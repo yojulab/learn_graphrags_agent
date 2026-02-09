@@ -2,19 +2,43 @@ from neo4j import GraphDatabase
 from neo4j_graphrag.retrievers import Text2CypherRetriever
 from neo4j_graphrag.llm import OpenAILLM
 from dotenv import load_dotenv
+import config
 import openai
 import os
 import re
-load_dotenv()
 
 ## OpenAI 클라이언트 선언
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = openai.OpenAI(
+    api_key=config.OPENAI_API_KEY,
+    base_url=config.MODEL_API_URL
+)
 
 ## Neo4j 드라이버와 리트리버 선언
-URI = "neo4j://127.0.0.1:7687"
-AUTH = ("neo4j", "12345678")
-driver = GraphDatabase.driver(URI, auth=AUTH)
-llm = OpenAILLM(model_name="gpt-4.1")
+from neo4j_graphrag.llm import OpenAILLM
+from neo4j_graphrag.llm.types import LLMResponse
+
+class CleanOpenAILLM(OpenAILLM):
+    def invoke(self, input: str) -> LLMResponse:
+        response = super().invoke(input)
+        content = response.content
+        # Remove <think>...</think> blocks including the tags
+        content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL)
+        # Remove any remaining closing tags and preceding content (handling malformed/partial output)
+        content = re.sub(r'.*?</think>', '', content, flags=re.DOTALL)
+        response.content = content.strip()
+        return response
+
+## Neo4j 드라이버와 리트리버 선언
+driver = GraphDatabase.driver(config.NEO4J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
+llm = CleanOpenAILLM(
+    model_name=config.LLM_MODEL,
+    model_params={
+        "max_tokens": 2000,
+        "temperature": 0,
+    },
+    api_key=config.OPENAI_API_KEY,
+    base_url=config.MODEL_API_URL
+)
 
 examples = [
     "USER INPUT: '토미오카 기유는 시즌 1에서 어떤 역할을 했는지 에피소드별로 알려줘.' QUERY: MATCH (n {name: '토미오카 기유'})-[r]-(m) RETURN n, r, m, properties(r) AS rel_props ORDER BY r.episode_number"
@@ -27,14 +51,14 @@ retriever = Text2CypherRetriever(
     examples=examples,
 )
 
-def llm_cal(prompt: str, model: str = "gpt-4.1") -> str:
-    response = client.responses.create(
+def llm_cal(prompt: str, model: str = config.LLM_MODEL) -> str:
+    response = client.chat.completions.create(
         model=model,
-        input=[
+        messages=[
             {"role": "user", "content": prompt},
         ],
     )
-    return response.output_text
+    return response.choices[0].message.content
 
 def graphrag_pipeline(user_question):
 

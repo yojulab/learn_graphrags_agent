@@ -1,0 +1,718 @@
+{
+  "nodes": [
+    {
+      "id": "N0",
+      "label": "인간",
+      "properties": {
+        "name": "카마도 탄지로"
+      }
+    },
+    {
+      "id": "N1",
+      "label": "인간",
+      "properties": {
+        "name": "카마도 네즈코"
+      }
+    },
+    {
+      "id": "N2",
+      "label": "인간",
+      "properties": {
+        "figuratively speaking": 25370
+      }
+    },
+    {
+      "id": "N13",
+      "label": "도깨비",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "N2",
+      "label": "인간",
+      "properties": {
+        "name": "토미오카 기유"
+      }
+    },
+    {
+      "id": "N3",
+      "label": "인간",
+      "properties": {
+        "name": "우로코다키 사콘지"
+      }
+    },
+    {
+      "id": "N4",
+      "label": "인간",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N5",
+      "label": "인간",
+      "properties": {
+        "name": "마코모"
+      }
+    },
+    {
+      "id": "N6",
+      "label": "인간",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N7",
+      "label": "인간",
+      "properties": {
+        "name": "하시비라 이노스케"
+      }
+    },
+    {
+      "id": "N8",
+      "label": "인간",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N9",
+      "label": "인간",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "N10",
+      "label": "인간",
+      "properties": {
+        "name": "우부야시키 카가야"
+      }
+    },
+    {
+      "id": "N11",
+      "label": "인간",
+      "properties": {
+        "name": "코쵸우 시노부"
+      }
+    },
+    {
+      "id": "N12",
+      "label": "인간",
+      "properties": {
+        "name": "시나즈가와 사네미"
+      }
+    },
+    {
+      "id": "N14",
+      "label": "도 도깨비",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N15, ",
+      "label": "도깨비",
+      "properties": {
+        "name": "야하바"
+      }
+    },
+    {
+      "id": "N16, ",
+      "label": "도venant",
+      "properties": {
+        "name": "쿄우가이"
+      }
+    },
+    {
+      "id": "N17, ",
+      "label": "도깨비",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N18, ",
+      "label": "도깨비",
+      "properties": {
+        "name": "엔무"
+      }
+    },
+    {
+      "id": "N6",
+      "label": "도깨비",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N9",
+      "label": "도깨비",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "N14",
+      "label": "도깨비",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N15",
+      "label": "도깨비",
+      "properties": {
+        "name": "야하바"
+      }
+    },
+    {
+      "id": "N16",
+      "label": "도깨비",
+      "properties": {
+        "name": "쿄우가이"
+      }
+    },
+    {
+      "id": "N17",
+      "label": "도깨비",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N18",
+      "label": "도깨비",
+      "properties": {
+        "name": "엔무"
+      }
+    },
+    {
+      "id": "N1",
+      "label": " 인간",
+      "properties": {
+        "name": "카마도 네즈코"
+      }
+    },
+    {
+      "id": "N12",
+      "label": " Sanemi Shinazugawa",
+      "properties": {
+        "name": "시나즈가와 사네미"
+      }
+    },
+    {
+      "id": "N8",
+      "label": "도깨비",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N14",
+      "label": "도 cerebro",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N17,",
+      "label": "도깨비",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N3",
+      "label": "인간",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N4",
+      "label": "인간",
+      "properties": {
+        "name": "마코모"
+      }
+    },
+    {
+      "id": "N5",
+      "label": "인간",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N17",
+      "label": "도 Coco",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N7",
+      "label": "도깨비",
+      "properties": {
+        "name": "하시비라 이노스케"
+      }
+    },
+    {
+      "id": "N10",
+      "label": "도깨비",
+      "properties": {
+        "name": "우부야시키 카가야"
+      }
+    },
+    {
+      "id": "N11",
+      "label": "도깨비",
+      "properties": {
+        "name": "코쵸우 시노부"
+      }
+    },
+    {
+      "id": "E1",
+      "label": "비행사",
+      "properties": {
+        "name": "Kikoshi",
+        "description": "delivery driver"
+      }
+    },
+    {
+      "id": "E2",
+      "label": "교사",
+      "properties": {
+        "name": "Hinsuke Kagane},",
+        "id": "E3",
+        "label": "교사",
+        "properties": ":"
+      }
+    },
+    {
+      "id": "N0",
+      "label": " 인간",
+      "properties": {
+        "name": "카마도 탄지로"
+      }
+    },
+    {
+      "id": "N6",
+      "label": " human",
+      "properties": {
+        "name": "우부야시키 카가야"
+      }
+    },
+    {
+      "id": "N10, ",
+      "label": "도깨비",
+      "properties": {
+        "name": "우부야시키 카가야"
+      }
+    },
+    {
+      "id": "N8",
+      "label": "Kanao Tsuyuri",
+      "properties": {
+        "name": "Kanozakura Kanzai-take"
+      }
+    },
+    {
+      "id": "N19",
+      "label": "인간",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "N7,",
+      "label": "도깨비",
+      "properties": {
+        "name": "하시비라 이노스케"
+      }
+    },
+    {
+      "id": "N8,",
+      "label": "도깨비",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N9,",
+      "label": "도깨비",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "N10,",
+      "label": "도깨비",
+      "properties": {
+        "name": "우부야시키 카가야"
+      }
+    },
+    {
+      "id": "N11,",
+      "label": "도깨비",
+      "properties": {
+        "name": "코쵸우 시노부"
+      }
+    },
+    {
+      "id": "N12,",
+      "label": "도깨비",
+      "properties": {
+        "name": "시나즈가와 사네미"
+      }
+    },
+    {
+      "id": "N13,",
+      "label": "도깨비",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "N14,",
+      "label": "도깨비",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N15,",
+      "label": "도깨비",
+      "properties": {
+        "name": "야하바"
+      }
+    },
+    {
+      "id": "N16,",
+      "label": "도깨비",
+      "properties": {
+        "name": "쿄우가이"
+      }
+    },
+    {
+      "id": "N18,",
+      "label": "도깨비",
+      "properties": {
+        "name": "엔무"
+      }
+    },
+    {
+      "id": "N17",
+      "label": "도격봉",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N6",
+      "label": "도보증",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N11",
+      "label": "도보증",
+      "properties": {
+        "name": "코쵸우 시노부"
+      }
+    },
+    {
+      "id": "N18",
+      "label": "도보증",
+      "properties": {
+        "name": "엔무"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E01"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E02"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "경투",
+        "direction": "전격",
+        "episode_number": "S1E03"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory over demons",
+        "episode_number": "S1E04"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E05"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E06"
+      }
+    },
+    {
+      "type": "INTERACTS_WITH",
+      "start_node_id": "N0",
+      "end_node_id": "N14",
+      "properties": {
+        "activity": "Investigation",
+        "episode_number": "S1E06"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N9",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E07"
+      }
+    },
+    {
+      "type": "ASAKUSA",
+      "start_node_id": "N0",
+      "end_node_id": "N15",
+      "properties": {
+        "context": "returned to the base of Asakura Yasu-ami's family as initially reported by Tanjiro.",
+        "episode_number": "S1E07"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E08"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E10"
+      }
+    },
+    {
+      "type": "ATTACKS",
+      "start_node_id": "N0",
+      "end_node_id": "N4",
+      "properties": {
+        "duration": "500},",
+        "relationships": "]} } </think></think></think>}},}}}}|{[{\"id\":\"N0\",\"label\":\"인신공력\",\"properties\": {\"role\":\"Tanjiro Kamado\"}}],\"relationships\":[{\"type\":\"ATTACKS\",\"start_node_id\":\"N0\",\"end_node_id\":\"N4\",\"properties\": {\"duration\":\"500\"}]}|}{[{",
+        "episode_number": "S1E13"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E14"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E15"
+      }
+    },
+    {
+      "type": "공격",
+      "start_node_id": "E1",
+      "end_node_id": "E2",
+      "properties": {
+        "occurrence": "1",
+        "episode_number": "S1E16"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "사옥나무 전투",
+        "episode_number": "S1E17"
+      }
+    },
+    {
+      "type": "JUDGE",
+      "start_node_id": "N7",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "결말 없는 해방",
+        "episode_number": "S1E18"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E19"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E20"
+      }
+    },
+    {
+      "type": "도깨비",
+      "start_node_id": "N17",
+      "end_node_id": "N3",
+      "properties": {
+        "outcome": "beheaded",
+        "episode_number": "S1E20"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "STRICT_PARENTMENT",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "type": "broken",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "ATTEMPT_KILL",
+      "start_node_id": "N0",
+      "end_node_id": "N15",
+      "properties": {
+        "description": "devoured someone and tried to kill him",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "JUDGING",
+      "start_node_id": "N8",
+      "end_node_id": "N19",
+      "properties": {
+        "reason": "conviction against Tanjiro",
+        "episode_number": "S1E22"
+      }
+    },
+    {
+      "type": "JOIN",
+      "start_node_id": "N1",
+      "end_node_id": "N13",
+      "properties": {
+        "additional_description": "from First Selection",
+        "episode_number": "S1E23"
+      }
+    },
+    {
+      "type": "JOIN",
+      "start_node_id": "N13",
+      "end_node_id": "N0",
+      "properties": {
+        "additional_description": "Kagama Rues and reaffirms faith",
+        "episode_number": "S1E23"
+      }
+    },
+    {
+      "type": "",
+      "start_node_id": "N13",
+      "end_node_id": "N0",
+      "properties": {
+        "additional_description": "to show Demon Slayers united",
+        "episode_number": "S1E23"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "SHOWS",
+      "start_node_id": "N6",
+      "end_node_id": "N17",
+      "properties": {
+        "context": "after rehabilitation training",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N12",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E25"
+      }
+    },
+    {
+      "type": "ENCOURAGEMENT",
+      "start_node_id": "N11",
+      "end_node_id": "N8",
+      "properties": {
+        "outcome": "decision-making",
+        "episode_number": "S1E25"
+      }
+    }
+  ]
+}

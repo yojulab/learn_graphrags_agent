@@ -9,11 +9,13 @@ import openai
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
-# 환경 변수 로드
-load_dotenv()
+import config
 
 # OpenAI 클라이언트 초기화
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = openai.OpenAI(
+    api_key=config.OPENAI_API_KEY,
+    base_url=config.MODEL_API_URL
+)
 
 # 타입 정의
 PropertyValue = Union[str, int, float, bool, None]
@@ -105,7 +107,7 @@ KOREAN_NODE_MAP = {
 }
 
 
-def llm_call_structured(prompt: str, model: str = "gpt-4.1") -> GraphResponse:
+def llm_call_structured(prompt: str, model: str = config.LLM_MODEL) -> GraphResponse:
     """구조화된 출력으로 OpenAI API 호출"""
     resp = client.beta.chat.completions.parse(
         model=model,
@@ -263,13 +265,8 @@ def save_output(episodes: List[dict], final_graph: GraphResponse):
 def main():
     """전체 프로세스를 조율하는 메인 함수"""
     try:
-        # OpenAI API 키 확인
-        if not os.getenv("OPENAI_API_KEY"):
-            print("❌ OPENAI_API_KEY가 설정되지 않았습니다.")
-            print("\n설정 방법:")
-            print("1. .env 파일에 OPENAI_API_KEY=your_api_key_here 추가")
-            print("2. 또는 환경변수로 설정: export OPENAI_API_KEY=your_api_key_here")
-            return 1
+        # config.py에서 로드된 값을 확인 (선택 사항)
+        # if not config.OPENAI_API_KEY: ...
         
         print("🚀 지식그래프 생성기 시작")
         print("=" * 50)

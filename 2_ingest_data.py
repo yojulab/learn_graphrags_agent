@@ -1,4 +1,5 @@
 import json
+import config
 import asyncio
 from neo4j import GraphDatabase
 from pydantic import validate_call
@@ -30,7 +31,7 @@ class Neo4jCreateWriter(KGWriter):
             with self.driver.session(database=self.neo4j_database) as session:
                 # 1. node 작성
                 for node in graph.nodes:
-                    labels = f":{node.label}"
+                    labels = f":`{node.label}`"
                     session.run(
                         f"""
                         MERGE (n{labels} {{id: $id}})
@@ -44,7 +45,8 @@ class Neo4jCreateWriter(KGWriter):
                     session.run(
                         f"""
                         MATCH (a {{id: $start_id}}), (b {{id: $end_id}})
-                        CREATE (a)-[r:{rel.type} $props]->(b)
+                        CREATE (a)-[r:{rel.type}]->(b)
+                        SET r += $props
                         """,
                         {
                             "start_id": rel.start_node_id,
@@ -64,13 +66,10 @@ class Neo4jCreateWriter(KGWriter):
             return KGWriterModel(status="FAILURE", metadata={"error": str(e)})
 
 async def write_to_neo4j(graph: Neo4jGraph):
-    uri = "neo4j://127.0.0.1:7687"
-    user = "neo4j"
-    password = "12345678"  
-    driver = GraphDatabase.driver(uri, auth=(user, password))
+    driver = GraphDatabase.driver(config.NEO4J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
     
     # writer = KGWriter(driver)
-    writer = Neo4jCreateWriter(driver)
+    writer = Neo4jCreateWriter(driver, neo4j_database=config.NEO4J_DATABASE)
     result = await writer.run(graph)
     print(result)
 
@@ -80,7 +79,7 @@ if __name__ == "__main__":
         data = json.load(f)
 
     nodes = [Neo4jNode(**node) for node in data["nodes"]]
-    relationships = [Neo4jRelationship(**rel) for rel in data.get("relationships", [])]
+    relationships = [Neo4jRelationship(**rel) for rel in data.get("relationships", []) if rel.get("type")]
     graph = Neo4jGraph(nodes=nodes, relationships=relationships)
 
     asyncio.run(write_to_neo4j(graph))
