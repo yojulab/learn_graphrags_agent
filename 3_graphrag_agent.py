@@ -7,6 +7,8 @@ import openai
 import os
 import re
 
+import traceback
+
 ## OpenAI 클라이언트 선언
 client = openai.OpenAI(
     api_key=config.OPENAI_API_KEY,
@@ -41,29 +43,63 @@ llm = CleanOpenAILLM(
 )
 
 examples = [
-    "USER INPUT: '토미오카 기유는 시즌 1에서 어떤 역할을 했는지 에피소드별로 알려줘.' QUERY: MATCH (n {name: '토미오카 기유'})-[r]-(m) RETURN n, r, m, properties(r) AS rel_props ORDER BY r.episode_number"
+    "USER INPUT: '토미오카 기유는 시즌 1에서 어떤 역할을 했는지 에피소드별로 알려줘.' QUERY: MATCH (n {{name: '토미오카 기유'}})-[r]-(m) RETURN n, r, m, properties(r) AS rel_props ORDER BY r.episode_number",
+    "USER INPUT: '카마도 탄지로는 시즌 1에서 에피소드별로 어떤 활약을 했어?' QUERY: MATCH (n {{name: '카마도 탄지로'}})-[r]-(m) RETURN n, r, m, properties(r) AS rel_props ORDER BY r.episode_number",
+    "USER INPUT: '카마도 탄지로와 카마도 네즈코 사이에 어떤 사건들이 있었어? 에피소드별로 정리해줘.' QUERY: MATCH (n {{name: '카마도 탄지로'}})-[r]-(m {{name: '카마도 네즈코'}}) RETURN n, r, m, properties(r) AS rel_props ORDER BY r.episode_number"
 ]
 
+
+
+
+# Define the schema manually based on the known data to help the LLM
+known_schema = """
+Node Labels: [인간, 도깨비]
+Relationship Types: [FIGHTS, PROTECTS, TRAINS, KNOWS, FAMILY_OF, ALLY_OF, ENEMY_OF, DEFEATS, SAVES, MEETS]
+Node Properties: id, name
+Relationship Properties: episode_number, outcome
+"""
+
+# Note: Double braces {{}} are needed to escape Python's .format() parsing
+# The actual Cypher output should use single braces {}
+custom_prompt = """Task: Generate a Cypher statement to query a Neo4j graph database.
+
+Schema:
+""" + known_schema + """
+
+Cypher Syntax Rules:
+- Properties use single curly braces in Cypher: {{name: 'value'}}
+- Use node labels like :인간 or :도깨비
+- Put character names in the 'name' property, e.g.: (n:인간 {{name: '카마도 탄지로'}})
+
+Examples:
+{examples}
+
+User Question:
+{query_text}
+
+OUTPUT ONLY THE CYPHER QUERY. NO EXPLANATION.
+"""
 
 retriever = Text2CypherRetriever(
     driver=driver,
     llm=llm,  
     examples=examples,
+    custom_prompt=custom_prompt
 )
 
-def llm_cal(prompt: str, model: str = config.LLM_MODEL) -> str:
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "user", "content": prompt},
-        ],
-    )
-    return response.choices[0].message.content
+def llm_cal(prompt: str) -> str:
+    # Use the cleaning LLM instance
+    response = llm.invoke(prompt)
+    return response.content
 
 def graphrag_pipeline(user_question):
 
     # 1 질문 -> cypher query -> 결과 리스트 반환
-    result =retriever.search(query_text=user_question)
+    try:
+        result = retriever.search(query_text=user_question)
+    except Exception as e:
+        traceback.print_exc()
+        return f"검색 중 오류가 발생했습니다: {e}"
 
     # 2 Cypher Query 확인
     cypher_used = result.metadata.get("cypher")
@@ -75,6 +111,9 @@ def graphrag_pipeline(user_question):
     result_items = result.items
     print("지식그래프에 찾은 결과")
     print(result_items)
+
+    if not result_items:
+        return "데이터베이스에서 관련 정보를 찾을 수 없습니다."
 
     # 4 결과 기반으로 프롬프트 완성
     context_list = []
@@ -107,9 +146,9 @@ def graphrag_pipeline(user_question):
 if __name__=="__main__":
     queries = [
 
-    "카마도 탄지로는 시즌 1에서 에피소드별로 어떤 활약을 했어?",
+    # "카마도 탄지로는 시즌 1에서 에피소드별로 어떤 활약을 했어?",
     # "토미오카 기유는 시즌 1에서 어떤 역할을 했는지 에피소드별로 알려줘.",
-    # "카마도 탄지로와 카마도 네즈코 사이에 어떤 사건들이 있었어? 에피소드별로 정리해줘.",
+    "카마도 탄지로와 카마도 네즈코 사이에 어떤 사건들이 있었어? 에피소드별로 정리해줘.",
         ]
     
     for query in queries:

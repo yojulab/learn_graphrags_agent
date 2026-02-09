@@ -31,7 +31,12 @@ class Neo4jCreateWriter(KGWriter):
             with self.driver.session(database=self.neo4j_database) as session:
                 # 1. node 작성
                 for node in graph.nodes:
-                    labels = f":`{node.label}`"
+                    if not node.label or not node.label.strip():
+                        print(f"Skipping node with empty label: {node}")
+                        continue
+                    # Clean label
+                    clean_label = node.label.strip().replace(" ", "_").replace(",", "") 
+                    labels = f":`{clean_label}`"
                     session.run(
                         f"""
                         MERGE (n{labels} {{id: $id}})
@@ -42,10 +47,15 @@ class Neo4jCreateWriter(KGWriter):
 
                 # 2. relationship 작성
                 for rel in graph.relationships:
+                    if not rel.type or not rel.type.strip():
+                        print(f"Skipping relationship with empty type: {rel}")
+                        continue
+                    # Clean type
+                    clean_type = rel.type.strip().replace(" ", "_")
                     session.run(
                         f"""
                         MATCH (a {{id: $start_id}}), (b {{id: $end_id}})
-                        CREATE (a)-[r:{rel.type}]->(b)
+                        CREATE (a)-[r:`{clean_type}`]->(b)
                         SET r += $props
                         """,
                         {
@@ -75,6 +85,7 @@ async def write_to_neo4j(graph: Neo4jGraph):
 
 
 if __name__ == "__main__":
+    # 검증된 데이터 사용 (1_prepare_data.py에서 생성)
     with open("output/지식그래프_최종.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
