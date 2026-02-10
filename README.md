@@ -1,166 +1,212 @@
 # GraphRAG Agent 🕸️
 
-
-애니메이션 줄거리를 AI로 분석하여 주인공 중심의 지식 그래프를 만들고, 자연어로 질문할 수 있는 GraphRAG 에이전트입니다!
+애니메이션 줄거리를 AI로 분석하여 지식 그래프를 만들고, 하이브리드 검색(벡터 + 그래프)으로 질문에 답하는 GraphRAG 에이전트입니다.
 
 <img width="700" alt="image" src="https://github.com/user-attachments/assets/87f784de-25ba-4dcd-a3b4-0ae93824f9ed" />
 
+---
 
-## 🎯 프로젝트 소개
+## 🎯 프로젝트 개요
 
-이 프로젝트는 자동으로:
-1. **수집 및 처리** - 위키피디아에서 에피소드 데이터 수집 (귀멸의 칼날 시즌 1) 후 OpenAI를 사용하여 텍스트에서 개체와 관계 추출
-2. **저장** - Neo4j 그래프 데이터베이스에 지식그래프 저장
-3. **질의** - 자연어 질문을 Cypher 쿼리로 변환하여 답변 생성
+**하이브리드 검색 파이프라인**: 벡터 검색 → 그래프 확장 → Cypher 쿼리 → 결과 병합
+
+1. **데이터 준비** - 위키피디아 스크래핑 → AI 개체/관계 추출 → JSON 저장
+2. **그래프 생성** - JSON → Neo4j 지식그래프 + 벡터 임베딩 저장
+3. **하이브리드 검색** - 자연어 질문 → 벡터 유사도 검색 → 그래프 순회 → Cypher 쿼리 생성 → 답변
+
+---
 
 ## 📋 사전 요구사항
 
-- Python 3.12+
-- OpenAI API 키
-- Neo4j desktop
+- **Python 3.12+**
+- **OpenAI API Key** (또는 Ollama)
+- **Neo4j Database** (Docker 권장)
 
-## 🚀 초기 셋팅
+---
 
-### 1. 프로젝트 클론 및 의존성 설치
+## 🚀 빠른 시작
+
+### 1. 의존성 설치
 
 ```bash
-# uv를 사용한 의존성 설치 (권장)
 uv sync
-
-# 또는 uv add / pip 사용
-uv add beautifulsoup4 neo4j-graphrag[openai] openai python-dotenv requests
-
 ```
 
-### 2. OpenAI API 키 설정
+### 2. 환경 변수 설정
 
-프로젝트 루트에 `.env` 파일 생성:
+`.env` 파일 생성:
+
 ```env
-OPENAI_API_KEY=여기에_API_키_입력
+OPENAI_API_KEY=your_api_key_here
 ```
 
-> 💡 [OpenAI API 키 발급 가이드](https://github.com/dabidstudio/dabidstudio_guides/blob/main/get-openai-api-key.md)
-
-### 3. Neo4j 데이터베이스 설정
-
-Neo4j Desktop을 사용하세요.
-
-기본 설정:
-- URI: `neo4j://127.0.0.1:7687`
-- 사용자명: `neo4j`
-- 비밀번호: `12345678` (실제 비밀번호로 변경 필요)
-
-## 📖 사용 방법
-
-### 단계별 실행
-
-스크립트를 순서대로 실행하세요:
+### 3. Neo4j 실행 (Docker)
 
 ```bash
-# 1단계: 위키피디아에서 에피소드 데이터 수집 및 처리
-uv run 1_prepare_data.py
-
-# 2단계: Neo4j 데이터베이스에 지식그래프 저장
-uv run 2_ingest_data.py
-
-# 3단계: GraphRAG 에이전트로 질의응답
-uv run 3_graphrag_agent.py
+cd dockers
+docker-compose up -d
 ```
 
-### 각 스크립트 설명
+### 4. 파이프라인 실행
 
-#### `1_prepare_data.py`
-- 위키피디아에서 귀멸의 칼날 시즌 1 에피소드 데이터 수집
-- OpenAI API를 사용하여 텍스트에서 개체(노드)와 관계 추출
-- 한국어 이름으로 표준화
-- 결과를 `output/` 폴더에 JSON 형태로 저장
+```bash
+# Step 1: 데이터 추출 (Wikipedia → JSON)
+uv run 1_prepare_data_v3.py
 
-#### `2_ingest_data.py`
-- 생성된 지식그래프를 Neo4j 데이터베이스에 저장
-- 커스텀 KGWriter를 사용하여 관계를 CREATE로 생성
-- 기존 데이터베이스 내용을 초기화 후 새 데이터 삽입
+# Step 2: 그래프 생성 (JSON → Neo4j + Embeddings)
+uv run 2_ingest_data_v2.py
 
-#### `3_graphrag_agent.py`
-- 자연어 질문을 Cypher 쿼리로 변환
-- Neo4j에서 관련 데이터 검색
-- OpenAI를 사용하여 자연스러운 한국어 답변 생성
+# Step 3: 하이브리드 검색 쿼리 (Interactive)
+uv run 3_graphrag_agent_v3.py
+```
+
+---
+
+## 📁 실행 파일 및 폴더
+
+### 🔧 실행 스크립트 (버전별)
+
+| 파일 | 주요 기능 | 출력 |
+|------|----------|------|
+| **`1_prepare_data_v3.py`** | Wikipedia 스크래핑 → OpenAI 개체/관계 추출 → 검증 | `output/raw_data_v3.json`, `knowledge_graph_v3.json` |
+| **`2_ingest_data_v2.py`** | 지식그래프 Neo4j 저장 → 노드/관계 임베딩 생성 → 벡터 인덱스 구축 | Neo4j 데이터베이스 (`entity_embeddings`, `relationship_embeddings`) |
+| **`3_graphrag_agent_v3.py`** | 하이브리드 검색: 벡터 유사도 → 그래프 확장 → Cypher 생성 → 답변 | 대화형 질의응답 시스템 |
+
+> **버전 관리**: `_v1`, `_v2`, `_v3`은 기능 개선 버전. 최신 버전(`v3`) 사용 권장.
+
+---
+
+### 📂 주요 폴더
+
+#### `output/`
+**역할**: 데이터 파이프라인 중간 결과 저장
+
+- `raw_data_v3.json` - Wikipedia 원본 데이터 (에피소드별 줄거리)
+- `knowledge_graph_v3.json` - 추출된 노드/관계 JSON (Neo4j 입력용)
+- `statistics_v3.json` - 데이터 통계 (노드 수, 관계 수, 처리 시간 등)
+
+#### `dockers/`
+**역할**: Neo4j + PostgreSQL 인프라 구성
+
+- `docker-compose.yml` - Neo4j (Bolt 7687, HTTP 7474), PostgreSQL with pgvector
+- `Dockerfile.fullstack` - 커스텀 환경 설정 (locale, timezone)
+- `.env` - Docker 환경 변수 (비밀번호, 플러그인 등)
+
+#### `config.py`
+**역할**: 환경 변수 관리
+
+- Neo4j 연결 정보 (`NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`)
+- OpenAI/Ollama 모델 설정 (`OPENAI_MODEL`, `EMBEDDING_MODEL`)
+- API 키 로딩 (`OPENAI_API_KEY`)
+
+---
+
+## 🔄 하이브리드 검색 파이프라인
+
+### 1️⃣ 벡터 검색 (Vector Search)
+
+- 사용자 질문을 임베딩 벡터로 변환
+- Neo4j `entity_embeddings` 인덱스에서 코사인 유사도 기반 상위 K개 노드 검색
+- 연관 관계에서 `relationship_embeddings` 인덱스로 상위 K개 관계 검색
+
+### 2️⃣ 그래프 확장 (Graph Expansion)
+
+- 벡터 검색으로 찾은 노드를 시작점으로 설정
+- Neo4j에서 1~2 hop 그래프 순회하여 컨텍스트 확장
+- 관련 에피소드, 캐릭터 간 관계 수집
+
+### 3️⃣ Cypher 쿼리 생성 (Cypher Generation)
+
+- LLM이 확장된 컨텍스트 + 스키마 정보를 분석
+- Few-shot 예시 기반 Cypher 쿼리 자동 생성
+- 구문 검증 및 재시도 메커니즘
+
+### 4️⃣ 결과 병합 (Result Merging)
+
+- Cypher 실행 결과를 자연어로 변환
+- 에피소드 순서대로 정렬 및 맥락 추가
+- 최종 답변 생성
+
+---
 
 ## 🎮 예시 질문
 
-GraphRAG 에이전트에게 다음과 같은 질문을 할 수 있습니다:
-
-```
+```text
 "카마도 탄지로는 시즌 1에서 에피소드별로 어떤 활약을 했어?"
-"토미오카 기유는 시즌 1에서 어떤 역할을 했는지 에피소드별로 알려줘."
-"카마도 탄지로와 카마도 네즈코 사이에 어떤 사건들이 있었어? 에피소드별로 정리해줘."
+"토미오카 기유와 관계있는 모든 캐릭터를 알려줘."
+"루이와 싸운 캐릭터는 누구야?"
+"3번 이상 등장한 관계 타입은?"
 ```
 
-## 📊 데이터 구조
+---
+
+## 📊 데이터 스키마
 
 ### 노드 타입
-- **인간**: 귀살대원들과 일반 인간 캐릭터
-- **도깨비**: 악역 도깨비 캐릭터들
+- **인간** - 귀살대원, 일반인 (properties: `name`, `embedding`)
+- **도깨비** - 적 캐릭터 (properties: `name`, `embedding`)
 
-### 주요 캐릭터
-- 카마도 탄지로, 카마도 네즈코
-- 토미오카 기유, 우로코다키 사콘지
-- 아가츠마 젠이츠, 하시비라 이노스케
-- 키부츠지 무잔, 루이, 엔무 등
+### 관계 타입 (예시)
+- `FIGHTS`, `PROTECTS`, `TRAINS`, `DEFEATS`, `RESCUES`, `BATTLES`, `JOINS`
+- **공통 속성**: `episode_number`, `season`, `episode`, `context`, `embedding`
 
-## 📁 프로젝트 구조
+### 벡터 인덱스
+- `entity_embeddings` - 노드 임베딩 (1024 dim, cosine)
+- `relationship_embeddings` - 관계 임베딩 (1024 dim, cosine)
 
+---
+
+## 🛠️ 기술 스택
+
+| 컴포넌트 | 기술 | 용도 |
+|---------|------|------|
+| 그래프 DB | Neo4j 5+ | 지식 그래프 저장, Cypher 쿼리 |
+| 임베딩 | OpenAI `text-embedding-3-large` | 벡터 검색용 임베딩 생성 |
+| LLM | OpenAI GPT-4o | 개체 추출, Cypher 생성, 답변 생성 |
+| 오케스트레이션 | Python 3.12 | 파이프라인 실행 |
+| 스크래핑 | BeautifulSoup | Wikipedia 데이터 수집 |
+
+---
+
+## 📚 참고 자료
+
+- [귀멸의 칼날 시즌 1 Wikipedia](https://en.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba_season_1)
+- [Neo4j GraphRAG Library](https://neo4j.com/docs/neo4j-graphrag-python/current/)
+- [OpenAI API 키 발급 가이드](https://github.com/dabidstudio/dabidstudio_guides/blob/main/get-openai-api-key.md)
+
+---
+
+## 🔍 검증 방법
+
+### Neo4j 브라우저에서 확인
+
+```cypher
+// 전체 노드 수
+MATCH (n) RETURN count(n)
+
+// 관계 타입별 통계
+MATCH ()-[r]-() RETURN type(r), count(r) ORDER BY count(r) DESC
+
+// 벡터 인덱스 확인
+SHOW INDEXES
 ```
-graphrag-agent/
-├── 1_prepare_data.py      # 데이터 수집 및 처리
-├── 2_ingest_data.py       # Neo4j 데이터베이스 저장
-├── 3_graphrag_agent.py    # GraphRAG 질의응답 에이전트
-├── output/                # 생성된 데이터 파일
-│   ├── 1_원본데이터.json
-│   └── 지식그래프_최종.json
-├── pyproject.toml         # 프로젝트 설정 및 의존성
-└── README.md
-```
 
+### 하이브리드 검색 로그
 
-## 🎨 활용 데이터
+`3_graphrag_agent_v3.py` 실행 시 콘솔에서 확인:
+- 벡터 검색 결과 (상위 K개 유사 노드)
+- 그래프 확장 컨텍스트
+- 생성된 Cypher 쿼리
+- 최종 답변
 
-[귀멸의 칼날 시즌 1 위키피디아 문서](https://en.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba_season_1)
+---
 
-## 🤖 Neo4j 프롬프트 템플릿
+## ⚙️ 성능 최적화
 
-<details>
-<summary>ChatGPT에서 직접 활용할 수 있는 프롬프트</summary>
-
-```text
-You are a top-tier algorithm designed for extracting
-information in structured formats to build a knowledge graph.
-
-Extract the entities (nodes) and specify their type from the following text.
-Also extract the relationships between these nodes.
-
-Return result as JSON using the following format:
-{{"nodes": [ {{"id": "0", "label": "Person", "properties": {{"name": "John"}} }}],
-"relationships": [{{"type": "KNOWS", "start_node_id": "0", "end_node_id": "1", "properties": {{"since": "2024-08-01"}} }}] }}
-
-Use only the following node and relationship types (if provided):
-{schema}
-
-Assign a unique ID (string) to each node, and reuse it to define relationships.
-Do respect the source and target node types for relationship and
-the relationship direction.
-
-Make sure you adhere to the following rules to produce valid JSON objects:
-- Do not return any additional information other than the JSON in it.
-- Omit any backticks around the JSON - simply output the JSON on its own.
-- The JSON object must not wrapped into a list - it is its own JSON object.
-- Property names must be enclosed in double quotes
-
-Examples:
-{examples}
-
-Input text:
-```
-</details>
+- **캐싱**: 동일한 Wikipedia 페이지 재다운로드 방지 (`1_prepare_data_v3.py`)
+- **배치 처리**: tqdm 진행률 표시로 대량 데이터 처리 추적
+- **벡터 인덱스**: Neo4j HNSW 알고리즘으로 빠른 유사도 검색
+- **Cypher 최적화**: `LIMIT` 절, 인덱스 활용 쿼리 생성
 
 
 
