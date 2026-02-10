@@ -10,6 +10,14 @@ NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "admin123")
 NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "db-demonslayer")
 
+# ============================================================
+# Hybrid Retrieval Settings
+# ============================================================
+USE_HYBRID_RETRIEVAL = os.getenv("USE_HYBRID_RETRIEVAL", "true").lower() == "true"
+VECTOR_TOP_K = int(os.getenv("VECTOR_TOP_K", "5"))
+GRAPH_EXPANSION_DEPTH = int(os.getenv("GRAPH_EXPANSION_DEPTH", "2"))
+
+
 # AI / LLM
 LLM_MODEL = os.getenv("LLM_MODEL", "ingu627/exaone4.0:1.2b")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "bge-m3:567m")
