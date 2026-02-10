@@ -347,7 +347,7 @@ def collect_data(use_cache: bool = True) -> List[dict]:
     """여러 시즌에서 에피소드 데이터를 수집합니다"""
     print("=== 데이터 수집 시작 ===")
     
-    cache_file = "output/1_원본데이터.json"
+    cache_file = "output/raw_data_v2.json"
     
     # 캐시 파일이 있으면 먼저 사용
     if use_cache and os.path.exists(cache_file):
@@ -423,21 +423,21 @@ def save_output(episodes: List[dict], final_graph: GraphResponse):
     os.makedirs("output", exist_ok=True)
     
     # 원본 데이터 저장
-    with open("output/1_원본데이터.json", "w", encoding="utf-8") as f:
+    with open("output/raw_data_v2.json", "w", encoding="utf-8") as f:
         json.dump(episodes, f, indent=2, ensure_ascii=False)
-    print("원본 데이터 저장: output/1_원본데이터.json")
+    print("원본 데이터 저장: output/raw_data_v2.json")
     
     # 최종 지식 그래프 저장
-    with open("output/지식그래프_최종.json", "w", encoding="utf-8") as f:
+    with open("output/knowledge_graph_v2.json", "w", encoding="utf-8") as f:
         json.dump(final_graph.model_dump(), f, ensure_ascii=False, indent=2)
-    print("최종 지식그래프 저장: output/지식그래프_최종.json")
+    print("최종 지식그래프 저장: output/knowledge_graph_v2.json")
 
 
 def validate_final_output():
     """최종 출력 파일 검증"""
     print("\n=== 최종 출력 검증 ===")
     
-    with open("output/지식그래프_최종.json", "r", encoding="utf-8") as f:
+    with open("output/knowledge_graph_v2.json", "r", encoding="utf-8") as f:
         data = json.load(f)
     
     errors = []
@@ -497,9 +497,9 @@ def main():
         print("✅ 지식그래프 생성 완료!")
         print(f"📊 총 노드 수: {len(final_graph.nodes)}")
         print(f"🔗 총 관계 수: {len(final_graph.relationships)}")
-        print("\n생성된 파일:")
-        print("- output/1_원본데이터.json")
-        print("- output/지식그래프_최종.json")
+        print("생성된 파일:")
+        print("- output/raw_data_v2.json")
+        print("- output/knowledge_graph_v2.json")
         
     except Exception as e:
         print(f"❌ 오류 발생: {e}")

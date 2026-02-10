@@ -253,14 +253,14 @@ def save_output(episodes: List[dict], final_graph: GraphResponse):
     os.makedirs("output", exist_ok=True)
     
     # 원본 데이터 저장
-    with open("output/1_원본데이터.json", "w", encoding="utf-8") as f:
+    with open("output/raw_data_v1.json", "w", encoding="utf-8") as f:
         json.dump(episodes, f, indent=2, ensure_ascii=False)
-    print("원본 데이터 저장: output/1_원본데이터.json")
+    print("원본 데이터 저장: output/raw_data_v1.json")
     
     # 최종 지식 그래프 저장
-    with open("output/지식그래프_최종.json", "w", encoding="utf-8") as f:
+    with open("output/knowledge_graph_v1.json", "w", encoding="utf-8") as f:
         json.dump(final_graph.model_dump(), f, ensure_ascii=False, indent=2)
-    print("최종 지식그래프 저장: output/지식그래프_최종.json")
+    print("최종 지식그래프 저장: output/knowledge_graph_v1.json")
 
 def main():
     """전체 프로세스를 조율하는 메인 함수"""
@@ -287,9 +287,9 @@ def main():
         print("✅ 지식그래프 생성 완료!")
         print(f"📊 총 노드 수: {len(final_graph.nodes)}")
         print(f"🔗 총 관계 수: {len(final_graph.relationships)}")
-        print("\n생성된 파일:")
-        print("- output/1_원본데이터.json")
-        print("- output/지식그래프_최종.json")
+        print("생성된 파일:")
+        print("- output/raw_data_v1.json")
+        print("- output/knowledge_graph_v1.json")
         
     except Exception as e:
         print(f"❌ 오류 발생: {e}")

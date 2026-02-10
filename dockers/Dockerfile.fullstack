@@ -1,0 +1,40 @@
+FROM python:3.13-slim
+
+# 로케일 및 타임존 설정
+ENV LANG=ko_KR.UTF-8 \
+    LANGUAGE=ko_KR:ko \
+    LC_ALL=ko_KR.UTF-8
+
+ENV TZ=Asia/Seoul
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# 시스템 패키지 업데이트 및 필수 도구 설치 (로케일 포함)
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    gcc \
+    g++ \
+    libpq-dev \
+    postgresql-client \
+    nodejs \
+    npm \
+    procps \
+    locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen
+
+# Python 패키지 설치
+RUN pip install --no-cache-dir --upgrade pip 
+
+# 작업 디렉토리 설정 및 리포지토리 클론
+WORKDIR /apps
+
+RUN git clone https://github.com/yojulab/learn_graphrags_agent.git
+
+# installation
+WORKDIR /apps/learn_graphrags_agent
+RUN pip install -r requirements.txt

@@ -13,3 +13,4 @@ wheels/
 archive/
 
 .env
+!dockers/.env

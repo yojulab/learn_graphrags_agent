@@ -85,8 +85,8 @@ async def write_to_neo4j(graph: Neo4jGraph):
 
 
 if __name__ == "__main__":
-    # 검증된 데이터 사용 (1_prepare_data.py에서 생성)
-    with open("output/지식그래프_최종.json", "r", encoding="utf-8") as f:
+    # 검증된 데이터 사용 (1_prepare_data_v3.py에서 생성)
+    with open("output/knowledge_graph_v3.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     nodes = [Neo4jNode(**node) for node in data["nodes"]]
