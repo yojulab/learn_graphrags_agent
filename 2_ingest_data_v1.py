@@ -1,8 +1,10 @@
 import json
 import config
 import asyncio
+import time
 from neo4j import GraphDatabase
 from pydantic import validate_call
+from tqdm import tqdm
 from neo4j_graphrag.experimental.components.types import (
     Neo4jGraph,
     Neo4jNode,
@@ -27,10 +29,11 @@ class Neo4jCreateWriter(KGWriter):
     @validate_call
     async def run(self, graph: Neo4jGraph) -> KGWriterModel:
         try:
+            start_time = time.time()
             self._wipe_database()
             with self.driver.session(database=self.neo4j_database) as session:
                 # 1. node 작성
-                for node in graph.nodes:
+                for node in tqdm(graph.nodes, desc="Creating nodes", unit="node"):
                     if not node.label or not node.label.strip():
                         print(f"Skipping node with empty label: {node}")
                         continue
@@ -46,7 +49,7 @@ class Neo4jCreateWriter(KGWriter):
                     )
 
                 # 2. relationship 작성
-                for rel in graph.relationships:
+                for rel in tqdm(graph.relationships, desc="Creating relationships", unit="rel"):
                     if not rel.type or not rel.type.strip():
                         print(f"Skipping relationship with empty type: {rel}")
                         continue
@@ -65,11 +68,14 @@ class Neo4jCreateWriter(KGWriter):
                         },
                     )
 
+            elapsed_time = time.time() - start_time
+            print(f"\n⏱️  Graph ingestion completed in {elapsed_time:.2f}s")
             return KGWriterModel(
                 status="SUCCESS",
                 metadata={
                     "node_count": len(graph.nodes),
                     "relationship_count": len(graph.relationships),
+                    "execution_time": f"{elapsed_time:.2f}s"
                 },
             )
         except Exception as e:

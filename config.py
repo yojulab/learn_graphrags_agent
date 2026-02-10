@@ -15,3 +15,8 @@ LLM_MODEL = os.getenv("LLM_MODEL", "ingu627/exaone4.0:1.2b")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "bge-m3:567m")
 MODEL_API_URL = os.getenv("MODEL_API_URL", "http://localhost:11434/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "ollama")
+
+# Vector Search Configuration
+VECTOR_INDEX_NODE = "entity_embeddings"
+VECTOR_INDEX_RELATIONSHIP = "relationship_embeddings"
+EMBEDDING_DIMENSION = 1024  # bge-m3 모델 차원

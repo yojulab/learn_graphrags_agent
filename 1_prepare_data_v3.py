@@ -1,12 +1,14 @@
 import json
 import re
 import os
+import time
 from typing import List, Dict, Any, Optional, Union
 import requests
 from bs4 import BeautifulSoup
 import openai
 from dotenv import load_dotenv
 from pydantic import BaseModel, field_validator
+from tqdm import tqdm
 
 import config
 
@@ -253,12 +255,15 @@ def llm_call_structured(prompt: str, model: str = config.LLM_MODEL, max_retries:
     """구조화된 출력으로 OpenAI API 호출 (재시도 로직 추가)"""
     for attempt in range(max_retries):
         try:
+            start_time = time.time()
             resp = client.beta.chat.completions.parse(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 response_format=GraphResponse,
                 temperature=0.1,  # 일관성을 위해 낮은 temperature
             )
+            elapsed_time = time.time() - start_time
+            print(f"  ⏱️  LLM call completed in {elapsed_time:.2f}s")
             return resp.choices[0].message.parsed
         except Exception as e:
             print(f"  ⚠️ API 호출 실패 (시도 {attempt + 1}/{max_retries}): {e}")
@@ -514,7 +519,7 @@ def collect_data(use_cache: bool = True) -> List[dict]:
     ]
 
     all_episodes = []
-    for link in episode_links:
+    for link in tqdm(episode_links, desc="Fetching seasons", unit="season"):
         try:
             episodes = fetch_episode(link)
             all_episodes.extend(episodes)
@@ -534,7 +539,7 @@ def process_data(episodes: List[dict]) -> GraphResponse:
     chunk_graphs: List[GraphResponse] = []
     failed_episodes = []
 
-    for episode in episodes:
+    for episode in tqdm(episodes, desc="Processing episodes", unit="episode"):
         if not episode.get("synopsis"):
             print(f"⏭️  S{episode['season']}E{episode['episode_in_season']:02d}: 시놉시스 없음 - 건너뜀")
             continue
