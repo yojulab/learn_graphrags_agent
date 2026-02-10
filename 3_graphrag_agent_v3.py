@@ -1,9 +1,12 @@
 """
-개선된 GraphRAG 에이전트 v2.0
+개선된 GraphRAG 에이전트 v3.0
+- 하이브리드 검색: 벡터 검색 + Cypher 그래프 순회 결합
 - 다단계 쿼리 검증 및 재시도
 - 질문 유형 분류 및 템플릿 기반 쿼리 생성
 - 컨텍스트 확장 전략
 - 개선된 프롬프트 템플릿
+- 확장된 Cypher 예제 (집계, 다중 홉, OPTIONAL MATCH, WITH 절)
+- Neo4j 벡터 인덱스 활용 (entity_embeddings, relationship_embeddings)
 """
 
 from neo4j import GraphDatabase
@@ -72,56 +75,94 @@ llm = CleanOpenAILLM(
     base_url=config.MODEL_API_URL
 )
 
+# Embedder initialization for hybrid retrieval
+from openai import OpenAI as OpenAIClient
+
+embedder_client = OpenAIClient(api_key=config.OPENAI_API_KEY, base_url=config.MODEL_API_URL)
+
+class OpenAIEmbedder:
+    """Simple embedder for hybrid retrieval"""
+    def __init__(self, client, model):
+        self.client = client
+        self.model = model
+    
+    def embed_query(self, text: str):
+        response = self.client.embeddings.create(model=self.model, input=[text])
+        return response.data[0].embedding
+
+embedder = OpenAIEmbedder(embedder_client, config.EMBEDDING_MODEL)
+
+
 # ============================================================
 # 스키마 정의
 # ============================================================
 SCHEMA = """
-## 노드 라벨:
-- 인간: 인간 캐릭터 (예: 카마도 탄지로, 카마도 네즈코)
-- 도깨비: 도깨비 캐릭터 (예: 키부츠지 무잔, 루이)
+## Node properties:
+인간 {id: STRING, name: STRING, embedding: LIST[FLOAT]}
+도깨비 {id: STRING, name: STRING, embedding: LIST[FLOAT]}
 
-## 관계 타입:
-- FIGHTS: 싸움 (예: 탄지로가 무잔과 싸움)
-- PROTECTS: 보호 (예: 탄지로가 네즈코를 보호)
-- TRAINS: 훈련 (예: 사콘지가 탄지로를 훈련)
-- TRAINS_WITH: 함께 훈련
-- SIBLING_OF: 형제/자매 관계
-- FAMILY_OF: 가족 관계
-- ALLY_OF: 동맹 관계
-- ENEMY_OF: 적 관계
-- DEFEATS: 물리침
-- SAVES: 구함
-- RESCUES: 구출
-- MEETS: 만남
-- ENCOUNTERS: 조우
-- GUIDES: 안내
-- ATTACKS: 공격
-- DEFENDS: 방어
-- SUPPORTS: 지원
-- REUNITES_WITH: 재회
-- HEALS: 치료
-- TEACHES: 가르침
-- BATTLES: 전투
-- JOINS: 합류
-- TRANSFORMS: 변신
+## Relationship properties:
+FIGHTS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, outcome: STRING, embedding: LIST[FLOAT]}
+PROTECTS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+TRAINS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+TRAINS_WITH {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+SIBLING_OF {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+FAMILY_OF {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+ALLY_OF {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+ENEMY_OF {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+DEFEATS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, outcome: STRING, embedding: LIST[FLOAT]}
+SAVES {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+RESCUES {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+MEETS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+ENCOUNTERS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+GUIDES {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+ATTACKS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+DEFENDS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+SUPPORTS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+REUNITES_WITH {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+HEALS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+TEACHES {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+BATTLES {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, outcome: STRING, embedding: LIST[FLOAT]}
+JOINS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
+TRANSFORMS {episode_number: STRING, season: INTEGER, episode: INTEGER, context: STRING, embedding: LIST[FLOAT]}
 
-## 노드 속성:
-- id: 노드 고유 ID (N0, N1, ...)
-- name: 캐릭터 이름 (예: '카마도 탄지로')
-
-## 관계 속성:
-- episode_number: 에피소드 번호 (형식: S1E01, S1E02, ...)
-- season: 시즌 번호 (정수)
-- episode: 에피소드 번호 (정수)
-- context: 사건 설명 (문자열)
-- outcome: 결과 (예: '승리', '패배', '도주')
+## The relationships:
+(:인간)-[:FIGHTS]->(:도깨비)
+(:인간)-[:PROTECTS]->(:인간)
+(:인간)-[:TRAINS]->(:인간)
+(:인간)-[:TRAINS_WITH]->(:인간)
+(:인간)-[:SIBLING_OF]->(:인간)
+(:인간)-[:FAMILY_OF]->(:인간)
+(:인간)-[:ALLY_OF]->(:인간)
+(:인간)-[:ENEMY_OF]->(:도깨비)
+(:인간)-[:DEFEATS]->(:도깨비)
+(:인간)-[:SAVES]->(:인간)
+(:인간)-[:RESCUES]->(:인간)
+(:인간)-[:MEETS]->(:인간)
+(:인간)-[:ENCOUNTERS]->(:도깨비)
+(:인간)-[:GUIDES]->(:인간)
+(:인간)-[:ATTACKS]->(:도깨비)
+(:인간)-[:DEFENDS]->(:인간)
+(:인간)-[:SUPPORTS]->(:인간)
+(:인간)-[:REUNITES_WITH]->(:인간)
+(:인간)-[:HEALS]->(:인간)
+(:인간)-[:TEACHES]->(:인간)
+(:인간)-[:BATTLES]->(:도깨비)
+(:인간)-[:JOINS]->(:인간)
+(:도깨비)-[:ATTACKS]->(:인간)
+(:도깨비)-[:TRANSFORMS]->(:도깨비)
 
 ## 주요 캐릭터 목록:
 인간: 카마도 탄지로, 카마도 네즈코, 토미오카 기유, 우로코다키 사콘지, 사비토, 마코모, 
       아가츠마 젠이츠, 하시비라 이노스케, 츠유리 카나오, 렌고쿠 쿄쥬로, 
       우부야시키 카가야, 코쵸우 시노부, 시나즈가와 사네미
 도깨비: 키부츠지 무잔, 스사마루, 야하바, 쿄우가이, 루이, 엔무
+
+## Vector Indexes:
+- entity_embeddings: 노드 임베딩 검색 (1024 dimensions, cosine similarity)
+- relationship_embeddings: 관계 임베딩 검색 (1024 dimensions, cosine similarity)
 """
+
 
 # ============================================================
 # 쿼리 템플릿 정의 (개선)
@@ -204,7 +245,64 @@ EXAMPLES = [
     "WHERE r.episode_number IS NOT NULL "
     "RETURN a, r, b, r.episode_number as episode, r.context as description "
     "ORDER BY r.season, r.episode",
+    
+    # 집계 쿼리 - 가장 많은 전투
+    "USER INPUT: '시즌 1에서 가장 많이 전투한 캐릭터는?' "
+    "QUERY: MATCH (n)-[r:FIGHTS|BATTLES]-() "
+    "WHERE r.season = 1 "
+    "RETURN n.name as character, count(r) as battle_count "
+    "ORDER BY battle_count DESC LIMIT 5",
+    
+    # 집계 쿼리 - 평균 에피소드 출연
+    "USER INPUT: '각 캐릭터가 평균적으로 몇 개 에피소드에 등장했어?' "
+    "QUERY: MATCH (n)-[r]-() "
+    "WHERE r.episode_number IS NOT NULL "
+    "WITH n, count(DISTINCT r.episode) as episode_count "
+    "RETURN n.name as character, episode_count "
+    "ORDER BY episode_count DESC",
+    
+    # 다중 홉 경로
+    "USER INPUT: '탄지로와 간접적으로 연결된 도깨비들은?' "
+    "QUERY: MATCH path = (a:인간 {name: '카마도 탄지로'})-[*1..2]-(d:도깨비) "
+    "RETURN DISTINCT d.name as demon, length(path) as distance "
+    "ORDER BY distance",
+    
+    # OPTIONAL MATCH 패턴
+    "USER INPUT: '모든 인간 캐릭터와 그들이 훈련한 사람들을 보여줘' "
+    "QUERY: MATCH (n:인간) "
+    "OPTIONAL MATCH (n)-[r:TRAINS]->(trainee) "
+    "RETURN n.name as character, collect(trainee.name) as trainees",
+    
+    # WITH 절 사용
+    "USER INPUT: '3번 이상 등장한 관계 타입은?' "
+    "QUERY: MATCH ()-[r]-() "
+    "WHERE r.episode_number IS NOT NULL "
+    "WITH type(r) as rel_type, count(r) as cnt "
+    "WHERE cnt >= 3 "
+    "RETURN rel_type, cnt "
+    "ORDER BY cnt DESC",
+    
+    # 관계 속성 필터링
+    "USER INPUT: '승리로 끝난 전투들은?' "
+    "QUERY: MATCH (a)-[r:FIGHTS|BATTLES|DEFEATS]->(b) "
+    "WHERE r.outcome =~ '(?i).*승리.*|.*이김.*' "
+    "RETURN a.name as winner, b.name as opponent, r.episode_number as episode, r.context as context",
+    
+    # 특정 에피소드 범위
+    "USER INPUT: '시즌 1 초반 5개 에피소드의 주요 사건은?' "
+    "QUERY: MATCH (a)-[r]->(b) "
+    "WHERE r.season = 1 AND r.episode <= 5 AND r.episode_number IS NOT NULL "
+    "RETURN r.episode_number as episode, a.name as from, type(r) as event, b.name as to, r.context as description "
+    "ORDER BY r.episode",
+    
+    # 패턴 매칭 - 보호 관계
+    "USER INPUT: '누가 누구를 보호했어?' "
+    "QUERY: MATCH (protector)-[r:PROTECTS|SAVES|RESCUES]->(protected) "
+    "WHERE r.episode_number IS NOT NULL "
+    "RETURN protector.name as protector, type(r) as action, protected.name as protected, r.episode_number as episode "
+    "ORDER BY r.season, r.episode",
 ]
+
 
 # ============================================================
 # 개선된 프롬프트 템플릿
@@ -535,9 +633,227 @@ retriever = ImprovedText2CypherRetriever(
     schema=SCHEMA,
     max_retries=4  # 최대 4회 시도
 )
+# ============================================================
+# 하이브리드 리트리버 (Vector Search + Cypher Traversal)
+# ============================================================
+class HybridRetriever:
+    """벡터 검색과 Cypher 그래프 순회를 결합한 하이브리드 검색"""
+    
+    def __init__(
+        self, 
+        driver, 
+        llm, 
+        embedder, 
+        cypher_retriever: ImprovedText2CypherRetriever,
+        top_k: int = 5,
+        expansion_depth: int = 2
+    ):
+        self.driver = driver
+        self.llm = llm
+        self.embedder = embedder
+        self.cypher_retriever = cypher_retriever
+        self.top_k = top_k
+        self.expansion_depth = expansion_depth
+    
+    def vector_search(self, query_text: str) -> List[Dict[str, Any]]:
+        """벡터 인덱스를 사용한 의미적 유사도 검색 (레이블별 인덱스 쿼리)"""
+        try:
+            # 1. 질문 임베딩
+            print(f"\n🔍 Vector search for: '{query_text}'")
+            start_time = time.time()
+            query_embedding = self.embedder.embed_query(query_text)
+            elapsed = time.time() - start_time
+            print(f"  ⏱️  Query embedding generated in {elapsed:.2f}s")
+            
+            # 2. 각 레이블별 벡터 인덱스 쿼리 (2_ingest_data_v2.py에서 생성한 인덱스 구조와 일치)
+            entity_labels = ["인간", "도깨비"]
+            all_seed_nodes = []
+            
+            with self.driver.session(database=config.NEO4J_DATABASE) as session:
+                for label in entity_labels:
+                    index_name = f"entity_embeddings_{label}"
+                    try:
+                        result = session.run(
+                            f"""
+                            CALL db.index.vector.queryNodes('{index_name}', $top_k, $embedding)
+                            YIELD node, score
+                            RETURN node.id as id, node.name as name, labels(node) as labels, score
+                            ORDER BY score DESC
+                            """,
+                            top_k=self.top_k,
+                            embedding=query_embedding
+                        )
+                        
+                        for record in result:
+                            all_seed_nodes.append({
+                                'id': record['id'],
+                                'name': record['name'],
+                                'labels': record['labels'],
+                                'score': record['score']
+                            })
+                    except Exception as e:
+                        print(f"  ⚠️  Failed to query index '{index_name}': {e}")
+                
+                # 3. 스코어 기준으로 정렬하고 top_k만 선택
+                all_seed_nodes.sort(key=lambda x: x['score'], reverse=True)
+                seed_nodes = all_seed_nodes[:self.top_k]
+                
+                print(f"  ✅ Found {len(seed_nodes)} seed nodes via vector search (from {len(all_seed_nodes)} total)")
+                for node in seed_nodes:
+                    print(f"    - {node['name']} (score: {node['score']:.4f})")
+                
+                return seed_nodes
+                
+        except Exception as e:
+            print(f"  ⚠️  Vector search failed: {e}")
+            return []
+    
+    def expand_from_seeds(self, seed_node_ids: List[str]) -> List[Dict[str, Any]]:
+        """시드 노드로부터 그래프 확장"""
+        if not seed_node_ids:
+            return []
+        
+        try:
+            print(f"\n🌐 Expanding graph from {len(seed_node_ids)} seed nodes...")
+            
+            with self.driver.session(database=config.NEO4J_DATABASE) as session:
+                # 시드 노드로부터 1-2 홉 이웃 탐색
+                # Use f-string for depth since parameters can't be used in path patterns
+                result = session.run(
+                    f"""
+                    MATCH (seed)
+                    WHERE seed.id IN $seed_ids
+                    MATCH path = (seed)-[r*1..{self.expansion_depth}]-(neighbor)
+                    WHERE r[0].episode_number IS NOT NULL
+                    WITH seed, neighbor, relationships(path) as rels, length(path) as dist
+                    UNWIND rels as rel
+                    RETURN DISTINCT 
+                        seed.name as seed_name,
+                        neighbor.name as neighbor_name,
+                        type(rel) as rel_type,
+                        rel.episode_number as episode,
+                        rel.context as context,
+                        dist as distance
+                    ORDER BY dist, episode
+                    LIMIT 50
+                    """,
+                    seed_ids=seed_node_ids
+                )
+                
+                expanded_results = []
+                for record in result:
+                    expanded_results.append(dict(record))
+                
+                print(f"  ✅ Expanded to {len(expanded_results)} relationships")
+                return expanded_results
+                
+        except Exception as e:
+            print(f"  ⚠️  Graph expansion failed: {e}")
+            return []
+    
+    def search(self, query_text: str) -> Dict[str, Any]:
+        """하이브리드 검색 실행"""
+        print("\n" + "="*80)
+        print("🔀 HYBRID RETRIEVAL: Vector Search + Cypher Traversal")
+        print("="*80)
+        
+        # 1. 벡터 검색으로 시드 노드 찾기
+        seed_nodes = self.vector_search(query_text)
+        
+        hybrid_context = []
+        
+        if seed_nodes:
+            # 2. 그래프 확장
+            seed_ids = [node['id'] for node in seed_nodes]
+            expanded_results = self.expand_from_seeds(seed_ids)
+            
+            if expanded_results:
+                # 벡터 검색 결과를 컨텍스트로 변환
+                for item in expanded_results:
+                    context_str = (
+                        f"[{item.get('episode', 'N/A')}] "
+                        f"{item.get('seed_name', '')} "
+                        f"--[{item.get('rel_type', '')}]--> "
+                        f"{item.get('neighbor_name', '')}: "
+                        f"{item.get('context', '')}"
+                    )
+                    hybrid_context.append(RetrieverResultItem(content=context_str))
+                
+                print(f"\n✅ Hybrid search found {len(hybrid_context)} context items from vector expansion")
+        
+        # 3. Cypher 쿼리 실행 (폴백 또는 보완)
+        print("\n" + "-"*80)
+        print("🔍 Running Cypher query for additional context...")
+        print("-"*80)
+        
+        cypher_result = self.cypher_retriever.search(query_text)
+        
+        # 4. 결과 병합
+        if cypher_result.get('success'):
+            cypher_items = cypher_result.get('items', [])
+            
+            # 하이브리드 컨텍스트와 Cypher 결과 결합
+            all_items = hybrid_context + cypher_items
+            
+            # 중복 제거 (간단한 문자열 비교)
+            seen = set()
+            unique_items = []
+            for item in all_items:
+                content_str = str(item.content)
+                if content_str not in seen:
+                    seen.add(content_str)
+                    unique_items.append(item)
+            
+            print(f"\n📊 Total unique items: {len(unique_items)} (vector: {len(hybrid_context)}, cypher: {len(cypher_items)})")
+            
+            return {
+                'success': True,
+                'cypher': cypher_result.get('cypher'),
+                'items': unique_items,
+                'metadata': {
+                    'cypher': cypher_result.get('cypher'),
+                    'vector_seed_count': len(seed_nodes),
+                    'vector_context_count': len(hybrid_context),
+                    'cypher_context_count': len(cypher_items),
+                    'total_unique_count': len(unique_items)
+                }
+            }
+        else:
+            # Cypher 실패 시 벡터 결과만 사용
+            if hybrid_context:
+                print("\n⚠️  Cypher query failed, using only vector search results")
+                return {
+                    'success': True,
+                    'cypher': None,
+                    'items': hybrid_context,
+                    'metadata': {
+                        'vector_only': True,
+                        'vector_context_count': len(hybrid_context)
+                    }
+                }
+            else:
+                return cypher_result  # 둘 다 실패
+
+
+# 컨텍스트 정제 및 확장
+
+
+# Initialize hybrid retriever if enabled
+if config.USE_HYBRID_RETRIEVAL:
+    hybrid_retriever = HybridRetriever(
+        driver=driver,
+        llm=llm,
+        embedder=embedder,
+        cypher_retriever=retriever,
+        top_k=config.VECTOR_TOP_K,
+        expansion_depth=config.GRAPH_EXPANSION_DEPTH
+    )
+    print("✅ Hybrid retrieval enabled (vector search + Cypher traversal)")
+else:
+    hybrid_retriever = None
+    print("ℹ️  Using pure Cypher retrieval (hybrid disabled)")
 
 # ============================================================
-# 컨텍스트 정제 및 확장
 # ============================================================
 def clean_context(raw_content: str) -> str:
     """컨텍스트 정제 (element_id 등 제거)"""
@@ -674,9 +990,12 @@ def graphrag_pipeline(user_question: str) -> str:
     print(f"❓ 사용자 질문: {user_question}")
     print("="*100)
 
-    # 1. 검색 실행 (다단계 검증 포함)
+    # 1. 검색 실행 (하이브리드 또는 순수 Cypher)
     try:
-        search_result = retriever.search(query_text=user_question)
+        if config.USE_HYBRID_RETRIEVAL and hybrid_retriever:
+            search_result = hybrid_retriever.search(query_text=user_question)
+        else:
+            search_result = retriever.search(query_text=user_question)
     except Exception as e:
         traceback.print_exc()
         return f"❌ 검색 중 오류가 발생했습니다: {e}"
