@@ -19,11 +19,18 @@ services:
     container_name: ${PROJECT_NAME}_ollama
     ports:
       - "11434:11434"
+    deploy:
+      resources:
+        limits:
+          cpus: "8.0"
     environment:
-      - OLLAMA_MODELS=sam860/exaone-4.0:1.2b-thinking-Q8_0,bge-m3:567m
+      - OLLAMA_MODELS=sam860/exaone-4.0:1.2b-Q8_0,sam860/exaone-4.0:1.2b-thinking-Q8_0,bge-m3:567m
+      - OLLAMA_NUM_PARALLEL=8
+      - OLLAMA_MAX_LOADED_MODELS=1      
     command: >
       sh -c "ollama serve & 
              sleep 10 && 
+             ollama pull sam860/exaone-4.0:1.2b-Q8_0 && 
              ollama pull sam860/exaone-4.0:1.2b-thinking-Q8_0 && 
              ollama pull bge-m3:567m && 
              wait"

@@ -72,13 +72,18 @@ llm = CleanOpenAILLM(
         "temperature": 0,  # 일관성을 위해 0으로 설정
     },
     api_key=config.OPENAI_API_KEY,
-    base_url=config.MODEL_API_URL
+    base_url=config.MODEL_API_URL,
+    timeout=300.0  # 5분 타임아웃 설정
 )
 
 # Embedder initialization for hybrid retrieval
 from openai import OpenAI as OpenAIClient
 
-embedder_client = OpenAIClient(api_key=config.OPENAI_API_KEY, base_url=config.MODEL_API_URL)
+embedder_client = OpenAIClient(
+    api_key=config.OPENAI_API_KEY, 
+    base_url=config.MODEL_API_URL,
+    timeout=300.0  # 5분 타임아웃 설정
+)
 
 class OpenAIEmbedder:
     """Simple embedder for hybrid retrieval"""
@@ -1056,7 +1061,17 @@ if __name__ == "__main__":
         print(f"# 테스트 {i}/{len(queries)}")
         print(f"{'#'*100}")
 
-        answer = graphrag_pipeline(query)
+        try:
+            answer = graphrag_pipeline(query)
+        except (openai.APITimeoutError, openai.APIConnectionError) as e:
+            print(f"\n❌ [Error] LLM 연결 오류 발생: {e}")
+            print("💡 팁: Docker 컨테이너(Ollama)가 실행 중인지, 또는 모델이 로딩 중인지 확인하세요.")
+            print("   (Dockers 폴더에서 'docker-compose up -d' 실행 필요)")
+            answer = "오류 발생: AI 모델에 연결할 수 없습니다."
+        except Exception as e:
+            print(f"\n❌ [Error] 예상치 못한 오류 발생: {e}")
+            traceback.print_exc()
+            answer = "오류 발생: 시스템 내부 오류입니다."
 
         print(f"\n{'='*100}")
         print("📝 최종 답변:")

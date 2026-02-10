@@ -19,7 +19,8 @@ GRAPH_EXPANSION_DEPTH = int(os.getenv("GRAPH_EXPANSION_DEPTH", "2"))
 
 
 # AI / LLM
-LLM_MODEL = os.getenv("LLM_MODEL", "ingu627/exaone4.0:1.2b")
+# LLM_MODEL = os.getenv("LLM_MODEL", "sam860/exaone-4.0:1.2b-Q8_0")
+LLM_MODEL = os.getenv("LLM_MODEL", "sam860/exaone-4.0:1.2b-thinking-Q8_0")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "bge-m3:567m")
 MODEL_API_URL = os.getenv("MODEL_API_URL", "http://localhost:11434/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "ollama")
