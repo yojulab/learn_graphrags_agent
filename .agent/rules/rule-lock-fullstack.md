@@ -27,8 +27,8 @@ Build a knowledge graph from anime plot summaries (Demon Slayer Season 1) and en
 
 ### Core Components
 1. **Data Preparation** (`1_prepare_data_v*.py`) - Wikipedia scraping & entity extraction
-2. **Data Ingestion** (`2_ingest_data.py`) - Neo4j knowledge graph creation
-3. **GraphRAG Agent** (`3_graphrag_agent.py`) - Natural language to Cypher query conversion
+2. **Data Ingestion** (`2_ingest_data_v*.py`) - Neo4j knowledge graph creation
+3. **GraphRAG Agent** (`3_graphrag_agent_v*.py`) - Natural language to Cypher query conversion
 4. **Configuration** (`config.py`) - Centralized environment variables
 
 ---
@@ -71,13 +71,13 @@ Build a knowledge graph from anime plot summaries (Demon Slayer Season 1) and en
 *   **Caching:** Implement cache mode to avoid redundant API calls
 *   **Output Format:** Standardized JSON with `nodes` and `relationships` keys
 
-#### Data Ingestion (`2_ingest_data.py`)
+#### Data Ingestion (`2_ingest_data_v*.py`)
 *   **Idempotency:** Clear existing data before ingestion to prevent duplicates
 *   **Atomic Operations:** Use Neo4j transactions for batch operations
 *   **Relationship Creation:** Use `CREATE` or `MERGE` consistently based on schema
 *   **Error Recovery:** Log failed node/relationship creation, continue processing
 
-#### GraphRAG Agent (`3_graphrag_agent.py`)
+#### GraphRAG Agent (`3_graphrag_agent_v*.py`)
 *   **Prompt Clarity:** Cypher generation prompts must include schema context
 *   **Query Validation:** Validate generated Cypher before execution
 *   **Result Processing:** Always provide context from graph in final answer
