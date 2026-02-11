@@ -19,15 +19,15 @@ from neo4j_graphrag.experimental.components.kg_writer import KGWriter, KGWriterM
 # ============================================================
 
 def create_node_text(node: Neo4jNode) -> str:
-    """노드 임베딩용 텍스트 생성"""
+    """Note embedding text generation"""
     return f"{node.label}: {node.properties.get('name', node.id)}"
 
 def create_relationship_text(rel: Neo4jRelationship, node_map: Dict[str, Neo4jNode]) -> str:
-    """관계 임베딩용 텍스트 생성"""
+    """Relationship embedding text generation"""
     start_name = node_map[rel.start_node_id].properties.get('name', rel.start_node_id)
     end_name = node_map[rel.end_node_id].properties.get('name', rel.end_node_id)
     
-    # description 우선, 없으면 context, action, technique 조합
+    # Priority: description > context > action/technique
     if not rel.properties:
         content = ""
     else:
@@ -42,14 +42,14 @@ def create_relationship_text(rel: Neo4jRelationship, node_map: Dict[str, Neo4jNo
 # ============================================================
 
 class OpenAIEmbeddings:
-    """OpenAI API 호환 임베딩 생성 (Ollama 지원)"""
+    """OpenAI API compatible embeddings (Supports Ollama)"""
     
     def __init__(self, model: str, api_key: str, base_url: str):
         self.client = openai.OpenAI(api_key=api_key, base_url=base_url)
         self.model = model
     
     def embed_query(self, text: str) -> List[float]:
-        """단일 텍스트 임베딩"""
+        """Single text embedding"""
         response = self.client.embeddings.create(
             model=self.model,
             input=[text]
@@ -57,7 +57,7 @@ class OpenAIEmbeddings:
         return response.data[0].embedding
     
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        """배치 텍스트 임베딩 (최대 100개씩)"""
+        """Batch text embedding (Max 100)"""
         all_embeddings = []
         batch_size = 100
         
@@ -71,14 +71,14 @@ class OpenAIEmbeddings:
                 all_embeddings.extend([data.embedding for data in response.data])
             except Exception as e:
                 print(f"⚠️  Embedding batch {i//batch_size + 1} failed: {e}")
-                # 실패한 배치는 빈 임베딩으로 대체
-                all_embeddings.extend([[0.0] * 1024 for _ in batch])
+                # Fallback to zero embedding
+                all_embeddings.extend([[0.0] * config.EMBEDDING_DIMENSION for _ in batch])
         
         return all_embeddings
 
 
 class Neo4jCreateWriter(KGWriter):
-    """관계에 대해 MERGE 대신 CREATE를 사용하는 Custom KGWriter (에피소드별로 다른 관계도 반영)"""
+    """Custom KGWriter to use CREATE instead of MERGE for relationships (to handle multiple episodes)"""
 
     def __init__(self, driver, neo4j_database=None, embedder=None):
         self.driver = driver
@@ -93,19 +93,19 @@ class Neo4jCreateWriter(KGWriter):
         )
     
     def _create_vector_indexes(self) -> None:
-        """노드 및 관계 벡터 인덱스 생성"""
-        # 노드 벡터 인덱스 (각 라벨마다 별도 인덱스 생성)
-        entity_labels = ["인간", "도깨비"]
-        for label in entity_labels:
+        """Create Node and Relationship Vector Indexes using Config"""
+        
+        # 1. Node Vector Indexes
+        for label in config.NODE_LABELS:
             try:
-                index_name = f"entity_embeddings_{label}"
+                index_name = f"{config.VECTOR_INDEX_NODE}_{label}"
                 self.driver.execute_query(
                     f"""
                     CREATE VECTOR INDEX {index_name} IF NOT EXISTS
                     FOR (n:{label})
                     ON n.embedding
                     OPTIONS {{indexConfig: {{
-                        `vector.dimensions`: 1024,
+                        `vector.dimensions`: {config.EMBEDDING_DIMENSION},
                         `vector.similarity_function`: 'cosine'
                     }}}}
                     """,
@@ -115,22 +115,19 @@ class Neo4jCreateWriter(KGWriter):
             except Exception as e:
                 print(f"⚠️  Failed to create entity vector index for {label}: {e}")
         
-        # 관계 벡터 인덱스 (Neo4j 5.13+ only, optional)
-        # Note: 관계 인덱스는 Neo4j 5.13+에서만 지원됨
-        # 현재 버전에서 지원하지 않으면 스킵
+        # 2. Relationship Vector Indexes (Neo4j 5.13+)
+        # Using the centralized RELATIONSHIP_TYPES from config
         try:
-            # 관계 타입별 인덱스 생성 (Neo4j 5.13+에서는 관계 타입 지정 필요)
-            relationship_types = ["전투", "변화", "사용", "상호작용", "소속", "보유", "훈련"]
-            for rel_type in relationship_types:
+            for rel_type in config.RELATIONSHIP_TYPES:
                 try:
-                    index_name = f"rel_embeddings_{rel_type}"
+                    index_name = f"{config.VECTOR_INDEX_RELATIONSHIP_PREFIX}_{rel_type}"
                     self.driver.execute_query(
                         f"""
                         CREATE VECTOR INDEX {index_name} IF NOT EXISTS
                         FOR ()-[r:{rel_type}]-()
                         ON r.embedding
                         OPTIONS {{indexConfig: {{
-                            `vector.dimensions`: 1024,
+                            `vector.dimensions`: {config.EMBEDDING_DIMENSION},
                             `vector.similarity_function`: 'cosine'
                         }}}}
                         """,
@@ -138,10 +135,9 @@ class Neo4jCreateWriter(KGWriter):
                     )
                     print(f"✅ Vector index '{index_name}' created")
                 except Exception as e:
-                    # 관계 벡터 인덱스는 선택 사항이므로 에러 무시
-                    pass
+                    print(f"⚠️  Failed to create relationship vector index for {rel_type}: {e}")
         except Exception as e:
-            print(f"ℹ️  Relationship vector indexes not created (requires Neo4j 5.13+): {e}")
+            print(f"ℹ️  Relationship vector indexes check failed: {e}")
 
     @validate_call
     async def run(self, graph: Neo4jGraph) -> KGWriterModel:
@@ -149,13 +145,13 @@ class Neo4jCreateWriter(KGWriter):
             start_time = time.time()
             self._wipe_database()
             
-            # 벡터 인덱스 생성
+            # Create Vector Indexes
             if self.embedder:
                 print("\n🔍 Creating vector indexes...")
                 self._create_vector_indexes()
             
             with self.driver.session(database=self.neo4j_database) as session:
-                # 1. 노드 임베딩 생성
+                # 1. Generate Node Embeddings
                 node_embeddings = []
                 if self.embedder:
                     print(f"\n🧠 Generating embeddings for {len(graph.nodes)} nodes...")
@@ -163,7 +159,7 @@ class Neo4jCreateWriter(KGWriter):
                     node_embeddings = self.embedder.embed_documents(node_texts)
                     print(f"✅ Generated {len(node_embeddings)} node embeddings")
                 
-                # 2. 노드 + 임베딩 저장
+                # 2. Save Nodes + Embeddings
                 for i, node in enumerate(tqdm(graph.nodes, desc="Creating nodes", unit="node")):
                     if not node.label or not node.label.strip():
                         print(f"Skipping node with empty label: {node}")
@@ -173,7 +169,7 @@ class Neo4jCreateWriter(KGWriter):
                     clean_label = node.label.strip().replace(" ", "_").replace(",", "") 
                     labels = f":`{clean_label}`"
                     
-                    # 임베딩 추가
+                    # Add Embedding
                     query_params = {"id": node.id, "props": node.properties or {}}
                     if self.embedder and i < len(node_embeddings):
                         query = f"""
@@ -189,7 +185,7 @@ class Neo4jCreateWriter(KGWriter):
                     
                     session.run(query, query_params)
 
-                # 3. 관계 임베딩 생성
+                # 3. Generate Relationship Embeddings
                 rel_embeddings = []
                 if self.embedder:
                     print(f"\n🧠 Generating embeddings for {len(graph.relationships)} relationships...")
@@ -198,7 +194,7 @@ class Neo4jCreateWriter(KGWriter):
                     rel_embeddings = self.embedder.embed_documents(rel_texts)
                     print(f"✅ Generated {len(rel_embeddings)} relationship embeddings")
 
-                # 4. 관계 + 임베딩 저장
+                # 4. Save Relationships + Embeddings
                 for i, rel in enumerate(tqdm(graph.relationships, desc="Creating relationships", unit="rel")):
                     if not rel.type or not rel.type.strip():
                         print(f"Skipping relationship with empty type: {rel}")
@@ -207,7 +203,7 @@ class Neo4jCreateWriter(KGWriter):
                     # Clean type
                     clean_type = rel.type.strip().replace(" ", "_")
                     
-                    # 임베딩 추가
+                    # Add Embedding
                     query_params = {
                         "start_id": rel.start_node_id,
                         "end_id": rel.end_node_id,
@@ -247,7 +243,10 @@ class Neo4jCreateWriter(KGWriter):
             return KGWriterModel(status="FAILURE", metadata={"error": str(e)})
 
 async def write_to_neo4j(graph: Neo4jGraph):
-    driver = GraphDatabase.driver(config.NEO4J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
+    driver = GraphDatabase.driver(
+        config.NEO4J_URI, 
+        auth=(config.NEO4J_USER, config.NEO4J_PASSWORD)
+    )
     
     # Initialize embedder
     embedder = OpenAIEmbeddings(
@@ -262,7 +261,7 @@ async def write_to_neo4j(graph: Neo4jGraph):
 
 
 if __name__ == "__main__":
-    # 검증된 데이터 사용 (1_prepare_data_v3.py에서 생성)
+    # Load same data as v2/v3
     with open("output/knowledge_graph_v3.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
