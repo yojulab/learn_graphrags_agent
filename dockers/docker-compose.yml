@@ -1,6 +1,5 @@
 
 services:
-  # Neo4j Graph Database
   db_neo4j:
     image: neo4j:5
     container_name: ${PROJECT_NAME}_db_neo4j
@@ -8,32 +7,28 @@ services:
       - "7474:7474"
       - "7687:7687"
     environment:
-      - NEO4J_AUTH=admin/admin123
-      - NEO4J_dbms_default__database=db_graphrag_agent
+      - NEO4J_AUTH=neo4j/admin123
+      - NEO4J_initial_dbms_default__database=db-graph-rag
       - NEO4J_PLUGINS=["apoc"]
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
 
-  # Ollama Server
+  # # Ollama Server
   ollama:
-    image: ollama/ollama:latest
-    container_name: ${PROJECT_NAME}_ollama
+    build: 
+      context: .
+      dockerfile: Dockerfile.ollama
+    container_name: ${PROJECT_NAME}_ai_ollama
     ports:
       - "11434:11434"
     deploy:
       resources:
         limits:
-          cpus: "8.0"
+          cpus: ${AI_OLAMA_CPU}
     environment:
-      - OLLAMA_MODELS=sam860/exaone-4.0:1.2b-Q8_0,sam860/exaone-4.0:1.2b-thinking-Q8_0,bge-m3:567m
-      - OLLAMA_NUM_PARALLEL=8
+      - OLLAMA_MODELS=sam860/exaone-4.0:1.2b-thinking-Q8_0,bge-m3:567m
+      - OLLAMA_NUM_PARALLEL=${AI_OLAMA_CPU}
       - OLLAMA_MAX_LOADED_MODELS=1      
-    command: >
-      sh -c "ollama serve & 
-             sleep 10 && 
-             ollama pull sam860/exaone-4.0:1.2b-Q8_0 && 
-             ollama pull sam860/exaone-4.0:1.2b-thinking-Q8_0 && 
-             ollama pull bge-m3:567m && 
-             wait"
+
 
   # FastAPI application
   app_fullstack:
@@ -41,9 +36,9 @@ services:
       context: .
       dockerfile: Dockerfile.fullstack
     container_name: ${PROJECT_NAME}_app_fullstack
+    # restart: unless-stopped
     ports:
       - "8000:8000"
       - "3000:3000"
     stdin_open: true
     tty: true
-    command: sleep infinity

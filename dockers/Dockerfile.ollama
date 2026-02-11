@@ -1,0 +1,33 @@
+FROM ollama/ollama:latest
+
+# 로케일 및 타임존 설정 (Dockerfile.fullstack 참조)
+ENV LANG=ko_KR.UTF-8 \
+    LANGUAGE=ko_KR:ko \
+    LC_ALL=ko_KR.UTF-8 \
+    TZ=Asia/Seoul
+
+# 시스템 패키지 설치 및 로케일/타임존 설정
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    procps \
+    locales \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen \
+    && rm -rf /var/lib/apt/lists/*
+
+# Entrypoint 스크립트 생성 (entrypoint.sh 병합)
+RUN echo '#!/bin/bash' > /entrypoint.sh && \
+    echo '/bin/ollama serve &' >> /entrypoint.sh && \
+    echo 'pid=$!' >> /entrypoint.sh && \
+    echo 'sleep 5' >> /entrypoint.sh && \
+    echo 'echo "🔴 Retrieve LLM model..."' >> /entrypoint.sh && \
+    echo 'ollama pull sam860/exaone-4.0:1.2b-thinking-Q8_0' >> /entrypoint.sh && \
+    echo 'ollama pull bge-m3:567m' >> /entrypoint.sh && \
+    echo 'echo "🟢 Done!"' >> /entrypoint.sh && \
+    echo 'wait $pid' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
