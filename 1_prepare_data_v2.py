@@ -346,6 +346,13 @@ def fetch_episode(link: str) -> List[dict]:
 def collect_data(use_cache: bool = True) -> List[dict]:
     """여러 시즌에서 에피소드 데이터를 수집합니다"""
     print("=== 데이터 수집 시작 ===")
+
+    # Check for existing raw data (priority)
+    raw_data_path = "output/raw_data.json"
+    if os.path.exists(raw_data_path):
+        print(f"기존 데이터 발견 (공통): {raw_data_path}")
+        with open(raw_data_path, "r", encoding="utf-8") as f:
+            return json.load(f)
     
     cache_file = "output/raw_data_v2.json"
     

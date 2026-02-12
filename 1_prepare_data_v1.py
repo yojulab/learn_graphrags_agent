@@ -183,6 +183,13 @@ def collect_data() -> List[dict]:
     """여러 시즌에서 에피소드 데이터를 수집합니다"""
     print("=== 데이터 수집 시작 ===")
     
+    # Check for existing raw data
+    raw_data_path = "output/raw_data.json"
+    if os.path.exists(raw_data_path):
+        print(f"기존 데이터 발견: {raw_data_path}")
+        with open(raw_data_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
     episode_links = [
         "https://en.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba_season_1",  # 귀멸의 칼날 시즌 1
         # 필요에 따라 더 많은 시즌 추가:

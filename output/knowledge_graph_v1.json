@@ -1,0 +1,695 @@
+{
+  "nodes": [
+    {
+      "id": "N0",
+      "label": "인간",
+      "properties": {
+        "name": "카마도 탄지로"
+      }
+    },
+    {
+      "id": "N1",
+      "label": "인간",
+      "properties": {
+        "name": "카마도 네즈코"
+      }
+    },
+    {
+      "id": "N2",
+      "label": "인간",
+      "properties": {
+        "name": "토미오카 기유"
+      }
+    },
+    {
+      "id": "N3",
+      "label": "인간",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N1",
+      "label": " 인간",
+      "properties": {
+        "name": "카마도 네즈코"
+      }
+    },
+    {
+      "id": "N2",
+      "label": "인간",
+      "properties": {
+        "명": "Giyu Tomioka"
+      }
+    },
+    {
+      "id": "N4",
+      "label": "도깨비",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N2",
+      "label": " 인간",
+      "properties": {
+        "name": "토미오카 기유"
+      }
+    },
+    {
+      "id": "N3",
+      "label": "인간",
+      "properties": {
+        "name": "우로코다키 사콘지"
+      }
+    },
+    {
+      "id": "N4",
+      "label": "인간",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N5",
+      "label": "인간",
+      "properties": {
+        "name": "마코모"
+      }
+    },
+    {
+      "id": "N13",
+      "label": "도깨비",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "N5",
+      "label": "human",
+      "properties": {
+        "name": "마코모"
+      }
+    },
+    {
+      "id": "N6",
+      "label": " 인간",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N14,",
+      "label": "도깨비",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N0",
+      "label": "인간",
+      "properties": {
+        "name": "Tanji로 Kamado"
+      }
+    },
+    {
+      "id": "N6",
+      "label": "도깨비",
+      "properties": {
+        "name": "아가츠마 젠이츠"
+      }
+    },
+    {
+      "id": "N7",
+      "label": "인간",
+      "properties": {
+        "name": "하시비라 이노스케"
+      }
+    },
+    {
+      "id": "N8",
+      "label": "인간",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N9",
+      "label": "인간",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "=================------------------=",
+      "label": "도깨비",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "N5",
+      "label": " 인간",
+      "properties": {
+        "name": "마코모"
+      }
+    },
+    {
+      "id": "N7, ",
+      "label": "도깨비",
+      "properties": {
+        "name": "하시비라 이노스케"
+      }
+    },
+    {
+      "id": "N1",
+      "label": "인간",
+      "properties": {
+        "name": "Nezuko Kamato}},  // fix typo in name "
+      }
+    },
+    {
+      "id": "N3",
+      "label": "Human",
+      "properties": {
+        "name": "우로코다키 사콘지"
+      }
+    },
+    {
+      "id": "N3",
+      "label": " 인간",
+      "properties": {
+        "name": "우로코다키 사콘지"
+      }
+    },
+    {
+      "id": "N4",
+      "label": " 인간",
+      "properties": {
+        "name": "사비토"
+      }
+    },
+    {
+      "id": "N8",
+      "label": " 인간",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N11",
+      "label": "인간",
+      "properties": {
+        "name": "Shinobu Kocho}, }  // Note: The JSON string has a missing doublequote in properties.json, but we output with proper escaping. As an example, keys are still the same; just fix the syntax. Use full string for properties.value.}}</tool_call>(",
+        "relationships": "",
+        "": "Relationships should be added based on extracted entities and their valid relationships."
+      }
+    },
+    {
+      "id": "N13",
+      "label": "도굴비",
+      "properties": {
+        "name": "키부츠지 무잔"
+      }
+    },
+    {
+      "id": "description_in_text.key_value.pairs()-split(',')}.replace(",
+      "label": "total concentration constant",
+      "properties": {
+        "conspirator": "[null]",
+        "effect": "[null]"
+      }
+    },
+    {
+      "id": "N14",
+      "label": "도깨비",
+      "properties": {
+        "name": "스사마루"
+      }
+    },
+    {
+      "id": "N09",
+      "label": "도깨비",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "N8675",
+      "label": "도굴비",
+      "properties": {
+        "name": "[null]",
+        "description": "undefined values"
+      }
+    },
+    {
+      "id": "N2139570",
+      "label": "도깨비",
+      "properties": {
+        "name": "Oshiro Shiroganejuroi"
+      }
+    },
+    {
+      "id": "L",
+      "label": "*",
+      "properties": {
+        "type": "relation_between_humans,demoniacous"
+      }
+    },
+    {
+      "id": "N1850911074,",
+      "label": "demons",
+      "properties": {
+        "description": "undefined values"
+      }
+    },
+    {
+      "id": "N23064961,",
+      "label": "humanoid",
+      "properties": {
+        "description": "#Him has a role as , #include_in_text.character"
+      }
+    },
+    {
+      "id": "D",
+      "label": "technique",
+      "properties": {
+        "type": "special ability",
+        "description": "the total concentration constant technique of Tanjiro Kamado to enhance human abilities."
+      }
+    },
+    {
+      "id": "N17",
+      "label": "도빙거",
+      "properties": {
+        "name": "루이"
+      }
+    },
+    {
+      "id": "N12",
+      "label": " 인간",
+      "properties": {
+        "name": "츠유리 카나오"
+      }
+    },
+    {
+      "id": "N9",
+      "label": " 인간",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로"
+      }
+    },
+    {
+      "id": "N18",
+      "label": "도깨비",
+      "properties": {
+        "name": "엔무"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E01"
+      }
+    },
+    {
+      "type": "RELIEVESHEALTHEALTHPTS",
+      "start_node_id": "N2",
+      "end_node_id": "N18",
+      "properties": {
+        "time": "afternoon",
+        "episode_number": "S1E01"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E02"
+      }
+    },
+    {
+      "type": "SCHEDULE_OF_TRAINING",
+      "start_node_id": "Sakonji",
+      "end_node_id": "Tanjiro",
+      "properties": {
+        "episode_number": "S1E02"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "M19",
+      "properties": {
+        "outcome": "survival",
+        "episode_number": "S1E03"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E04"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E05"
+      }
+    },
+    {
+      "type": "공격",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "배신",
+        "episode_number": "S1E07"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "???",
+      "properties": {
+        "episode_number": "S1E08"
+      }
+    },
+    {
+      "type": "사용처",
+      "start_node_id": "F7",
+      "end_node_id": "N9",
+      "properties": {
+        "description": "사용하는 주체",
+        "episode_number": "S1E09"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N3",
+      "end_node_id": "N12",
+      "properties": {
+        "outcome": "attack",
+        "episode_number": "S1E11"
+      }
+    },
+    {
+      "type": "사트로부터",
+      "start_node_id": "N0",
+      "end_node_id": "N14",
+      "properties": {
+        "outcome": "공격을 받음",
+        "episode_number": "S1E12"
+      }
+    },
+    {
+      "type": "인간",
+      "start_node_id": "N8",
+      "end_node_id": "N9",
+      "properties": {
+        "outcome": "전투를 행함",
+        "episode_number": "S1E12"
+      }
+    },
+    {
+      "type": "TIMES_BEFORE",
+      "start_node_id": "N0",
+      "end_node_id": "N17",
+      "properties": {
+        "description": "+100만 원의 할인 제공",
+        "#231": "+8 Billion yen worth of discount through their platform agreement.",
+        "episode_number": "S1E13"
+      }
+    },
+    {
+      "type": "CONFIRMED_ADVICE",
+      "start_node_id": "N7",
+      "end_node_id": "N0",
+      "properties": {
+        "description": "그로 인해 당신은 원하지 않는 느낌을 받았다.",
+        "#231": "(It was difficult to accept Tanjiro's actions.)}},{",
+        "episode_number": "S1E13"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E14"
+      }
+    },
+    {
+      "type": "LINKSINHERNESS",
+      "start_node_id": "N0",
+      "end_node_id": "N5",
+      "properties": {
+        "properties": "",
+        "outcome": "",
+        "episode_number": "S1E14"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N5",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E15"
+      }
+    },
+    {
+      "type": "LOCATION",
+      "start_node_id": "N2",
+      "end_node_id": "N13",
+      "properties": {
+        "description": "Mt. Natagosum",
+        "episode_number": "S1E15"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "",
+      "properties": {
+        "episode_number": "S1E18"
+      }
+    },
+    {
+      "type": "ARRIVAL",
+      "start_node_id": "",
+      "end_node_id": "N17",
+      "properties": {
+        "context": "전환 지점",
+        "episode_number": "S1E18"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E20"
+      }
+    },
+    {
+      "type": "ATTACK",
+      "start_node_id": "N12",
+      "end_node_id": "N9",
+      "properties": {
+        "target": "Enmu",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "WATCHES",
+      "start_node_id": "N7",
+      "end_node_id": "N0",
+      "properties": {
+        "content": "haunting",
+        "direction": "-",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "DENIES",
+      "start_node_id": "N9",
+      "end_node_id": "N17",
+      "properties": {
+        "against": "haunting",
+        "episode_number": "S1E21"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E22"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "관계로필업(relatiorooms/selfexamination)",
+      "start_node_id": "N8675,",
+      "end_node_id": "N14",
+      "properties": {
+        "cause": "unsupportability of progress",
+        "outcome": "quit",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "psychological",
+      "start_node_id": "N0",
+      "end_node_id": "N19x",
+      "properties": {
+        "reason": "recovery of spirit by Shinobu Kocho and memories from sister tragedy",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "humanoid",
+      "start_node_id": "N8675,",
+      "end_node_id": "N12",
+      "properties": {
+        "roleasofthecharacterintext": "Shinobu Kocho",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "special ability",
+      "start_node_id": "N8675,",
+      "end_node_id": "N1850911074",
+      "properties": {
+        "effect": "hate demons and destruction of demon-filled world",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "humanoid",
+      "start_node_id": "N13,",
+      "end_node_id": "N18",
+      "properties": {
+        "roleasofthecharacterintext": "Muzan Kibutsuji",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "implied_lie",
+      "start_node_id": "N13570964",
+      "end_node_id": "N12130898",
+      "properties": {
+        "description": "demons's own plan to take away their servants and exploit them",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "psychological, ",
+      "start_node_id": "N8675,",
+      "end_node_id": "N934002",
+      "properties": {
+        "description": "feeling of guilt over actions in past conflict with his sister and responsibility to Nezuko",
+        "": "demons approach him through different means including stealing a key chain by Shinobu Kocho and destroying the mansion at the end.",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "special ability",
+      "start_node_id": "N19x",
+      "end_node_id": "N23064961",
+      "properties": {
+        "description": "can perform tasks requiring human effort due to lack of motivation from demons.}});  }   ] 8675 is not in NODES, so relationships involving N8675 are invalid and must be skipped. Similarly for any nodes outside the predefined list. Ignore descriptions/keys that are undefined or non-NODES nodes.",
+        "relationships": "",
+        "": "Select only valid ones",
+        "episode_number": "S1E24"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N5",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "FIGHTS",
+      "start_node_id": "N9",
+      "end_node_id": "N13",
+      "properties": {
+        "outcome": "victory",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "TRAIN",
+      "start_node_id": "N0",
+      "end_node_id": "N13",
+      "properties": {
+        "direction": "towards",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "TRAIN",
+      "start_node_id": "N9",
+      "end_node_id": "N13",
+      "properties": {
+        "direction": "towards",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "CONCERTS",
+      "start_node_id": "N0",
+      "end_node_id": "N14",
+      "properties": {
+        "details": "Kanakume, Tanjiro's mother, who died earlier, and Susamaru",
+        "episode_number": "S1E26"
+      }
+    },
+    {
+      "type": "CONNECTION",
+      "start_node_id": "N0",
+      "end_node_id": "N12",
+      "properties": {
+        "reason": "kindness",
+        "episode_number": "S1E26"
+      }
+    }
+  ]
+}

@@ -503,6 +503,15 @@ def collect_data(use_cache: bool = True) -> List[dict]:
     print("📚 데이터 수집 시작")
     print("="*60)
 
+    # Check for existing raw data (priority)
+    raw_data_path = "output/raw_data.json"
+    if os.path.exists(raw_data_path):
+        print(f"💾 기존 데이터 발견 (공통): {raw_data_path}")
+        with open(raw_data_path, "r", encoding="utf-8") as f:
+            episodes = json.load(f)
+        print(f"✅ 총 {len(episodes)}개 에피소드 로드 완료 (raw_data.json)")
+        return episodes
+
     cache_file = "output/raw_data_v3.json"
 
     # 캐시 파일이 있으면 먼저 사용
