@@ -8,7 +8,7 @@ services:
       - "7687:7687"
     environment:
       - NEO4J_AUTH=neo4j/admin123
-      - NEO4J_initial_dbms_default__database=db_graphrag_agent
+      - NEO4J_initial_dbms_default__database=db-graphrag-agent
       - NEO4J_PLUGINS=["apoc"]
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
 
