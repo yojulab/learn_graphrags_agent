@@ -24,65 +24,168 @@
 
 ---
 
-## 🚀 빠른 시작
+## 🚀 실행 가이드 (Execution Guide)
 
-### 1. 의존성 설치
+본 프로젝트는 **데이터 수집(Playwright Headless) → Neo4j 그래프 적재 및 벡터 인덱싱 → GraphRAG 하이브리드 검색 CLI → FastAPI 웹 대시보드 → E2E 파이프라인 검증**의 전 과정을 모듈화하여 지원합니다.
+
+---
+
+### 1. 환경 설정 및 의존성 설치
+
+#### 1.1 Python 패키지 설치
+`uv` 또는 `pip`를 사용하여 필수 의존성을 설치합니다:
 
 ```bash
+# uv 사용 시 (권장)
 uv sync
+
+# 또는 pip 사용 시
+pip install -r requirements.txt
 ```
+
+#### 1.2 Playwright Headless 브라우저 설치
+웹 스크래핑 및 E2E UI 검증을 위해 Chromium 브라우저 바이너리를 설치합니다:
+
+```bash
+# Playwright Chromium 브라우저 설치
+playwright install chromium
+
+# (Linux/Docker 환경) 필수 시스템 라이브러리 설치
+playwright install-deps chromium
+```
+
+---
 
 ### 2. 환경 변수 설정 (`.env`)
 
-프로젝트 루트의 `.env` 파일에서 전체 시스템 및 모델 설정을 관리합니다:
+프로젝트 루트의 `.env` 파일에서 Neo4j 데이터베이스 및 AI 모델 연결 정보를 설정합니다:
 
 ```env
+# Neo4j 데이터베이스 연결
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=admin123
 NEO4J_DATABASE=db-graphrag-agent
 
+# LLM 및 임베딩 모델 (Ollama 또는 OpenAI)
 LLM_MODEL=sam860/exaone-4.0:1.2b-thinking-Q8_0
 EMBEDDING_MODEL=bge-m3:567m
 MODEL_API_URL=http://localhost:11434/v1
 OPENAI_API_KEY=ollama
+
+# 하이브리드 검색 설정
+USE_HYBRID_RETRIEVAL=true
+VECTOR_TOP_K=5
+GRAPH_EXPANSION_DEPTH=2
 ```
 
-### 3. Docker 인프라 실행
+---
+
+### 3. 인프라 실행 (Docker Compose)
+
+`dockers` 폴더에서 Docker Compose로 Neo4j 및 Ollama 인프라를 실행합니다:
 
 ```bash
 cd dockers
+
+# 전체 서비스 실행 (Neo4j, Postgres AGE, Mongo, Ollama, App)
 docker-compose up -d
+
+# 또는 특정 서비스만 선별 실행 (예: Neo4j 전용)
+docker-compose --profile neo4j up -d
+
 cd ..
 ```
 
-### 4. 파이프라인 실행 (최신 v3 버전)
+> **서비스 접속 정보**:
+> - **Neo4j Browser**: `http://localhost:7474` (Bolt: `localhost:7687`)
+> - **Ollama API**: `http://localhost:11434`
+
+---
+
+### 4. 파이프라인 단계별 실행 (Step-by-Step)
+
+#### Step 1: 데이터 수집 및 개체 추출 (`1_prepare_data`)
+위키피디아 시즌 1 줄거리 데이터를 수집하고 LLM을 통해 지식그래프 노드/관계를 정형화합니다:
 
 ```bash
-# Step 1: 데이터 추출 (Wikipedia → JSON)
-uv run src/v3/1_prepare_data_v3.py
-
-# Step 2: 그래프 생성 (JSON → Neo4j + Vector Embeddings)
-uv run src/v3/2_ingest_data_v3.py
-
-# Step 3: 하이브리드 검색 쿼리 (Interactive)
-uv run src/v3/3_graphrag_agent_v3.py
-
-# Utility: 벡터 인덱스 상태 확인
-uv run src/utils/check_indexes.py
-```
-
-### 5. 웹 서비스 & Playwright Headless 파이프라인 검증
-
-```bash
-# Playwright Headless 기반 위키피디아 수집 단독 실행
+# [방법 A] Playwright Headless 기반 정밀 수집기 단독 실행
 python3 src/utils/playwright_scraper.py
 
-# FastAPI 웹 대시보드 실행 (http://localhost:8000)
-uvicorn src.app.main:app --host 0.0.0.0 --port 8000
+# [방법 B] v3 파이프라인 (수집 + 정규화된 한국어 개체/관계 추출)
+python3 src/v3/1_prepare_data_v3.py
+# (uv 사용 시: uv run src/v3/1_prepare_data_v3.py)
+```
+- **출력 아티팩트**: `output/raw_data.json`, `output/knowledge_graph_v3.json`
 
-# Playwright Headless 전체 파이프라인 E2E 통합 검증
+#### Step 2: Neo4j 지식그래프 적재 및 벡터 인덱싱 (`2_ingest_data`)
+추출된 JSON 데이터를 Neo4j 데이터베이스에 적재하고 HNSW 벡터 인덱스를 구축합니다:
+
+```bash
+python3 src/v3/2_ingest_data_v3.py
+# (uv 사용 시: uv run src/v3/2_ingest_data_v3.py)
+```
+- **주요 동작**: 이전 데이터 초기화 → 노드 및 관계 생성 → 1024차원 임베딩 저장 → 벡터 인덱스(`entity_embeddings_*`, `rel_embeddings_*`) 자동 생성
+
+#### Step 3: GraphRAG 에이전트 CLI 질의응답 (`3_graphrag_agent`)
+터미널에서 자연어 질문을 입력하여 하이브리드 검색 답변을 생성합니다:
+
+```bash
+# v3.0 최신 하이브리드 검색 (벡터 검색 + 그래프 1~2hop + Text2Cypher)
+python3 src/v3/3_graphrag_agent_v3.py
+
+# v2.0 메타데이터 필터링 + LLM Reranking 버전
+python3 src/v2/3_graphrag_agent_v2.py
+
+# v1.0 기본 Text2Cypher 베이스라인 버전
+python3 src/v1/3_graphrag_agent_v1.py
+```
+
+---
+
+### 5. 웹 서비스 & 대시보드 실행
+
+FastAPI 기반의 인터랙티브 웹 대시보드를 구동하여 브라우저에서 편리하게 질문하고 결과를 시각적으로 확인합니다:
+
+```bash
+# FastAPI 개발 서버 실행 (포트 8000)
+uvicorn src.app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# 또는 main.py 직접 실행
+python3 src/app/main.py
+```
+
+- **웹 대시보드 URL**: `http://localhost:8000`
+- **주요 기능**:
+  - 💬 **대화형 질의응답 창**: 추천 질문 칩 클릭 또는 자연어 질문 입력
+  - 🎛️ **버전 전환 셀렉터**: v3(하이브리드), v2(메타데이터), v1(Text2Cypher) 실시간 전환
+  - 📊 **실시간 통계 카드**: 총 노드/관계 수, 에피소드 수 등 지식그래프 상태 표시
+  - 🕸️ **원클릭 데이터 수집**: 대시보드 내에서 Playwright Headless 수집 트리거 지원
+
+---
+
+### 6. Playwright Headless 전체 파이프라인 E2E 검증
+
+데이터 수집기, Web UI 대시보드 인터랙션, PRD 스키마 무결성을 자동으로 일괄 검증합니다:
+
+```bash
 python3 src/utils/test_pipeline_playwright.py
+```
+
+- **검증 항목**:
+  1. `[Test 1] Playwright Headless Scraper Test`: 위키피디아 에피소드 파싱 및 공백 보존 검증
+  2. `[Test 2] Playwright Web UI E2E Test`: 대시보드 DOM 렌더링, 타이틀, 폼 입력 및 API 인터랙션 검증
+  3. `[Test 3] Schema Integrity Test`: PRD 정의 `NODE_LABELS`(`인간`, `도깨비`) 및 24종 `RELATIONSHIP_TYPES` 100% 일치 검증
+- **결과 보고서**: `output/playwright_test_report.json`으로 자동 저장
+
+---
+
+### 7. 유틸리티 및 인덱스 점검
+
+Neo4j에 정상 구축된 HNSW 벡터 인덱스 목록을 확인합니다:
+
+```bash
+python3 src/utils/check_indexes.py
 ```
 
 ---
