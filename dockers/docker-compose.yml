@@ -1,9 +1,11 @@
-
 services:
   # Neo4j Graph Database
   db_neo4j:
     image: neo4j:5
     container_name: ${PROJECT_NAME}_db_neo4j
+    profiles:
+      - neo4j
+      - all
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -17,6 +19,9 @@ services:
   db_postgres:
     image: apache/age:${AGE_IMAGE_TAG}
     container_name: ${PROJECT_NAME}_db_postgres
+    profiles:
+      - postgres
+      - all
     ports:
       - "${POSTGRES_PORT}:5432"
     command: ["postgres", "-c", "shared_preload_libraries=age"]
@@ -34,6 +39,9 @@ services:
       context: .
       dockerfile: Dockerfile.ollama
     container_name: ${PROJECT_NAME}_ai_ollama
+    profiles:
+      - ollama
+      - all
     ports:
       - "11434:11434"
     deploy:
@@ -52,12 +60,21 @@ services:
       context: .
       dockerfile: Dockerfile.fullstack
     container_name: ${PROJECT_NAME}_app_fullstack
+    profiles:
+      - app
+      - all
     # restart: unless-stopped
     env_file:
       - .env
     depends_on:
-      - db_neo4j
-      - db_postgres
-      - ollama
+      db_neo4j:
+        condition: service_started
+        required: false
+      db_postgres:
+        condition: service_started
+        required: false
+      ollama:
+        condition: service_started
+        required: false
     stdin_open: true
     tty: true

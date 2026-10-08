@@ -92,7 +92,7 @@ uv run 3_graphrag_agent_v3.py
 - `Dockerfile.ollama` - Ollama 서버, `LLM_MODEL` / `EMBEDDING_MODEL` 기동 시 자동 pull
 - `Dockerfile.fullstack` - 커스텀 환경 설정 (locale, timezone)
 - `postgres/init/01_init_age.sql` - AGE 확장 생성 및 `search_path` 설정 (최초 1회)
-- `.env` - Docker 환경 변수 (DB ID/PW, 모델명, CPU 등)
+- `.env` - Docker 환경 변수 (`COMPOSE_PROFILES` 서비스 선택 플래그, DB ID/PW, 모델명, CPU 등)
 
 #### `config.py`
 **역할**: 환경 변수 관리
