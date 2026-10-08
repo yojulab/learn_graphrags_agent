@@ -24,8 +24,8 @@ RUN echo '#!/bin/bash' > /entrypoint.sh && \
     echo 'pid=$!' >> /entrypoint.sh && \
     echo 'sleep 5' >> /entrypoint.sh && \
     echo 'echo "🔴 Retrieve LLM model..."' >> /entrypoint.sh && \
-    echo 'ollama pull sam860/exaone-4.0:1.2b-thinking-Q8_0' >> /entrypoint.sh && \
-    echo 'ollama pull bge-m3:567m' >> /entrypoint.sh && \
+    echo 'ollama pull "${LLM_MODEL:?LLM_MODEL is not set}"' >> /entrypoint.sh && \
+    echo 'ollama pull "${EMBEDDING_MODEL:?EMBEDDING_MODEL is not set}"' >> /entrypoint.sh && \
     echo 'echo "🟢 Done!"' >> /entrypoint.sh && \
     echo 'wait $pid' >> /entrypoint.sh && \
     chmod +x /entrypoint.sh

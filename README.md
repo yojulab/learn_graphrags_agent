@@ -86,11 +86,13 @@ uv run 3_graphrag_agent_v3.py
 - `statistics_v3.json` - 데이터 통계 (노드 수, 관계 수, 처리 시간 등)
 
 #### `dockers/`
-**역할**: Neo4j + PostgreSQL 인프라 구성
+**역할**: Neo4j + PostgreSQL(Apache AGE) + Ollama + App 인프라 구성
 
-- `docker-compose.yml` - Neo4j (Bolt 7687, HTTP 7474), PostgreSQL with pgvector
+- `docker-compose.yml` - Neo4j (Bolt 7687, HTTP 7474), PostgreSQL + Apache AGE (5432), Ollama (11434), app_fullstack (포트 미노출)
+- `Dockerfile.ollama` - Ollama 서버, `LLM_MODEL` / `EMBEDDING_MODEL` 기동 시 자동 pull
 - `Dockerfile.fullstack` - 커스텀 환경 설정 (locale, timezone)
-- `.env` - Docker 환경 변수 (비밀번호, 플러그인 등)
+- `postgres/init/01_init_age.sql` - AGE 확장 생성 및 `search_path` 설정 (최초 1회)
+- `.env` - Docker 환경 변수 (DB ID/PW, 모델명, CPU 등)
 
 #### `config.py`
 **역할**: 환경 변수 관리

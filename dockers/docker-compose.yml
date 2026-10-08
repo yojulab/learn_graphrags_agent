@@ -1,5 +1,6 @@
 
 services:
+  # Neo4j Graph Database
   db_neo4j:
     image: neo4j:5
     container_name: ${PROJECT_NAME}_db_neo4j
@@ -7,14 +8,29 @@ services:
       - "7474:7474"
       - "7687:7687"
     environment:
-      - NEO4J_AUTH=neo4j/admin123
-      - NEO4J_initial_dbms_default__database=db-graphrag-agent
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+      - NEO4J_initial_dbms_default__database=${NEO4J_DATABASE}
       - NEO4J_PLUGINS=["apoc"]
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
 
-  # # Ollama Server
+  # PostgreSQL + Apache AGE (Graph Extension)
+  db_postgres:
+    image: apache/age:${AGE_IMAGE_TAG}
+    container_name: ${PROJECT_NAME}_db_postgres
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    command: ["postgres", "-c", "shared_preload_libraries=age"]
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=Asia/Seoul
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+
+  # Ollama Server
   ollama:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.ollama
     container_name: ${PROJECT_NAME}_ai_ollama
@@ -25,20 +41,23 @@ services:
         limits:
           cpus: ${AI_OLAMA_CPU}
     environment:
-      - OLLAMA_MODELS=sam860/exaone-4.0:1.2b-thinking-Q8_0,bge-m3:567m
+      - LLM_MODEL=${LLM_MODEL}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL}
       - OLLAMA_NUM_PARALLEL=${AI_OLAMA_CPU}
-      - OLLAMA_MAX_LOADED_MODELS=1      
+      - OLLAMA_MAX_LOADED_MODELS=1
 
-
-  # FastAPI application
+  # FastAPI application (no published ports; access via docker network / exec)
   app_fullstack:
     build:
       context: .
       dockerfile: Dockerfile.fullstack
     container_name: ${PROJECT_NAME}_app_fullstack
     # restart: unless-stopped
-    ports:
-      - "8000:8000"
-      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - db_neo4j
+      - db_postgres
+      - ollama
     stdin_open: true
     tty: true
