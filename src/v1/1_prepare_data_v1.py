@@ -9,6 +9,9 @@ import openai
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 import config
 
 # OpenAI 클라이언트 초기화

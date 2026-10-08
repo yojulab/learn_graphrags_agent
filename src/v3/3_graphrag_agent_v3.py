@@ -16,6 +16,9 @@ from neo4j_graphrag.llm.types import LLMResponse
 from neo4j_graphrag.types import RetrieverResultItem
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Optional, Tuple
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 import config
 import openai
 import os

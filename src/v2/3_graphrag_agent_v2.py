@@ -22,6 +22,9 @@ import openai
 from dotenv import load_dotenv
 from tqdm import tqdm
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 import config
 
 # ============================================================
