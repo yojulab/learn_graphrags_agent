@@ -38,6 +38,9 @@ Build a knowledge graph from anime plot summaries (Demon Slayer Season 1) and en
 │   └── Dockerfile.*
 ├── output/                    # Pipeline Output JSON Artifacts
 ├── src/                       # Executable Pipeline Scripts by Version
+│   ├── app/                   # GraphRAG Web Application & Dashboard (FastAPI)
+│   │   ├── __init__.py
+│   │   └── main.py
 │   ├── v1/                    # Basic Version (OpenAI Schema Baseline)
 │   │   ├── 1_prepare_data_v1.py
 │   │   ├── 2_ingest_data_v1.py
@@ -51,10 +54,13 @@ Build a knowledge graph from anime plot summaries (Demon Slayer Season 1) and en
 │   │   ├── 2_ingest_data_v3.py
 │   │   └── 3_graphrag_agent_v3.py
 │   └── utils/
-│       └── check_indexes.py
+│       ├── check_indexes.py
+│       ├── playwright_scraper.py
+│       └── test_pipeline_playwright.py
 └── docs/
     └── agent/
-        └── harness_prompt.md  # Agent System Harness Prompt Standard
+        ├── harness_prompt.md  # Agent System Harness Prompt Standard
+        └── system_prompt.md   # Agent System Prompt Standard
 ```
 
 ---

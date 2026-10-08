@@ -309,10 +309,12 @@ retriever = Text2CypherRetriever(
     custom_prompt=escaped_system_prompt + "\n\n" + MAIN_PROMPT_TEMPLATE
 )
 
-def llm_cal(prompt: str) -> str:
+def llm_call(prompt: str) -> str:
     # Use the cleaning LLM instance
     response = llm.invoke(prompt)
     return response.content
+
+llm_cal = llm_call  # backwards compatibility alias
 
 ANSWER_GENERATION_PROMPT = """당신은 애니메이션 "귀멸의 칼날"의 전문가입니다.
 아래 데이터베이스 검색 결과를 바탕으로 사용자의 질문에 대해 **최대한 상세하고 풍부하게** 답변하세요.
@@ -372,13 +374,16 @@ def graphrag_pipeline(user_question):
         return f"검색 중 오류가 발생했습니다: {e}"
 
     # 2 Cypher Query 확인
-    cypher_used = result.metadata.get("cypher")
+    cypher_used = None
+    if hasattr(result, "metadata") and isinstance(result.metadata, dict):
+        cypher_used = result.metadata.get("cypher")
+    elif isinstance(result, dict):
+        cypher_used = result.get("metadata", {}).get("cypher") or result.get("cypher")
     print("생성된 Cypher Query:")
     print(cypher_used)
 
-
     # 3 결과 확인
-    result_items = result.items
+    result_items = getattr(result, "items", []) if hasattr(result, "items") else (result.get("items", []) if isinstance(result, dict) else [])
     print("지식그래프에 찾은 결과")
     print(result_items)
 

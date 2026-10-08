@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-08 20:04:10",
+  "overall_status": "FAIL",
+  "tests": [
+    {
+      "name": "Playwright Scraper Test",
+      "passed": false,
+      "details": {},
+      "error": "단어 공백 분리 오류: "
+    },
+    {
+      "name": "Playwright Web UI E2E Test",
+      "passed": false,
+      "details": {},
+      "error": "invalid decimal literal (main.py, line 123)"
+    },
+    {
+      "name": "Schema Integrity Test",
+      "passed": true,
+      "details": {
+        "total_nodes": 19,
+        "total_relationships": 310,
+        "validated_labels": [
+          "도깨비",
+          "인간"
+        ],
+        "validated_relationship_types_count": 24,
+        "duration": "0.00s"
+      }
+    }
+  ]
+}

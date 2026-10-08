@@ -19,7 +19,8 @@
 | **LLM Provider** | Ollama (`sam860/exaone-4.0:1.2b-thinking-Q8_0`) / OpenAI API | Entity/Relationship extraction, Text2Cypher, Answer synthesis |
 | **Embedding Engine** | Ollama (`bge-m3:567m` - 1024 dim) / OpenAI | Node & Relationship vector embedding generation |
 | **Orchestration** | LangChain / LangGraph / Neo4j-GraphRAG | Agent state graph & hybrid retrieval pipeline |
-| **Web Scraping** | BeautifulSoup4 & Requests | Wikipedia plot summary scraping |
+| **Web Scraping & E2E Test** | Playwright (Headless) & BeautifulSoup4 | Wikipedia scraping & headless UI/pipeline validation |
+| **Web Service & Dashboard** | FastAPI & HTML5/CSS3 (Vanilla) | GraphRAG agent UI explorer & REST API |
 | **Data Validation** | Pydantic v2 | JSON schema validation and entity sanitization |
 | **Configuration** | `python-dotenv` & `config.py` | Centralized `.env` environment loading |
 

@@ -172,7 +172,11 @@ def fetch_episode(link: str) -> List[dict]:
         synopsis_row = row.find_next_sibling("tr", class_="expand-child")
         if synopsis_row:
             synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
-            synopsis = synopsis_cell.get_text(strip=True) if synopsis_cell else None
+            if synopsis_cell:
+                raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
+                synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
+            else:
+                synopsis = None
 
         episodes.append({
             "season": season,

@@ -1,3 +1,5 @@
+import os
+import json
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -93,8 +95,10 @@ async def write_to_neo4j(graph: Neo4jGraph):
 
 
 if __name__ == "__main__":
-    # 검증된 데이터 사용 (1_prepare_data_v3.py에서 생성)
-    with open("output/knowledge_graph_v3.json", "r", encoding="utf-8") as f:
+    # 검증된 데이터 사용 (1_prepare_data_v1.py 또는 v3 결과)
+    data_file = "output/knowledge_graph_v1.json" if os.path.exists("output/knowledge_graph_v1.json") else "output/knowledge_graph_v3.json"
+    print(f"📖 지식 그래프 로드 중: {data_file}")
+    with open(data_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     nodes = [Neo4jNode(**node) for node in data["nodes"]]

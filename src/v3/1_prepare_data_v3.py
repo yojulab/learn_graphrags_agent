@@ -490,7 +490,11 @@ def fetch_episode(link: str) -> List[dict]:
         synopsis_row = row.find_next_sibling("tr", class_="expand-child")
         if synopsis_row:
             synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
-            synopsis = synopsis_cell.get_text(strip=True) if synopsis_cell else None
+            if synopsis_cell:
+                raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
+                synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
+            else:
+                synopsis = None
 
         episodes.append({
             "season": season,
@@ -536,8 +540,15 @@ def collect_data(use_cache: bool = True) -> List[dict]:
             episodes = fetch_episode(link)
             all_episodes.extend(episodes)
         except Exception as e:
-            print(f"❌ 데이터 가져오기 실패 ({link}): {e}")
-            continue
+            print(f"❌ Requests 기반 데이터 수집 실패 ({link}): {e}")
+            print("🔄 Playwright Headless 모듈로 폴백 시도...")
+            try:
+                from src.utils.playwright_scraper import scrape_episodes_playwright
+                episodes = scrape_episodes_playwright(url=link, headless=True)
+                all_episodes.extend(episodes)
+            except Exception as pe:
+                print(f"❌ Playwright 수집도 실패: {pe}")
+                continue
 
     print(f"✅ 총 {len(all_episodes)}개 에피소드 수집 완료")
     return all_episodes

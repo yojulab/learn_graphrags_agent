@@ -72,6 +72,19 @@ uv run src/v3/3_graphrag_agent_v3.py
 uv run src/utils/check_indexes.py
 ```
 
+### 5. 웹 서비스 & Playwright Headless 파이프라인 검증
+
+```bash
+# Playwright Headless 기반 위키피디아 수집 단독 실행
+python3 src/utils/playwright_scraper.py
+
+# FastAPI 웹 대시보드 실행 (http://localhost:8000)
+uvicorn src.app.main:app --host 0.0.0.0 --port 8000
+
+# Playwright Headless 전체 파이프라인 E2E 통합 검증
+python3 src/utils/test_pipeline_playwright.py
+```
+
 ---
 
 ## 📁 디렉토리 구조 (버전별 폴더 구성)
@@ -90,8 +103,12 @@ uv run src/utils/check_indexes.py
 ├── output/                           # 파이프라인 추출 JSON 데이터 저장소
 ├── docs/
 │   └── agent/
-│       └── harness_prompt.md         # 에이전트 하네스 프롬프트 규격서
+│       ├── harness_prompt.md         # 에이전트 하네스 프롬프트 규격서
+│       └── system_prompt.md          # 시스템 프롬프트 규격서
 └── src/                              # 버전별 실행 코드 폴더
+    ├── app/                          # GraphRAG 웹 애플리케이션 및 대시보드
+    │   ├── __init__.py
+    │   └── main.py
     ├── v1/                           # v1.0 baseline 스크립트
     │   ├── 1_prepare_data_v1.py
     │   ├── 2_ingest_data_v1.py
@@ -105,7 +122,9 @@ uv run src/utils/check_indexes.py
     │   ├── 2_ingest_data_v3.py
     │   └── 3_graphrag_agent_v3.py
     └── utils/                        # 유틸리티 스크립트
-        └── check_indexes.py
+        ├── check_indexes.py          # Neo4j 벡터 인덱스 점검
+        ├── playwright_scraper.py     # Playwright Headless 데이터 수집기
+        └── test_pipeline_playwright.py # Playwright Headless E2E 통합 검증 스크립트
 ```
 
 ---
