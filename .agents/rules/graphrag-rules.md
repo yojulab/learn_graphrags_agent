@@ -55,3 +55,20 @@ DEFENDS, TRANSFORMS, JOINS, SUPPORTS, REUNITES_WITH, BATTLES, HEALS, TEACHES
    모든 모델명, DB 접속 정보, 임베딩 차원, 라벨/관계 목록은 루트 `.env`와 `config.py`에 집중 관리하며, 하드코딩을 절대 금지한다.
 10. **[원자적 커밋 및 무한 폴링 차단 (Atomic Commit & Zero Polling)]**:
     의미 있는 파이프라인 구현, 스키마 갱신, 프롬프트 개선 완료 시 원자적 Git Commit을 수행한다. 백그라운드 태스크 대기 시 무한 폴링 루프를 돌지 않고 반응형 웨이크업에 위임한다.
+
+---
+
+## 3. MCP 서버 & 도구 가이드라인 및 코드 아키텍처 락 (Architecture Lock)
+
+### 3-1. MCP 서버 및 도구 사용 지침
+1. **`context7` (작업 범위 한정)**:
+   - 현재 작업에 필요한 컨텍스트 스코프만 정의하며, 명시적으로 요구되지 않은 임의의 파일 리팩터링이나 변경을 엄격히 금지합니다.
+2. **`sequential-thinking` (순차적 다단계 사고 필수화)**:
+   - 복잡한 지식그래프 파이프라인 설계, 멀티 백엔드 스키마 동기화, 에이전트 워크플로우 구현 시 체계적인 단계 분해 및 컨텍스트 유지를 위해 필수 사용합니다.
+
+### 3-2. 개발 표준 및 코드 품질 수칙
+1. **Python 버전 & 타입 안전성**: Python 3.12+ 기준 Strict Type Annotations(`typing`) 준수.
+2. **Pydantic v2 데이터 검증**: 노드, 관계, 파이프라인 입출력 시 Pydantic 모델을 통한 스키마 검증 강제.
+3. **루트 경로 해석 (Path Resolution Lock)**: `src/v*/` 하위 스크립트 실행 시 루트 디렉터리 경로를 자동 해석하여 `config.py`를 SSOT로 임포트.
+4. **환경 변수 단일 원천 (.env Lock)**: 모든 설정(`NEO4J_*`, `POSTGRES_*`, `AGE_*`, `LLM_*`, `EMBEDDING_*`, `VECTOR_*`)은 루트 `.env`와 `config.py`를 통해서만 참조.
+

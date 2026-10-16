@@ -37,3 +37,8 @@
    - 사전에 정의된 검증 기준과 완료 약속(Completion Promise)이 기계적으로 입증되었을 때에만 약속 토큰을 출력하고 종료한다.
 8. **자가 진화 참여**:
    - 작업 완료 후 오류 패턴이나 사용자 피드백이 발생하면 [harness-evolve](file:///apps/learn_graphrags_agent/.agents/skills/harness-evolve/SKILL.md) 스킬을 통해 시스템 지식으로 일반화하여 환류한다.
+9. **MCP 서버 및 코드 표준 가드레일 (Architecture Lock)**:
+   - `context7`: 현재 작업 스코프만 정의하며, 명시적 요구 없는 임의 리팩터링 및 무관 파일 변경을 엄격히 금지한다.
+   - `sequential-thinking`: 복잡한 파이프라인 설계 및 워크플로우 구현 시 체계적 단계 분해를 필수 적용한다.
+   - `Python 3.12+ & Pydantic v2`: Strict typing 준수, Pydantic 모델 기반 데이터 검증, 루트 디렉터리 경로 자동 해석(`config.py` SSOT 연동)을 강제한다.
+

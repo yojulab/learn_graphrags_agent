@@ -194,3 +194,25 @@ Graph Retrieval Context:
 - `{VECTOR_TOP_K}` ➔ `config.VECTOR_TOP_K` (`5`)
 - `{GRAPH_EXPANSION_DEPTH}` ➔ `config.GRAPH_EXPANSION_DEPTH` (`2`)
 - `{AGE_GRAPH_NAME}` ➔ `config.AGE_GRAPH_NAME` (`demon_slayer`)
+
+---
+
+## 4. MCP 서버 & 도구 가이드라인 및 개발 안전성 규격 (Architecture Lock)
+
+### 4-1. MCP 서버 및 도구 사용 원칙
+1. **`context7` (현재 작업 스코프 격리)**:
+   - 에이전트는 주어진 현재 작업 스코프만 정의하고 작업합니다.
+   - 제공된 컨텍스트를 넘어선 전역적 가정을 금지하며, 작업 요구사항과 무관한 임의의 리팩터링이나 파일 수정을 엄격히 금지합니다.
+2. **`sequential-thinking` (다단계 추론 필수화)**:
+   - 복잡한 문제 분해, 지식그래프 스키마 계획, 다단계 하이브리드 검색 워크플로우 설계 시 필수적으로 순차적 사고 과정을 거칩니다.
+
+### 4-2. 파이썬 표준 및 타입 안전성 (Type Safety & Python Standard)
+1. **Python 버전 & 타입 힌팅**: Python 3.12+ 런타임 및 엄격한 타입 어노테이션(`typing`) 준수.
+2. **Pydantic v2 데이터 검증**: 위키피디아 스크래핑 데이터 및 그래프 엔티티 파싱 시 Pydantic 모델(`Node`, `Relationship`, `GraphResponse`)로 데이터 정합성을 강제.
+3. **루트 경로 해석 (Path Resolution)**: `src/v*/` 하위의 모든 버전별 스크립트는 프로젝트 루트 디렉터리 경로를 자동 해석(`sys.path.append(str(Path(__file__).resolve().parent.parent.parent))`)하여 `config.py`를 단일 진실 공급원(SSOT)으로 완벽히 임포트.
+
+### 4-3. 3단계 파이프라인 규칙 (Data Pipeline Standard)
+- **Preparation (`1_prepare_data_v*.py`)**: 원천 줄거리 수집, 엔티티/관계 Pydantic 검증, `output/` 아티팩트 저장.
+- **Ingestion (`2_ingest_data_v*.py`)**: 멱등 초기화 후 노드/관계 1024차원 `bge-m3` 임베딩 생성 및 벡터 인덱스(`entity_embeddings_*`, `rel_embeddings_*`) 자동 구축.
+- **Agent Execution (`3_graphrag_agent_v*.py`)**: 질문 분류 ➔ 시드 벡터 추출 ➔ 1~2 hop 그래프 확장 ➔ 듀얼 백엔드 Cypher/openCypher 실행 ➔ `<think>` 태그 정제 ➔ 한국어 답변 합성.
+
