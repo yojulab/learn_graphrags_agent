@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-10-17 05:27:25",
+  "overall_status": "PASS",
+  "stages": [
+    {
+      "stage": "1_prepare_data_playwright",
+      "passed": true,
+      "details": {
+        "episodes_count": 26,
+        "kg_nodes": 19,
+        "kg_relationships": 310,
+        "duration": "0.03s"
+      }
+    },
+    {
+      "stage": "2_database_integrity",
+      "passed": true,
+      "details": {
+        "neo4j_nodes": 19,
+        "neo4j_relationships": 310,
+        "neo4j_vector_indexes": 26,
+        "postgres_age_extension": "LOADED",
+        "duration": "0.23s"
+      }
+    },
+    {
+      "stage": "3_graphrag_agent_execution",
+      "passed": true,
+      "details": {
+        "test_question": "카마도 탄지로와 카마도 네즈코는 어떤 관계야?",
+        "query_type": "relationship",
+        "entities": {
+          "entity_a": "카마도 탄지로",
+          "entity_b": "카마도 네즈코"
+        },
+        "seed_nodes": [
+          "카마도 탄지로",
+          "카마도 네즈코",
+          "츠유리 카나오",
+          "마코모",
+          "우부야시키 카가야"
+        ],
+        "subgraph_records": 50,
+        "duration": "1.54s"
+      }
+    },
+    {
+      "stage": "4_web_ui_playwright_e2e",
+      "passed": true,
+      "details": {
+        "ui_nodes": 19,
+        "ui_relationships": 310,
+        "api_health": "healthy",
+        "query_result_sample": "**[GraphRAG v3 답변]**\n\n질문: '탄지로와 네즈코'\n\n### 지식그래프 검색 결과:\n- [PROTECTS] S1E1: 대목족의 부활 계획에 대한 두려움과 Nezuko",
+        "screenshot_path": "/apps/learn_graphrags_agent/output/playwright_e2e_screenshot.png",
+        "duration": "4.87s"
+      }
+    }
+  ]
+}

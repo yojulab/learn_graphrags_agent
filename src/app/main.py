@@ -197,6 +197,18 @@ async def trigger_scrape(req: ScrapeRequest):
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui():
     """GraphRAG 대시보드 UI"""
+    kg_file = BASE_DIR / "output/knowledge_graph_v3.json"
+    node_count = 19
+    rel_count = 310
+    if kg_file.exists():
+        try:
+            with open(kg_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                node_count = len(data.get("nodes", [])) or node_count
+                rel_count = len(data.get("relationships", [])) or rel_count
+        except Exception:
+            pass
+
     html_content = """<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -382,11 +394,11 @@ async def serve_ui():
           <h2>📊 지식그래프 통계</h2>
           <div class="stats-item">
             <span style="color:var(--text-muted);">총 노드 수:</span>
-            <strong id="stat-nodes">19</strong>
+            <strong id="stat-nodes">__NODE_COUNT__</strong>
           </div>
           <div class="stats-item">
             <span style="color:var(--text-muted);">총 관계 수:</span>
-            <strong id="stat-rels">138</strong>
+            <strong id="stat-rels">__REL_COUNT__</strong>
           </div>
           <div class="stats-item">
             <span style="color:var(--text-muted);">노드 분류:</span>
@@ -472,7 +484,12 @@ async def serve_ui():
 </body>
 </html>
 """
-    return HTMLResponse(content=html_content)
+    rendered_html = (
+        html_content
+        .replace("__NODE_COUNT__", str(node_count))
+        .replace("__REL_COUNT__", str(rel_count))
+    )
+    return HTMLResponse(content=rendered_html)
 
 if __name__ == "__main__":
     import uvicorn

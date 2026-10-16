@@ -123,8 +123,8 @@ class Neo4jCreateWriter(KGWriter):
         # Note: 관계 인덱스는 Neo4j 5.13+에서만 지원됨
         # 현재 버전에서 지원하지 않으면 스킵
         try:
-            # 관계 타입별 인덱스 생성 (Neo4j 5.13+에서는 관계 타입 지정 필요)
-            relationship_types = ["전투", "변화", "사용", "상호작용", "소속", "보유", "훈련"]
+            # 관계 타입별 인덱스 생성 (config.RELATIONSHIP_TYPES 기준)
+            relationship_types = config.RELATIONSHIP_TYPES
             for rel_type in relationship_types:
                 try:
                     index_name = f"rel_embeddings_{rel_type}"
