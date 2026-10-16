@@ -318,36 +318,35 @@ def combine_chunk_graphs(chunk_graphs: List[GraphResponse]) -> GraphResponse:
 
 
 def fetch_episode(link: str) -> List[dict]:
-    """위키피디아에서 에피소드 데이터를 가져옵니다"""
-    season = int(re.search(r"season_(\d+)", link).group(1))
-    print(f"Fetching Season {season} from: {link}")
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-    response = requests.get(link, headers=headers)
-    
-    soup = BeautifulSoup(response.text, "html.parser")
-    table = soup.select_one("table.wikitable.plainrowheaders.wikiepisodetable")
-
-    episodes = []
-    rows = table.select("tr.vevent.module-episode-list-row")
-
-    for i, row in enumerate(rows, start=1):
-        synopsis = None
-        synopsis_row = row.find_next_sibling("tr", class_="expand-child")
-        if synopsis_row:
-            synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
-            if synopsis_cell:
-                raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
-                synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
-            else:
-                synopsis = None
-
-        episodes.append({
-            "season": season,
-            "episode_in_season": i,
-            "synopsis": synopsis,
-        })
-    
-    return episodes
+    """Playwright Headless 기반으로 에피소드 데이터를 가져옵니다"""
+    try:
+        from src.utils.playwright_scraper import scrape_episodes_playwright
+        return scrape_episodes_playwright(url=link, headless=True)
+    except Exception as e:
+        print(f"Playwright 수집 실패 ({e}), requests 폴백 시도...")
+        season = int(re.search(r"season_(\d+)", link).group(1))
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        response = requests.get(link, headers=headers, timeout=15)
+        soup = BeautifulSoup(response.text, "html.parser")
+        table = soup.select_one("table.wikitable.plainrowheaders.wikiepisodetable")
+        episodes = []
+        rows = table.select("tr.vevent.module-episode-list-row") if table else []
+        for i, row in enumerate(rows, start=1):
+            synopsis = None
+            synopsis_row = row.find_next_sibling("tr", class_="expand-child")
+            if synopsis_row:
+                synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
+                if synopsis_cell:
+                    for a_tag in synopsis_cell.find_all("a"):
+                        a_tag.replace_with(f" {a_tag.get_text(strip=True)} ")
+                    raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
+                    synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
+            episodes.append({
+                "season": season,
+                "episode_in_season": i,
+                "synopsis": synopsis,
+            })
+        return episodes
 
 
 def collect_data(use_cache: bool = True) -> List[dict]:

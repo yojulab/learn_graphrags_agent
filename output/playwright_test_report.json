@@ -1,18 +1,31 @@
 {
-  "timestamp": "2026-10-08 20:04:10",
-  "overall_status": "FAIL",
+  "timestamp": "2026-10-17 01:56:22",
+  "overall_status": "PASS",
   "tests": [
     {
       "name": "Playwright Scraper Test",
-      "passed": false,
-      "details": {},
-      "error": "단어 공백 분리 오류: "
+      "passed": true,
+      "details": {
+        "episodes_parsed": 2,
+        "sample_synopsis": "Tanjiro Kamado lives a peaceful life with his family. His si...",
+        "duration": "0.56s"
+      }
     },
     {
       "name": "Playwright Web UI E2E Test",
-      "passed": false,
-      "details": {},
-      "error": "invalid decimal literal (main.py, line 123)"
+      "passed": true,
+      "details": {
+        "ui_elements_verified": [
+          "#app-title",
+          "#question-input",
+          "#version-select",
+          "#btn-submit",
+          "#stat-nodes"
+        ],
+        "api_health": "healthy",
+        "query_result_sample": "**[GraphRAG v3 답변]**\n\n질문: '탄지로와 네즈코'\n\n### 지식그래프 검색 결과:\n- [PR...",
+        "duration": "0.90s"
+      }
     },
     {
       "name": "Schema Integrity Test",

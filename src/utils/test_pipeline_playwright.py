@@ -74,11 +74,10 @@ def run_test_1_scraper_validation() -> Dict[str, Any]:
             page.set_content(test_html)
 
             # DOM 파싱 검증
-            rows = page.locator("tr.module-episode-list-row").all()
+            syn_locators = page.locator("tr.expand-child .shortSummaryText").all()
             episodes = []
-            for i, row in enumerate(rows, start=1):
-                synopsis_cell = page.locator(f"tr.expand-child:nth-of-type({i}) .shortSummaryText")
-                syn_text = synopsis_cell.inner_text() if synopsis_cell.count() > 0 else ""
+            for i, loc in enumerate(syn_locators, start=1):
+                syn_text = loc.inner_text()
                 episodes.append({
                     "season": 1,
                     "episode_in_season": i,
@@ -89,8 +88,17 @@ def run_test_1_scraper_validation() -> Dict[str, Any]:
         # 공백 분리 검증 (단어가 붙지 않고 'Tanjiro Kamado lives'로 분리되었는지)
         ep1_text = episodes[0]["synopsis"]
         assert "Tanjiro Kamado lives" in ep1_text, f"단어 공백 분리 오류: {ep1_text}"
-        assert "Nezuko Kamado , is" in ep1_text or "Nezuko Kamado, is" in ep1_text or "Nezuko Kamado" in ep1_text
+        assert "Nezuko Kamado" in ep1_text, f"인물명 누락: {ep1_text}"
         assert len(episodes) == 2, f"에피소드 개수 불일치: {len(episodes)}"
+
+        # 실제 수집된 raw_data.json 검증도 함께 수행
+        from src.utils.playwright_scraper import validate_dataset
+        raw_data_path = BASE_DIR / "output/raw_data.json"
+        if raw_data_path.exists():
+            with open(raw_data_path, "r", encoding="utf-8") as f:
+                scraped_data = json.load(f)
+            assert len(scraped_data) == 26, f"실제 수집 에피소드 개수 부족: {len(scraped_data)}"
+            assert validate_dataset(scraped_data) is True, "실제 수집 데이터셋 정밀 검증 실패"
 
         result["passed"] = True
         result["details"] = {

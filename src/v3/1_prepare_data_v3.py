@@ -473,55 +473,52 @@ def combine_chunk_graphs(chunk_graphs: List[GraphResponse]) -> GraphResponse:
     return GraphResponse(nodes=all_nodes, relationships=all_relationships)
 
 def fetch_episode(link: str) -> List[dict]:
-    """위키피디아에서 에피소드 데이터를 가져옵니다"""
-    season = int(re.search(r"season_(\d+)", link).group(1))
-    print(f"📥 Season {season} 데이터 가져오는 중: {link}")
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-    response = requests.get(link, headers=headers)
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    table = soup.select_one("table.wikitable.plainrowheaders.wikiepisodetable")
-
-    episodes = []
-    rows = table.select("tr.vevent.module-episode-list-row")
-
-    for i, row in enumerate(rows, start=1):
-        synopsis = None
-        synopsis_row = row.find_next_sibling("tr", class_="expand-child")
-        if synopsis_row:
-            synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
-            if synopsis_cell:
-                raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
-                synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
-            else:
-                synopsis = None
-
-        episodes.append({
-            "season": season,
-            "episode_in_season": i,
-            "synopsis": synopsis,
-        })
-
-    return episodes
+    """Playwright Headless 기반으로 에피소드 데이터를 가져옵니다"""
+    try:
+        from src.utils.playwright_scraper import scrape_episodes_playwright
+        return scrape_episodes_playwright(url=link, headless=True)
+    except Exception as e:
+        print(f"⚠️ Playwright 수집 실패 ({e}), requests 폴백 시도...")
+        season = int(re.search(r"season_(\d+)", link).group(1))
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        response = requests.get(link, headers=headers, timeout=15)
+        soup = BeautifulSoup(response.text, "html.parser")
+        table = soup.select_one("table.wikitable.plainrowheaders.wikiepisodetable")
+        episodes = []
+        rows = table.select("tr.vevent.module-episode-list-row") if table else []
+        for i, row in enumerate(rows, start=1):
+            synopsis = None
+            synopsis_row = row.find_next_sibling("tr", class_="expand-child")
+            if synopsis_row:
+                synopsis_cell = synopsis_row.select_one("td.description div.shortSummaryText")
+                if synopsis_cell:
+                    for a_tag in synopsis_cell.find_all("a"):
+                        a_tag.replace_with(f" {a_tag.get_text(strip=True)} ")
+                    raw_synopsis = synopsis_cell.get_text(separator=" ", strip=True)
+                    synopsis = re.sub(r'\s+', ' ', raw_synopsis).strip()
+            episodes.append({
+                "season": season,
+                "episode_in_season": i,
+                "synopsis": synopsis,
+            })
+        return episodes
 
 def collect_data(use_cache: bool = True) -> List[dict]:
-    """여러 시즌에서 에피소드 데이터를 수집합니다"""
+    """여러 시즌에서 에피소드 데이터를 수집합니다 (Playwright Headless 우선)"""
     print("\n" + "="*60)
-    print("📚 데이터 수집 시작")
+    print("📚 데이터 수집 시작 (Playwright Headless)")
     print("="*60)
 
     # Check for existing raw data (priority)
     raw_data_path = "output/raw_data.json"
     if os.path.exists(raw_data_path):
-        print(f"💾 기존 데이터 발견 (공통): {raw_data_path}")
+        print(f"💾 기존 정밀 데이터 발견 (공통): {raw_data_path}")
         with open(raw_data_path, "r", encoding="utf-8") as f:
             episodes = json.load(f)
         print(f"✅ 총 {len(episodes)}개 에피소드 로드 완료 (raw_data.json)")
         return episodes
 
     cache_file = "output/raw_data_v3.json"
-
-    # 캐시 파일이 있으면 먼저 사용
     if use_cache and os.path.exists(cache_file):
         print(f"💾 캐시 파일 사용: {cache_file}")
         with open(cache_file, "r", encoding="utf-8") as f:
@@ -531,24 +528,16 @@ def collect_data(use_cache: bool = True) -> List[dict]:
 
     episode_links = [
         "https://en.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba_season_1",
-        # "https://en.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba_season_2",  # 귀멸의 칼날 시즌 2
     ]
 
     all_episodes = []
-    for link in tqdm(episode_links, desc="Fetching seasons", unit="season"):
+    for link in episode_links:
         try:
             episodes = fetch_episode(link)
             all_episodes.extend(episodes)
         except Exception as e:
-            print(f"❌ Requests 기반 데이터 수집 실패 ({link}): {e}")
-            print("🔄 Playwright Headless 모듈로 폴백 시도...")
-            try:
-                from src.utils.playwright_scraper import scrape_episodes_playwright
-                episodes = scrape_episodes_playwright(url=link, headless=True)
-                all_episodes.extend(episodes)
-            except Exception as pe:
-                print(f"❌ Playwright 수집도 실패: {pe}")
-                continue
+            print(f"❌ 데이터 수집 실패 ({link}): {e}")
+            continue
 
     print(f"✅ 총 {len(all_episodes)}개 에피소드 수집 완료")
     return all_episodes
