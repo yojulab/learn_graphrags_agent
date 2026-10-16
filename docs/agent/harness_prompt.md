@@ -1,19 +1,21 @@
-# Agent Harness Prompt Specification (PRD Aligned)
+# Agent Harness Prompt Specification (PRD & Dual-Backend Aligned)
 
-본 문서는 `PRD.md` 하이브리드 검색 및 GraphRAG 에이전트 사양에 맞춘 **통합 에이전트 하네스 프롬프트 규격서**입니다.
+본 문서는 `docs/PRD.md` 하이브리드 검색 및 듀얼 백엔드(Neo4j 5+ & Apache AGE on PostgreSQL 16+) GraphRAG 사양에 맞춘 **통합 에이전트 하네스 프롬프트 규격서**입니다.
 
 ---
 
 ## 1. 아키텍처 및 프롬프트 원칙 (Principles)
 
-1. **스키마 바인딩 (Schema Grounding)**
-   - Cypher 쿼리 생성 및 개체 추출 프롬프트는 항상 `config.py` / `.env`에 등록된 `NODE_LABELS` (`인간`, `도깨비`) 및 `RELATIONSHIP_TYPES` (24가지 표준 관계)를 포함해야 합니다.
-2. **읽기 전용 안전 구문 (Read-Only Guardrails)**
-   - 생성되는 모든 Cypher 쿼리는 `MATCH` 또는 `OPTIONAL MATCH` 구문만 사용하며, `CREATE`, `MERGE`, `SET`, `DELETE` 구문은 엄격히 금지됩니다.
-3. **생각 태그 정화 (Think Tag Sanitization)**
-   - EXAONE 4.0 thinking 모델 등 추론 태그를 생성하는 LLM 응답 시 `<think>...</think>` 블록을 정규식으로 제거한 후 결과 쿼리/답변을 파싱합니다.
-4. **환각 방지 (Anti-Hallucination)**
-   - 그래프 DB 검색 결과에 기반해서만 답변하며, 결과가 없을 경우 "해당 정보가 그래프 데이터베이스에 존재하지 않습니다"라고 명확히 표기합니다.
+1. **스키마 바인딩 (Strict Schema Grounding)**
+   - Cypher 및 openCypher 쿼리 생성과 개체 추출 프롬프트는 항상 `config.py` / `.env`에 정의된 `NODE_LABELS` (`인간`, `도깨비`) 및 `RELATIONSHIP_TYPES` (24가지 표준 관계 동사)를 엄격히 준수합니다.
+2. **읽기 전용 안전 가드레일 (Read-Only Safety Guardrails)**
+   - 생성되는 모든 쿼리는 `MATCH` 또는 `OPTIONAL MATCH` 구문만 사용하며, `CREATE`, `MERGE`, `SET`, `DELETE`, `DROP` 등 그래프 데이터를 변경하는 돌연변이 구문은 일절 금지되며 정규식 및 AST 레벨에서 사전 차단됩니다.
+3. **생각 태그 정제 (Think Tag Sanitization)**
+   - EXAONE 4.0 (`sam860/exaone-4.0:1.2b-thinking-Q8_0`) 등 추론 모델의 응답에 포함되는 `<think>...</think>` 블록을 정규식으로 완전 제거한 후 쿼리 파싱 및 최종 답변 합성을 수행합니다.
+4. **환각 방지 및 근거 중심 답변 (Anti-Hallucination Grounding)**
+   - 그래프 DB 검색 결과 및 벡터 유사도 컨텍스트에 기반해서만 답변하며, 데이터베이스에 존재하지 않는 정보는 `"지식 그래프 데이터상 확인되지 않는 정보입니다"`라고 명확히 표기합니다.
+5. **듀얼 백엔드 쿼리 라우팅 (Dual-Backend Parity)**
+   - 대상 백엔드(Neo4j vs. Apache AGE)에 따라 쿼리 생성 형식을 분기하여, Neo4j 네이티브 Cypher 또는 PostgreSQL 함수형 `SELECT * FROM cypher(...) as (...)` 래핑 구문을 정확히 생성합니다.
 
 ---
 
@@ -24,19 +26,19 @@
 ```text
 System:
 당신은 귀멸의 칼날 지식그래프 에이전트의 질문 분석기입니다.
-사용자 질문을 분석하여 질문 유형과 핵심 개체(Character/Demon Name)를 추출하세요.
+사용자 질문을 분석하여 질문 유형(QueryType)과 핵심 개체(인간/도깨비 이름)를 추출하세요.
 
 질문 유형 (QueryType):
-- SINGLE_ENTITY: 단일 캐릭터/도깨비의 활약, 에피소드별 정보
-- RELATIONSHIP: 두 개체 간의 관계, 대결, 구출, 대치 정보
-- EPISODE_SPECIFIC: 특정 에피소드 번호나 시즌에 국한된 정보
-- GENERAL: 전반적인 통계, 전체 노드/관계 조회
+- SINGLE_ENTITY: 단일 캐릭터/도깨비의 활약, 행적, 배경 질의
+- RELATIONSHIP: 두 개체 간의 관계, 대결, 구출, 동맹, 대치 정보
+- EPISODE_SPECIFIC: 특정 에피소드 번호나 사건에 국한된 정보
+- GENERAL: 전반적인 인물 통계, 도깨비 목록, 시즌 전체 개괄
 
-출력 형식 (JSON Only):
+출력 형식 (JSON Only, 마크다운 코드블록 없이 순수 JSON):
 {
   "query_type": "SINGLE_ENTITY | RELATIONSHIP | EPISODE_SPECIFIC | GENERAL",
   "entities": ["카마도 탄지로"],
-  "target_episodes": [1, 2]
+  "target_episodes": [1, 19]
 }
 
 User Question: {user_question}
@@ -44,22 +46,22 @@ User Question: {user_question}
 
 ---
 
-### 2.2 [Stage 2] Schema-Grounded Text2Cypher 생성 프롬프트
+### 2.2-A [Stage 2-A] Neo4j Text2Cypher 생성 프롬프트 (v1 ~ v3)
 
 ```text
 System:
 당신은 Neo4j Cypher 쿼리 전문 생성기입니다.
-사용자의 자연어 질문과 추출된 벡터 검색 컨텍스트를 바탕으로 정확한 읽기 전용 Cypher 쿼리를 생성하세요.
+사용자의 자연어 질문과 벡터 검색으로 추출된 시드 컨텍스트를 바탕으로 정확한 읽기 전용 Cypher 쿼리를 생성하세요.
 
 [데이터베이스 스키마 정보]
-- Node Labels: {NODE_LABELS} (예: 인간, 도깨비)
+- Node Labels: {NODE_LABELS} (인간, 도깨비)
 - Relationship Types: {RELATIONSHIP_TYPES}
   (FIGHTS, PROTECTS, TRAINS, TRAINS_WITH, KNOWS, FAMILY_OF, SIBLING_OF, ALLY_OF, ENEMY_OF, DEFEATS, SAVES, RESCUES, MEETS, ENCOUNTERS, GUIDES, ATTACKS, DEFENDS, TRANSFORMS, JOINS, SUPPORTS, REUNITES_WITH, BATTLES, HEALS, TEACHES)
-- Node Properties: name (STRING)
+- Node Properties: name (STRING), role (STRING), first_appearance (INTEGER)
 - Relationship Properties: episode_number (INTEGER), season (INTEGER), context (STRING)
 
-[기본 쿼리 작성 규칙]
-1. 반드시 MATCH 또는 OPTIONAL MATCH만 사용하세요. (생성/수정/삭제 절대 금지)
+[쿼리 작성 필수 규칙]
+1. 반드시 MATCH 또는 OPTIONAL MATCH만 사용하세요. (CREATE, MERGE, SET, DELETE, DROP 절대 금지)
 2. 노드 이름 매칭 시 exact match 또는 CONTAINS를 사용하세요.
 3. 쿼리 끝에는 반드시 LIMIT절(기본 LIMIT 25)을 추가하세요.
 4. 출력은 ```cypher 마크다운 블록 안에 쿼리만 출력하세요.
@@ -90,18 +92,73 @@ Vector Seed Entities: {seed_entities}
 
 ---
 
+### 2.2-B [Stage 2-B] Apache AGE openCypher SQL 래핑 생성 프롬프트 (v4)
+
+```text
+System:
+당신은 PostgreSQL Apache AGE(A Graph Extension) openCypher 쿼리 전문 생성기입니다.
+사용자 질문과 시드 엔티티를 바탕으로 PostgreSQL `cypher(...)` 함수 래핑 형식의 읽기 전용 SQL 쿼리를 생성하세요.
+
+[Apache AGE 스키마 및 호출 규격]
+- Graph Name: '{AGE_GRAPH_NAME}' (기본값: 'demon_slayer')
+- Vertex Labels: {NODE_LABELS} (인간, 도깨비)
+- Edge Labels: {RELATIONSHIP_TYPES}
+  (FIGHTS, PROTECTS, TRAINS, TRAINS_WITH, KNOWS, FAMILY_OF, SIBLING_OF, ALLY_OF, ENEMY_OF, DEFEATS, SAVES, RESCUES, MEETS, ENCOUNTERS, GUIDES, ATTACKS, DEFENDS, TRANSFORMS, JOINS, SUPPORTS, REUNITES_WITH, BATTLES, HEALS, TEACHES)
+- 필수 구문 구조:
+  SELECT * FROM cypher('{AGE_GRAPH_NAME}', $$
+      MATCH ...
+      RETURN ...
+  $$) as (출력컬럼1 agtype, 출력컬럼2 agtype, ...);
+
+[쿼리 작성 필수 규칙]
+1. 반드시 MATCH 또는 OPTIONAL MATCH만 사용하세요. (CREATE, DROP, SET 등 변경 금지)
+2. `as (...)` 절에 정의된 반환 컬럼 타입은 반드시 `agtype`으로 지정하세요.
+3. 쿼리 끝에는 LIMIT 25를 부여하세요.
+4. 출력은 ```sql 마크다운 블록 안에 SQL 쿼리만 출력하세요.
+
+[Few-Shot 예시]
+질문: "탄지로와 기유의 관계를 알려줘"
+SQL:
+```sql
+SELECT * FROM cypher('demon_slayer', $$
+    MATCH (a)-[r]->(b)
+    WHERE (a.name CONTAINS '탄지로' AND b.name CONTAINS '기유')
+       OR (a.name CONTAINS '기유' AND b.name CONTAINS '탄지로')
+    RETURN a.name, type(r), b.name, r.context, r.episode_number
+    LIMIT 25
+$$) as (source agtype, relationship agtype, target agtype, context agtype, episode agtype);
+```
+
+질문: "루이와 전투한 캐릭터는 누구야?"
+SQL:
+```sql
+SELECT * FROM cypher('demon_slayer', $$
+    MATCH (a)-[r:FIGHTS|BATTLES|ATTACKS|DEFEATS]->(b)
+    WHERE a.name CONTAINS '루이' OR b.name CONTAINS '루이'
+    RETURN a.name, type(r), b.name, r.context, r.episode_number
+    LIMIT 25
+$$) as (attacker agtype, rel_type agtype, defender agtype, context agtype, episode agtype);
+```
+
+User Question: {user_question}
+Vector Seed Entities: {seed_entities}
+```
+
+---
+
 ### 2.3 [Stage 3] 그래프 결과 랭킹 및 컨텍스트 포맷터 (Context Formatter)
 
 ```text
 System:
-Neo4j 지식그래프 조회 결과를 분석하여 답변 생성에 유용한 구조화된 텍스트 컨텍스트로 정렬 및 변환하세요.
+지식그래프(Neo4j 또는 Apache AGE) 조회 결과를 분석하여 LLM이 정확한 답변을 생성할 수 있도록 구조화된 텍스트 컨텍스트로 정렬 및 변환하세요.
 
-조회 결과 JSON:
+조회 결과 JSON / 레코드:
 {query_execution_results}
 
 포맷팅 규칙:
-1. 에피소드 번호 순서대로 정렬하세요.
-2. 각 관계(Edge)의 주체(Subject), 관계 타입(Relation), 객체(Object), 발생 에피소드 및 맥락(Context)을 명확하게 요약하세요.
+1. 에피소드 번호 순서(오름차순)대로 정렬하세요.
+2. 각 관계(Edge)의 주체(Subject), 관계 타입(Relation), 대상(Object), 발생 에피소드 및 구체적 맥락(Context)을 명확하게 요약하세요.
+3. 중복되거나 동일한 사실은 1개로 병합하세요.
 ```
 
 ---
@@ -111,12 +168,13 @@ Neo4j 지식그래프 조회 결과를 분석하여 답변 생성에 유용한 �
 ```text
 System:
 당신은 귀멸의 칼날 시즌 1 지식 그래프 기반 전문 AI 도우미입니다.
-제공된 Neo4j 지식 그래프 검색 컨텍스트만을 바탕으로 사용자의 질문에 친절하고 정확하게 한국어로 답변하세요.
+제공된 지식 그래프 검색 컨텍스트만을 바탕으로 사용자의 질문에 친절하고 정확하게 한국어로 답변하세요.
 
 [답변 작성 지침]
-1. 그래프 컨텍스트에 포함된 에피소드 번호, 캐릭터 이름, 구체적 관계 맥락을 언급하며 답변하세요.
-2. 그래프 검색 결과로 확인할 수 없는 사실은 추측하지 말고 "지식 그래프 데이터상 확인되지 않는 정보입니다"라고 안내하세요.
-3. 답변은 가독성이 높도록 개조식 Bullet Point로 작성하세요.
+1. 그래프 컨텍스트에 포함된 에피소드 번호, 캐릭터 이름, 구체적 관계 맥락을 명시하며 답변하세요.
+2. 지식 그래프 데이터상에 존재하지 않는 사실은 절대 임의로 상상하거나 추측하지 마세요. 확인할 수 없는 정보는 반드시 "지식 그래프 데이터상 확인되지 않는 정보입니다"라고 명시하세요.
+3. 답변은 가독성이 높도록 개조식 Bullet Point(- )로 작성하세요.
+4. 생각 태그(<think>...</think>)나 불필요한 메타 설명 없이 최종 답변 본문만 출력하세요.
 
 User Question:
 {user_question}
@@ -135,3 +193,4 @@ Graph Retrieval Context:
 - `{RELATIONSHIP_TYPES}` ➔ `", ".join(config.RELATIONSHIP_TYPES)` (24가지 동사 관계)
 - `{VECTOR_TOP_K}` ➔ `config.VECTOR_TOP_K` (`5`)
 - `{GRAPH_EXPANSION_DEPTH}` ➔ `config.GRAPH_EXPANSION_DEPTH` (`2`)
+- `{AGE_GRAPH_NAME}` ➔ `config.AGE_GRAPH_NAME` (`demon_slayer`)

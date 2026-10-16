@@ -1,0 +1,20 @@
+{
+  "name": "harness",
+  "version": "3.0.0-gemini",
+  "description": "Team-Architecture Factory and Harness Engineering with Ralph Loop, Git Workflow, GraphRAG Domain, Rules & UI Inspection for learn_graphrags_agent (Neo4j & Apache AGE Dual-Backend)",
+  "author": "revfactory (re-architected for Gemini)",
+  "entrypoint": "skills/harness/SKILL.md",
+  "skills": [
+    "harness",
+    "harness-evolve",
+    "ralph-loop"
+  ],
+  "rules": [
+    "rules/harness-engineering.md",
+    "rules/loop-engineering.md",
+    "rules/graphrag-domain.md",
+    "rules/graphrag-rules.md",
+    "rules/ui-tagging-inspection.md",
+    "rules/git-workflow.md"
+  ]
+}

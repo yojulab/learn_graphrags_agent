@@ -1,0 +1,12 @@
+{
+  "ralph-loop-gate": {
+    "enabled": true,
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 ./.agents/skills/ralph-loop/scripts/stop_hook.py",
+        "timeout": 30
+      }
+    ]
+  }
+}

@@ -120,10 +120,12 @@ async def execute_query(req: QueryRequest):
         # 안전한 mock 또는 실제 파이프라인 호출
         # 오프라인/테스트 환경에서는 로컬 그래프 검색 또는 LLM 호출
         if req.version == "v1":
-            from src.v1 import 3_graphrag_agent_v1 as agent_v1
+            import importlib
+            agent_v1 = importlib.import_module("src.v1.3_graphrag_agent_v1")
             answer = agent_v1.graphrag_pipeline(question)
         elif req.version == "v2":
-            from src.v2 import 3_graphrag_agent_v2 as agent_v2
+            import importlib
+            agent_v2 = importlib.import_module("src.v2.3_graphrag_agent_v2")
             # v2 파이프라인 실행
             rewritten = agent_v2.rewrite_query(question)
             results = agent_v2.vector_search(rewritten, top_k_per_query=10)
