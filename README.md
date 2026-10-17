@@ -106,39 +106,47 @@ cd ..
 ### 4. 파이프라인 단계별 실행 (Step-by-Step)
 
 #### Step 1: 데이터 수집 및 개체 추출 (`1_prepare_data`)
-위키피디아 시즌 1 줄거리 데이터를 수집하고 LLM을 통해 지식그래프 노드/관계를 정형화합니다:
+위키피디아 시즌 1 줄거리 데이터를 수집하고 LLM/정규화기를 통해 지식그래프 노드/관계를 정형화합니다:
 
 ```bash
 # [방법 A] Playwright Headless 기반 정밀 수집기 단독 실행
 python3 src/utils/playwright_scraper.py
 
-# [방법 B] v3 파이프라인 (수집 + 정규화된 한국어 개체/관계 추출)
-python3 src/v3/1_prepare_data_v3.py
-# (uv 사용 시: uv run src/v3/1_prepare_data_v3.py)
-```
-- **출력 아티팩트**: `output/raw_data.json`, `output/knowledge_graph_v3.json`
+# [방법 B] Neo4j 하이브리드 파이프라인 데이터 준비
+python3 src/neo4j_hybrid/1_prepare_data_v3.py
 
-#### Step 2: Neo4j 지식그래프 적재 및 벡터 인덱싱 (`2_ingest_data`)
-추출된 JSON 데이터를 Neo4j 데이터베이스에 적재하고 HNSW 벡터 인덱스를 구축합니다:
+# [방법 C] Apache AGE 멀티모델 파이프라인 데이터 준비
+python3 src/apache_age/1_prepare_data_v4.py
+```
+- **출력 아티팩트**: `output/raw_data.json`, `output/knowledge_graph_v3.json`, `output/knowledge_graph_v4.json`
+
+#### Step 2: 지식그래프 적재 및 벡터 인덱싱 (`2_ingest_data`)
+추출된 JSON 데이터를 그래프 데이터베이스에 적재하고 벡터 인덱스를 구축합니다:
 
 ```bash
-python3 src/v3/2_ingest_data_v3.py
-# (uv 사용 시: uv run src/v3/2_ingest_data_v3.py)
+# [백엔드 A] Neo4j 5+ 그래프 적재 및 HNSW 벡터 인덱스 생성
+python3 src/neo4j_hybrid/2_ingest_data_v3.py
+
+# [백엔드 B] PostgreSQL 16+ & Apache AGE Multi-Model 적재 및 벡터 테이블 생성
+python3 src/apache_age/2_ingest_data_v4.py
 ```
-- **주요 동작**: 이전 데이터 초기화 → 노드 및 관계 생성 → 1024차원 임베딩 저장 → 벡터 인덱스(`entity_embeddings_*`, `rel_embeddings_*`) 자동 생성
+- **주요 동작**: 이전 데이터 멱등 초기화 → 노드 및 관계 생성 → 1024차원 `bge-m3` 임베딩 저장 → 벡터 인덱스/테이블 구축
 
 #### Step 3: GraphRAG 에이전트 CLI 질의응답 (`3_graphrag_agent`)
 터미널에서 자연어 질문을 입력하여 하이브리드 검색 답변을 생성합니다:
 
 ```bash
-# v3.0 최신 하이브리드 검색 (벡터 검색 + 그래프 1~2hop + Text2Cypher)
-python3 src/v3/3_graphrag_agent_v3.py
+# Apache AGE Multi-Model (openCypher in SQL + In-Database 벡터 검색)
+python3 src/apache_age/3_graphrag_agent_v4.py
 
-# v2.0 메타데이터 필터링 + LLM Reranking 버전
-python3 src/v2/3_graphrag_agent_v2.py
+# Neo4j 최신 하이브리드 검색 (벡터 검색 + 그래프 1~2hop + Cypher)
+python3 src/neo4j_hybrid/3_graphrag_agent_v3.py
 
-# v1.0 기본 Text2Cypher 베이스라인 버전
-python3 src/v1/3_graphrag_agent_v1.py
+# 메타데이터 필터링 + LLM Reranking 버전
+python3 src/metadata_filter/3_graphrag_agent_v2.py
+
+# 기본 Text2Cypher 베이스라인 버전
+python3 src/baseline/3_graphrag_agent_v1.py
 ```
 
 ---
@@ -149,34 +157,32 @@ FastAPI 기반의 인터랙티브 웹 대시보드를 구동하여 브라우저�
 
 ```bash
 # FastAPI 개발 서버 실행 (포트 8000)
-uvicorn src.app.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn src.web_app.main:app --host 0.0.0.0 --port 8000 --reload
 
 # 또는 main.py 직접 실행
-python3 src/app/main.py
+python3 src/web_app/main.py
 ```
 
 - **웹 대시보드 URL**: `http://localhost:8000`
 - **주요 기능**:
   - 💬 **대화형 질의응답 창**: 추천 질문 칩 클릭 또는 자연어 질문 입력
-  - 🎛️ **버전 전환 셀렉터**: v3(하이브리드), v2(메타데이터), v1(Text2Cypher) 실시간 전환
-  - 📊 **실시간 통계 카드**: 총 노드/관계 수, 에피소드 수 등 지식그래프 상태 표시
+  - 🎛️ **버전 전환 셀렉터**: v4(Apache AGE 멀티모델), v3(Neo4j 하이브리드), v2(메타데이터), v1(Text2Cypher) 실시간 전환
+  - 📊 **실시간 통계 카드**: 총 노드/관계 수, 에피소드 수 등 지식그래프 상태 동적 표시
   - 🕸️ **원클릭 데이터 수집**: 대시보드 내에서 Playwright Headless 수집 트리거 지원
 
 ---
 
-### 6. Playwright Headless 전체 파이프라인 E2E 검증
+### 6. 전체 파이프라인 E2E 검증 (Playwright Headless)
 
-데이터 수집기, Web UI 대시보드 인터랙션, PRD 스키마 무결성을 자동으로 일괄 검증합니다:
+데이터 수집기, 듀얼 DB 정합성, Dual GraphRAG 에이전트, Web UI 대시보드 인터랙션을 일괄 검증합니다:
 
 ```bash
+# 전체 파이프라인 흐름(Flow 1~4) 일괄 검증
+python3 src/utils/verify_full_pipeline.py
+
+# Playwright 단위/통합 테스트
 python3 src/utils/test_pipeline_playwright.py
 ```
-
-- **검증 항목**:
-  1. `[Test 1] Playwright Headless Scraper Test`: 위키피디아 에피소드 파싱 및 공백 보존 검증
-  2. `[Test 2] Playwright Web UI E2E Test`: 대시보드 DOM 렌더링, 타이틀, 폼 입력 및 API 인터랙션 검증
-  3. `[Test 3] Schema Integrity Test`: PRD 정의 `NODE_LABELS`(`인간`, `도깨비`) 및 24종 `RELATIONSHIP_TYPES` 100% 일치 검증
-- **결과 보고서**: `output/playwright_test_report.json`으로 자동 저장
 
 ---
 
@@ -190,55 +196,65 @@ python3 src/utils/check_indexes.py
 
 ---
 
-## 📁 디렉토리 구조 (버전별 폴더 구성)
+## 📁 디렉토리 구조 (업무별 폴더 구성)
 
 ```text
 /apps/learn_graphrags_agent
 ├── .env                              # 전체 중앙 환경변수 관리
 ├── config.py                         # .env 기반 설정을 로딩하는 모듈
-├── PRD.md                            # 요구사항 및 상세 분석 문서
+├── PRD.md                            # 요구사항 및 상세 분석 문서 (docs/PRD.md)
 ├── README.md                         # 실행 및 프로젝트 설명서
 ├── dockers/                          # Docker 및 컨테이너 관련 파일
 │   ├── .env
 │   ├── docker-compose.yml
 │   ├── Dockerfile.ollama
-│   └── Dockerfile.fullstack
+│   ├── Dockerfile.fullstack
+│   └── postgres/init/01_init_age.sql
 ├── output/                           # 파이프라인 추출 JSON 데이터 저장소
 ├── docs/
+│   ├── PRD.md                        # 제품 요구사항 정의서
 │   └── agent/
 │       ├── harness_prompt.md         # 에이전트 하네스 프롬프트 규격서
 │       └── system_prompt.md          # 시스템 프롬프트 규격서
-└── src/                              # 버전별 실행 코드 폴더
-    ├── app/                          # GraphRAG 웹 애플리케이션 및 대시보드
-    │   ├── __init__.py
-    │   └── main.py
-    ├── v1/                           # v1.0 baseline 스크립트
+└── src/                              # 업무별 실행 코드 폴더
+    ├── baseline/                     # [구 v1] Text2Cypher 베이스라인 파이프라인
     │   ├── 1_prepare_data_v1.py
     │   ├── 2_ingest_data_v1.py
     │   └── 3_graphrag_agent_v1.py
-    ├── v2/                           # v2.0 메타데이터 필터링 벡터 RAG 스크립트
+    ├── metadata_filter/              # [구 v2] 메타데이터 필터링 및 리랭킹 파이프라인
     │   ├── 1_prepare_data_v2.py
     │   ├── 2_ingest_data_v2.py
     │   └── 3_graphrag_agent_v2.py
-    ├── v3/                           # v3.0 최신 하이브리드 검색 GraphRAG 스크립트
+    ├── neo4j_hybrid/                 # [구 v3] Neo4j 벡터+그래프 1~2hop 하이브리드 RAG
     │   ├── 1_prepare_data_v3.py
     │   ├── 2_ingest_data_v3.py
     │   └── 3_graphrag_agent_v3.py
-    └── utils/                        # 유틸리티 스크립트
+    ├── apache_age/                   # [신규 v4] PostgreSQL 16+ & Apache AGE Multi-Model RAG
+    │   ├── 1_prepare_data_v4.py
+    │   ├── 2_ingest_data_v4.py
+    │   └── 3_graphrag_agent_v4.py
+    ├── web_app/                      # FastAPI 웹 대시보드 및 REST API
+    │   ├── __init__.py
+    │   └── main.py
+    └── utils/                        # 공통 유틸리티 및 검증 도구
         ├── check_indexes.py          # Neo4j 벡터 인덱스 점검
         ├── playwright_scraper.py     # Playwright Headless 데이터 수집기
-        └── test_pipeline_playwright.py # Playwright Headless E2E 통합 검증 스크립트
+        ├── test_pipeline_playwright.py # Playwright 단위/통합 테스트
+        └── verify_full_pipeline.py   # 전체 흐름(Flow 1~4) E2E 검증기
 ```
 
 ---
 
 ## 🛠️ 버전별 주요 차이점
 
-| 버전 | 데이터 추출 (`1_prepare_data`) | 데이터 인제스천 (`2_ingest_data`) | GraphRAG 에이전트 (`3_graphrag_agent`) |
-|---|---|---|---|
-| **v1** | 기본 OpenAI 스킴 추출 | 기본 Neo4j 그래프 생성 | Text2Cypher 기본 쿼리 생성 |
-| **v2** | 정형 데이터 검증 추가 | 노드/관계 벡터 임베딩 생성 | 메타데이터 기반 벡터 검색 + LLM Reranking |
-| **v3 (권장)** | 정규화된 한국어 이름 + 릴레이션 마스터 매핑 | HNSW 벡터 인덱스 자동 생성 | **하이브리드 검색** (벡터 + 그래프 1~2hop + Text2Cypher + Think 태그 정화) |
+| 항목 | baseline (v1) | metadata_filter (v2) | neo4j_hybrid (v3) | apache_age (v4) |
+|---|---|---|---|---|
+| **백엔드 DB** | Neo4j 5 | Neo4j 5 | Neo4j 5 | PostgreSQL 16+ & Apache AGE |
+| **그래프 모델** | Native Property Graph | Native Property Graph | Native Property Graph | Relational Property Graph (`ag_catalog`) |
+| **쿼리 언어** | Neo4j Cypher | Neo4j Cypher | Neo4j Cypher | openCypher in SQL (`cypher(...)`) |
+| **벡터 검색** | 미지원 (순수 Cypher) | 벡터 + 메타데이터 필터링 | HNSW 노드/관계 벡터 인덱스 | In-Database Cosine 테이블 검색 |
+| **그래프 순회** | 0-hop (단일 매칭) | 1-hop 정적 순회 | 1~2 hop 동적 하이브리드 확장 | 1~2 hop AGE 하이브리드 순회 |
+| **RDBMS 결합** | 불가 (그래프 전용) | 불가 (그래프 전용) | 불가 (그래프 전용) | **가능** (SQL JOIN + Cypher 동시 질의) |
 
 ---
 

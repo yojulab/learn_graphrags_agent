@@ -126,7 +126,7 @@ def run_test_2_web_ui_e2e() -> Dict[str, Any]:
 
     try:
         import asyncio
-        from src.app.main import serve_ui, health_check, get_stats, execute_query, QueryRequest
+        from src.web_app.main import serve_ui, health_check, get_stats, execute_query, QueryRequest
 
         # 1. HTML 응답 획득
         html_response = asyncio.run(serve_ui())

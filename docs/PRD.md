@@ -214,35 +214,36 @@ RELATIONSHIP_TYPES=FIGHTS,PROTECTS,TRAINS,TRAINS_WITH,KNOWS,FAMILY_OF,SIBLING_OF
 │   └── agent/
 │       ├── harness_prompt.md         # Agent Harness Prompt Specification
 │       └── system_prompt.md          # Agent System Prompt Specification
-└── src/                              # Source Code by Version
-    ├── v1/                           # Baseline Version (Basic Text2Cypher - Neo4j)
+└── src/                              # Source Code by Domain & Task
+    ├── baseline/                     # Baseline Version (Basic Text2Cypher - Neo4j)
     │   ├── 1_prepare_data_v1.py
     │   ├── 2_ingest_data_v1.py
     │   └── 3_graphrag_agent_v1.py
-    ├── v2/                           # Intermediate Version (Metadata Filtered Vector RAG - Neo4j)
+    ├── metadata_filter/              # Intermediate Version (Metadata Filtered Vector RAG - Neo4j)
     │   ├── 1_prepare_data_v2.py
     │   ├── 2_ingest_data_v2.py
     │   └── 3_graphrag_agent_v2.py
-    ├── v3/                           # Production Hybrid Version (Vector + Graph Expansion - Neo4j)
+    ├── neo4j_hybrid/                 # Production Hybrid Version (Vector + Graph Expansion - Neo4j)
     │   ├── 1_prepare_data_v3.py
     │   ├── 2_ingest_data_v3.py
     │   └── 3_graphrag_agent_v3.py
-    ├── v4/                           # Multi-Model Hybrid Version (PostgreSQL + Apache AGE)
+    ├── apache_age/                   # Multi-Model Hybrid Version (PostgreSQL + Apache AGE)
     │   ├── 1_prepare_data_v4.py
     │   ├── 2_ingest_data_v4.py
     │   └── 3_graphrag_agent_v4.py
-    ├── app/                          # FastAPI Web Service & Explorer
+    ├── web_app/                      # FastAPI Web Service & Explorer
     │   ├── __init__.py
     │   └── main.py
     └── utils/                        # Utilities & Validation
         ├── check_indexes.py
         ├── playwright_scraper.py
-        └── test_pipeline_playwright.py
+        ├── test_pipeline_playwright.py
+        └── verify_full_pipeline.py
 ```
 
 ### Version Comparison Matrix
 
-| 항목 | v1 (Baseline) | v2 (Metadata Filter) | v3 (Neo4j Hybrid) | v4 (Apache AGE) |
+| 항목 | baseline (v1) | metadata_filter (v2) | neo4j_hybrid (v3) | apache_age (v4) |
 | :--- | :--- | :--- | :--- | :--- |
 | **백엔드 DB** | Neo4j 5 | Neo4j 5 | Neo4j 5 | PostgreSQL 16+ & Apache AGE |
 | **그래프 모델** | Native Property Graph | Native Property Graph | Native Property Graph | Relational Property Graph (`ag_catalog`) |
@@ -265,42 +266,42 @@ cd dockers
 docker-compose up -d
 
 # 또는 백엔드별 선별 실행:
-# [Neo4j v1~v3 실행 시]
+# [Neo4j 실행 시]
 docker-compose --profile neo4j --profile ollama up -d
 
-# [Apache AGE v4 실행 시]
+# [Apache AGE 실행 시]
 docker-compose --profile postgres --profile ollama up -d
 
 cd ..
 ```
 
-### 2. Version 3 (Neo4j Hybrid) Execution
+### 2. Neo4j Hybrid Execution
 
 ```bash
 # Step 1: 데이터 수집 및 정규화
-uv run src/v3/1_prepare_data_v3.py
+python3 src/neo4j_hybrid/1_prepare_data_v3.py
 
 # Step 2: Neo4j 그래프 적재 및 HNSW 벡터 인덱스 생성
-uv run src/v3/2_ingest_data_v3.py
+python3 src/neo4j_hybrid/2_ingest_data_v3.py
 
 # Step 3: GraphRAG 에이전트 CLI 실행
-uv run src/v3/3_graphrag_agent_v3.py
+python3 src/neo4j_hybrid/3_graphrag_agent_v3.py
 
 # 유틸리티: Neo4j 벡터 인덱스 상태 점검
-uv run src/utils/check_indexes.py
+python3 src/utils/check_indexes.py
 ```
 
-### 3. Version 4 (Apache AGE) Execution
+### 3. Apache AGE Multi-Model Execution
 
 ```bash
 # Step 1: 데이터 수집 및 AGE 호환 포맷 정규화
-uv run src/v4/1_prepare_data_v4.py
+python3 src/apache_age/1_prepare_data_v4.py
 
 # Step 2: PostgreSQL AGE 그래프 생성, 노드/간선 적재 및 임베딩 인덱싱
-uv run src/v4/2_ingest_data_v4.py
+python3 src/apache_age/2_ingest_data_v4.py
 
 # Step 3: Apache AGE 기반 GraphRAG 에이전트 CLI 실행
-uv run src/v4/3_graphrag_agent_v4.py
+python3 src/apache_age/3_graphrag_agent_v4.py
 ```
 
 ### 4. Apache AGE Direct SQL Verification (psql 검증)

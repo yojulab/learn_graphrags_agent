@@ -156,14 +156,15 @@ def stage_2_database_integrity() -> bool:
 
 
 def stage_3_graphrag_agent_execution() -> bool:
-    """[Flow 3] GraphRAG 하이브리드 검색 질의응답 파이프라인 검증"""
-    log_stage("[Flow 3] GraphRAG 하이브리드 검색 파이프라인 검증 (v3)")
+    """[Flow 3] GraphRAG 하이브리드 검색 파이프라인 검증 (Neo4j v3 & Apache AGE v4)"""
+    log_stage("[Flow 3] Dual GraphRAG 하이브리드 검색 파이프라인 검증 (Neo4j & Apache AGE)")
     start_time = time.time()
     stage_info = {"stage": "3_graphrag_agent_execution", "passed": False, "details": {}}
 
     try:
         import importlib
-        agent_v3 = importlib.import_module("src.v3.3_graphrag_agent_v3")
+        agent_v3 = importlib.import_module("src.neo4j_hybrid.3_graphrag_agent_v3")
+        agent_v4_mod = importlib.import_module("src.apache_age.3_graphrag_agent_v4")
 
         # 1. 쿼리 의도 분류기 검증
         test_question = "카마도 탄지로와 카마도 네즈코는 어떤 관계야?"
@@ -173,30 +174,49 @@ def stage_3_graphrag_agent_execution() -> bool:
         assert entities.get("entity_a") == "카마도 탄지로"
         assert entities.get("entity_b") == "카마도 네즈코"
 
-        # 2. 하이브리드 리트리버 시드 노드 검색 검증
+        # 2. Neo4j 하이브리드 리트리버 시드 노드 검색 검증
         seed_nodes = agent_v3.hybrid_retriever.vector_search(test_question)
         assert len(seed_nodes) > 0, "시드 노드 검색 결과가 비어있습니다."
 
         seed_names = [n["name"] for n in seed_nodes]
-        print(f"  🌱 벡터 유사도 기반 시드 노드: {seed_names}", flush=True)
+        print(f"  🌱 [Neo4j] 벡터 유사도 기반 시드 노드: {seed_names}", flush=True)
         assert any(name in ["카마도 탄지로", "카마도 네즈코"] for name in seed_names)
 
-        # 3. 1~2 hop 서브그래프 확장 검증
+        # 3. Neo4j 1~2 hop 서브그래프 확장 검증
         seed_ids = [n["id"] for n in seed_nodes]
         subgraph = agent_v3.hybrid_retriever.expand_from_seeds(seed_ids)
-        print(f"  🕸️ 그래프 확장 결과: 서브그래프 레코드 {len(subgraph)}건 확보", flush=True)
+        print(f"  🕸️ [Neo4j] 그래프 확장 결과: 서브그래프 레코드 {len(subgraph)}건 확보", flush=True)
         assert len(subgraph) > 0, "서브그래프 확장 결과가 0건입니다."
+
+        # 4. Apache AGE v4 멀티모델 파이프라인 검증
+        v4_agent = agent_v4_mod.GraphRAGAgentV4()
+        v4_seeds = v4_agent.vector_retriever.search_seed_nodes(test_question, top_k=3)
+        assert len(v4_seeds) > 0, "Apache AGE 시드 노드 검색 결과 0건"
+        v4_seed_names = [s["name"] for s in v4_seeds]
+        print(f"  🐘 [Apache AGE] In-Database 벡터 유사도 시드 노드: {v4_seed_names}", flush=True)
+        assert any(name in ["카마도 탄지로", "카마도 네즈코"] for name in v4_seed_names)
+
+        v4_cypher_sql = v4_agent.cypher_engine.generate_intent_query(
+            agent_v4_mod.QueryType.RELATIONSHIP,
+            {"entity_a": "카마도 탄지로", "entity_b": "카마도 네즈코"},
+            v4_seeds
+        )
+        v4_records = v4_agent.cypher_engine.execute_cypher_sql(v4_cypher_sql)
+        print(f"  🕸️ [Apache AGE] openCypher in SQL 매칭 레코드: {len(v4_records)}건", flush=True)
+        assert len(v4_records) > 0, "Apache AGE openCypher 질의 결과 0건"
 
         stage_info["passed"] = True
         stage_info["details"] = {
             "test_question": test_question,
             "query_type": query_type.value,
             "entities": entities,
-            "seed_nodes": seed_names,
-            "subgraph_records": len(subgraph),
+            "neo4j_seed_nodes": seed_names,
+            "neo4j_subgraph_records": len(subgraph),
+            "age_seed_nodes": v4_seed_names,
+            "age_cypher_records": len(v4_records),
             "duration": f"{time.time() - start_time:.2f}s"
         }
-        print(f"✅ [Flow 3 완료] 질문 분류 및 그래프 확장 파이프라인 정상 ({stage_info['details']['duration']})", flush=True)
+        print(f"✅ [Flow 3 완료] Dual GraphRAG (Neo4j & Apache AGE) 검색 및 확장 파이프라인 정상 ({stage_info['details']['duration']})", flush=True)
 
     except Exception as e:
         stage_info["error"] = str(e)
@@ -213,7 +233,7 @@ def stage_4_playwright_e2e_web_ui() -> bool:
     stage_info = {"stage": "4_web_ui_playwright_e2e", "passed": False, "details": {}}
 
     try:
-        from src.app.main import serve_ui, health_check, get_stats, execute_query, QueryRequest
+        from src.web_app.main import serve_ui, health_check, get_stats, execute_query, QueryRequest
 
         # 1. FastAPI UI 렌더링 검증
         html_response = asyncio.run(serve_ui())
@@ -244,12 +264,17 @@ def stage_4_playwright_e2e_web_ui() -> bool:
             assert stat_rels >= 300, f"UI 관계 수 부족: {stat_rels} < 300"
             print(f"  📊 UI 통계 카운터: 노드 {stat_nodes}개, 관계 {stat_rels}개", flush=True)
 
+            # 버전 선택 옵션 검증 (v4, v3 포함 여부)
+            version_options = page.locator("#version-select option").all_inner_texts()
+            assert any("v4.0" in opt for opt in version_options), f"v4.0 옵션 누락: {version_options}"
+            print(f"  🎛️  버전 선택 옵션: {version_options}", flush=True)
+
             # 입력 폼 인터랙션 시뮬레이션
             question_input = page.locator("#question-input")
             question_input.fill("카마도 탄지로와 카마도 네즈코의 여정")
 
             version_select = page.locator("#version-select")
-            version_select.select_option("v3")
+            version_select.select_option("v4")
 
             btn_submit = page.locator("#btn-submit")
             assert btn_submit.is_visible()
@@ -260,7 +285,7 @@ def stage_4_playwright_e2e_web_ui() -> bool:
 
             browser.close()
 
-        # 3. 비동기 엔드포인트 핸들러 E2E 검증
+        # 3. 비동기 엔드포인트 핸들러 E2E 검증 (v3 및 v4 모두 검증)
         health_res = asyncio.run(health_check())
         assert health_res["status"] == "healthy", f"헬스체크 실패: {health_res}"
         assert health_res["neo4j_connected"] is True, "Neo4j 연결 미확인"
@@ -268,16 +293,22 @@ def stage_4_playwright_e2e_web_ui() -> bool:
         stats_res = asyncio.run(get_stats())
         assert stats_res["total_nodes"] == 19
 
-        query_res = asyncio.run(execute_query(QueryRequest(question="탄지로와 네즈코", version="v3")))
-        assert query_res["success"] is True
-        print(f"  💬 에이전트 질의응답 응답 검증 완료: {query_res['answer'][:80]}...", flush=True)
+        # v3 쿼리
+        query_res_v3 = asyncio.run(execute_query(QueryRequest(question="탄지로와 네즈코", version="v3")))
+        assert query_res_v3["success"] is True
+        print(f"  💬 [v3] 에이전트 응답 검증 완료: {query_res_v3['answer'][:60]}...", flush=True)
+
+        # v4 쿼리
+        query_res_v4 = asyncio.run(execute_query(QueryRequest(question="탄지로와 네즈코", version="v4")))
+        assert query_res_v4["success"] is True
+        print(f"  💬 [v4] 에이전트 응답 검증 완료: {query_res_v4['answer'][:60]}...", flush=True)
 
         stage_info["passed"] = True
         stage_info["details"] = {
             "ui_nodes": stat_nodes,
             "ui_relationships": stat_rels,
             "api_health": health_res["status"],
-            "query_result_sample": query_res["answer"][:100],
+            "query_result_sample": query_res_v4["answer"][:100],
             "screenshot_path": str(screenshot_path),
             "duration": f"{time.time() - start_time:.2f}s"
         }

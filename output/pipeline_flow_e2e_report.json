@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-17 05:27:25",
+  "timestamp": "2026-10-17 12:10:31",
   "overall_status": "PASS",
   "stages": [
     {
@@ -9,7 +9,7 @@
         "episodes_count": 26,
         "kg_nodes": 19,
         "kg_relationships": 310,
-        "duration": "0.03s"
+        "duration": "0.05s"
       }
     },
     {
@@ -20,7 +20,7 @@
         "neo4j_relationships": 310,
         "neo4j_vector_indexes": 26,
         "postgres_age_extension": "LOADED",
-        "duration": "0.23s"
+        "duration": "0.43s"
       }
     },
     {
@@ -33,15 +33,21 @@
           "entity_a": "카마도 탄지로",
           "entity_b": "카마도 네즈코"
         },
-        "seed_nodes": [
+        "neo4j_seed_nodes": [
           "카마도 탄지로",
           "카마도 네즈코",
           "츠유리 카나오",
           "마코모",
           "우부야시키 카가야"
         ],
-        "subgraph_records": 50,
-        "duration": "1.54s"
+        "neo4j_subgraph_records": 50,
+        "age_seed_nodes": [
+          "카마도 탄지로",
+          "카마도 네즈코",
+          "츠유리 카나오"
+        ],
+        "age_cypher_records": 24,
+        "duration": "15.51s"
       }
     },
     {
@@ -51,9 +57,9 @@
         "ui_nodes": 19,
         "ui_relationships": 310,
         "api_health": "healthy",
-        "query_result_sample": "**[GraphRAG v3 답변]**\n\n질문: '탄지로와 네즈코'\n\n### 지식그래프 검색 결과:\n- [PROTECTS] S1E1: 대목족의 부활 계획에 대한 두려움과 Nezuko",
+        "query_result_sample": "**[Apache AGE GraphRAG v4 답변]**\n\nHmm, 사용자가 탄지로와 네즈코에 대한 정보를 요청했네. 제공된 지식그래프 검색 결과를 보면 이 두 인물 사이의 관계와",
         "screenshot_path": "/apps/learn_graphrags_agent/output/playwright_e2e_screenshot.png",
-        "duration": "4.87s"
+        "duration": "494.38s"
       }
     }
   ]

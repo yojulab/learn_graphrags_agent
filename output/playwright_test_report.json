@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-17 05:27:39",
+  "timestamp": "2026-10-17 12:04:34",
   "overall_status": "PASS",
   "tests": [
     {
@@ -8,7 +8,7 @@
       "details": {
         "episodes_parsed": 2,
         "sample_synopsis": "Tanjiro Kamado lives a peaceful life with his family. His si...",
-        "duration": "0.62s"
+        "duration": "1.62s"
       }
     },
     {
@@ -24,7 +24,7 @@
         ],
         "api_health": "healthy",
         "query_result_sample": "**[GraphRAG v3 답변]**\n\n질문: '탄지로와 네즈코'\n\n### 지식그래프 검색 결과:\n- [PR...",
-        "duration": "1.25s"
+        "duration": "2.18s"
       }
     },
     {

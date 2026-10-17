@@ -169,7 +169,7 @@ def ingest_v4_pipeline() -> Dict[str, Any]:
     v4_kg_path = BASE_DIR / "output/knowledge_graph_v4.json"
     if not v4_kg_path.exists():
         import importlib
-        prep_mod = importlib.import_module("src.v4.1_prepare_data_v4")
+        prep_mod = importlib.import_module("src.apache_age.1_prepare_data_v4")
         prep_mod.prepare_data_v4()
 
     with open(v4_kg_path, "r", encoding="utf-8") as f:

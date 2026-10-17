@@ -138,8 +138,19 @@ async def execute_query(req: QueryRequest):
                 temperature=0
             )
             answer = resp.choices[0].message.content
+        elif req.version == "v4":
+            # v4 파이프라인 (PostgreSQL 16+ & Apache AGE Multi-Model)
+            try:
+                import importlib
+                agent_v4_mod = importlib.import_module("src.apache_age.3_graphrag_agent_v4")
+                agent_v4 = agent_v4_mod.GraphRAGAgentV4()
+                result = agent_v4.query(question)
+                answer = result.get("answer", "")
+            except Exception as e:
+                # 폴백
+                answer = f"**[Apache AGE GraphRAG v4 답변]**\n\n질문: '{question}'\n(에이전트 검색 처리 중: {e})"
         else:
-            # v3 파이프라인
+            # v3 파이프라인 (Neo4j 하이브리드)
             # 지식 그래프 JSON 파일 기반 신속 조회 폴백 포함
             kg_file = BASE_DIR / "output/knowledge_graph_v3.json"
             if kg_file.exists():
@@ -368,7 +379,8 @@ async def serve_ui():
             <div>
               <label for="version-select" style="font-size: 0.85rem; color: var(--text-muted);">버전:</label>
               <select id="version-select" style="background:#111420; color:var(--text-main); border:1px solid var(--border-color); border-radius:4px; padding:4px 8px;">
-                <option value="v3">v3.0 (하이브리드 벡터+그래프)</option>
+                <option value="v4">v4.0 (Apache AGE 멀티모델)</option>
+                <option value="v3" selected>v3.0 (하이브리드 벡터+그래프)</option>
                 <option value="v2">v2.0 (메타데이터 필터링+리랭킹)</option>
                 <option value="v1">v1.0 (Text2Cypher 베이스라인)</option>
               </select>
@@ -493,4 +505,4 @@ async def serve_ui():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("src.app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.web_app.main:app", host="0.0.0.0", port=8000, reload=True)
