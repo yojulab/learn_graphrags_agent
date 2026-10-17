@@ -196,11 +196,36 @@ python3 src/utils/check_indexes.py
 
 ---
 
+### 8. Multi-Model DB Inspector MCP 서버 (대화형 DB 상태 확인)
+
+에이전트가 Neo4j, Apache AGE on PostgreSQL, MongoDB의 적재 상태를 실시간으로 직접 확인하고 쿼리할 수 있도록 표준 **Model Context Protocol (MCP)** 서버를 제공합니다:
+
+```bash
+# MCP 도구 로컬 자체 검증 (3대 DB 상태 일괄 출력)
+python3 src/utils/mcp_db_server.py --test
+
+# Stdio 모드로 MCP 서버 구동 (mcp_config.json 등록 시 자동 호출)
+python3 src/utils/mcp_db_server.py
+```
+
+- **제공되는 6대 핵심 MCP 도구**:
+  1. `check_all_dbs_status()`: Neo4j(19개 노드/310개 관계), PostgreSQL AGE(19개 버텍스/310개 엣지), MongoDB 상태 일괄 요약
+  2. `inspect_neo4j_graph()`: 인간(13)/도깨비(6) 라벨별 통계 및 26개 HNSW 벡터 인덱스 목록 확인
+  3. `query_neo4j_cypher(cypher_query)`: 읽기 전용 Cypher 안전 실행 (가드레일 적용)
+  4. `inspect_apache_age_graph()`: demon_slayer 그래프 버텍스 및 PostgreSQL 관계형 벡터 테이블(`node_embeddings`, `relationship_embeddings`) 행 수 조회
+  5. `query_apache_age_cypher(cypher_body)`: openCypher in SQL 안전 실행 및 agtype 디코딩 결과 반환
+  6. `inspect_mongodb_status()`: MongoDB 컬렉션 및 문서 현황 확인
+
+- **설정 파일**: `mcp_config.json` 및 `.agents/plugins/harness/mcp_config.json`
+
+---
+
 ## 📁 디렉토리 구조 (업무별 폴더 구성)
 
 ```text
 /apps/learn_graphrags_agent
 ├── .env                              # 전체 중앙 환경변수 관리
+├── mcp_config.json                   # Multi-Model DB Inspector MCP 설정
 ├── config.py                         # .env 기반 설정을 로딩하는 모듈
 ├── PRD.md                            # 요구사항 및 상세 분석 문서 (docs/PRD.md)
 ├── README.md                         # 실행 및 프로젝트 설명서
@@ -238,6 +263,7 @@ python3 src/utils/check_indexes.py
     │   └── main.py
     └── utils/                        # 공통 유틸리티 및 검증 도구
         ├── check_indexes.py          # Neo4j 벡터 인덱스 점검
+        ├── mcp_db_server.py          # Multi-Model DB Inspector MCP 서버
         ├── playwright_scraper.py     # Playwright Headless 데이터 수집기
         ├── test_pipeline_playwright.py # Playwright 단위/통합 테스트
         └── verify_full_pipeline.py   # 전체 흐름(Flow 1~4) E2E 검증기
