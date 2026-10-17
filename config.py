@@ -32,6 +32,7 @@ POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", "5432"))
 POSTGRES_USER = os.getenv("POSTGRES_USER", "admin")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "admin123")
 POSTGRES_DB = os.getenv("POSTGRES_DB", "db_graphrag_agent")
+AGE_GRAPH_NAME = os.getenv("AGE_GRAPH_NAME", "demon_slayer")
 
 # Database (MongoDB)
 MONGO_HOST = os.getenv("MONGO_HOST", "localhost")

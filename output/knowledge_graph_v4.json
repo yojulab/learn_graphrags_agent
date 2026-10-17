@@ -1,0 +1,3290 @@
+{
+  "version": "v4.0-apache-age",
+  "nodes": [
+    {
+      "id": "N0",
+      "label": "인간",
+      "name": "카마도 탄지로",
+      "properties": {
+        "name": "카마도 탄지로",
+        "id": "N0"
+      }
+    },
+    {
+      "id": "N1",
+      "label": "인간",
+      "name": "카마도 네즈코",
+      "properties": {
+        "name": "카마도 네즈코",
+        "id": "N1"
+      }
+    },
+    {
+      "id": "N2",
+      "label": "인간",
+      "name": "토미오카 기유",
+      "properties": {
+        "name": "토미오카 기유",
+        "id": "N2"
+      }
+    },
+    {
+      "id": "N5",
+      "label": "인간",
+      "name": "마코모",
+      "properties": {
+        "name": "마코모",
+        "id": "N5"
+      }
+    },
+    {
+      "id": "N6",
+      "label": "인간",
+      "name": "아가츠마 젠이츠",
+      "properties": {
+        "name": "아가츠마 젠이츠",
+        "id": "N6"
+      }
+    },
+    {
+      "id": "N7",
+      "label": "인간",
+      "name": "하시비라 이노스케",
+      "properties": {
+        "name": "하시비라 이노스케",
+        "id": "N7"
+      }
+    },
+    {
+      "id": "N8",
+      "label": "인간",
+      "name": "츠유리 카나오",
+      "properties": {
+        "name": "츠유리 카나오",
+        "id": "N8"
+      }
+    },
+    {
+      "id": "N9",
+      "label": "인간",
+      "name": "렌고쿠 쿄쥬로",
+      "properties": {
+        "name": "렌고쿠 쿄쥬로",
+        "id": "N9"
+      }
+    },
+    {
+      "id": "N10",
+      "label": "인간",
+      "name": "우부야시키 카가야",
+      "properties": {
+        "name": "우부야시키 카가야",
+        "id": "N10"
+      }
+    },
+    {
+      "id": "N11",
+      "label": "인간",
+      "name": "코쵸우 시노부",
+      "properties": {
+        "name": "코쵸우 시노부",
+        "id": "N11"
+      }
+    },
+    {
+      "id": "N12",
+      "label": "인간",
+      "name": "시나즈가와 사네미",
+      "properties": {
+        "name": "시나즈가와 사네미",
+        "id": "N12"
+      }
+    },
+    {
+      "id": "N13",
+      "label": "도깨비",
+      "name": "키부츠지 무잔",
+      "properties": {
+        "name": "키부츠지 무잔",
+        "id": "N13"
+      }
+    },
+    {
+      "id": "N14",
+      "label": "도깨비",
+      "name": "스사마루",
+      "properties": {
+        "name": "스사마루",
+        "id": "N14"
+      }
+    },
+    {
+      "id": "N15",
+      "label": "도깨비",
+      "name": "야하바",
+      "properties": {
+        "name": "야하바",
+        "id": "N15"
+      }
+    },
+    {
+      "id": "N16",
+      "label": "도깨비",
+      "name": "쿄우가이",
+      "properties": {
+        "name": "쿄우가이",
+        "id": "N16"
+      }
+    },
+    {
+      "id": "N17",
+      "label": "도깨비",
+      "name": "루이",
+      "properties": {
+        "name": "루이",
+        "id": "N17"
+      }
+    },
+    {
+      "id": "N18",
+      "label": "도깨비",
+      "name": "엔무",
+      "properties": {
+        "name": "엔무",
+        "id": "N18"
+      }
+    },
+    {
+      "id": "N3",
+      "label": "인간",
+      "name": "우로코다키 사콘지",
+      "properties": {
+        "name": "우로코다키 사콘지",
+        "id": "N3"
+      }
+    },
+    {
+      "id": "N4",
+      "label": "인간",
+      "name": "사비토",
+      "properties": {
+        "name": "사비토",
+        "id": "N4"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "대목족의 부활 계획에 대한 두려움과 Nezuko의 저항을 목격한 후"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "대목족의 교육 기관인 키부츠지에서 받은 Hinokami Kagura 기술을 전수받음."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N13",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "대목족의 위협에 대한 공동 대응"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N14",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "대목족의 복수 계획 실행 방해"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에서 명시된 직접적 보호 행위"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "위기 극복을 위한 협력 관계 형성"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N0",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko의 인간화 방지를 위한 경고"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 프로그램 개설 및 Tanjiro의 참여 유도"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Final Selection을 위한 필수 기술 습득 과정"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "서로 다른 배경을 가진 두 인물이 협력 관계를 구축함"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N2",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "마코모가 탄지로의 신체적 위협에 대한 방어"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N3",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "두 인물 모두 우보타키 사콘지의 제자였던 과거 연결고리"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N1",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 중 실수 인정 및 동료 간 경쟁 심화"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N8",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 가문의 일원으로서의 정체성 탐구"
+      }
+    },
+    {
+      "start_id": "N8",
+      "end_id": "N1",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 후 동료들과의 유대감 강화"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N1",
+      "type": "BATTLES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Final Selection의 핵심 전투 장면"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Final Selection 위기에서의 생존 시도"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N13",
+      "type": "TRANSFORMS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "위기 극복을 위한 핵심 기술 습득"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N8",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 가문과의 연결고리 회복 시도"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro believes Sakonji Nezuko will become a Demon Slayer and takes action to protect her spirit."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N2",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro trains Tomioka as a Demon Slayer through rigorous training."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N14",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Meeting during the mountain evacuation"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N6",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Sakonji Nezuko transforms into Kyogai after Tanjiro's encouragement, becoming a powerful demon hunter."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N9",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Fight against the largest demon threat"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N9",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Demon attacks Sakonji students"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N4",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro rescues Sabito after his own battle, showing compassion."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N5",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro rescues Makomo following Sabito's death, demonstrating strength."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N15",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Rescue mission to evacuate students from Hell"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N0",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Susamaru Shasararu warns Tanjiro about Yahaba's growing power."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Final confrontation in the mountain"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N16",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro learns Kyogai's techniques from his mentor after meeting him."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko를 보호하기 위해 카마도 탄지로 결정"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N6",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠의 기술 전수와 첫 임무 지시"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N3",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "왕좌 쟁탈전 구도 형성"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "마코모의 권력 다툼에서 협력"
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N9",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로의 운명을 알려주기 위한 조치"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 후 위기 상황에서의 구출 활동"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N18",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야와 엔무의 연합 활동"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미의 죽음 이후 새로운 운명에 대한 두려움과 책임감이 작용"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N4",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미의 죽음과 함께 발생한 위기 상황에서의 생존 노력"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N7",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미의 죽음 후 도깨비 세계로의 전환 과정에서 발생한 갈등"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N8",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미와 유사한 상황 재현을 위한 실험적 접근"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N18",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미의 죽음 이후 예상치 못한 적 등장으로 인한 긴장 고조"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비 세계의 위협에 대한 극복 방안 모색"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N2",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미와의 대립 후 얻은 경험을 바탕으로 한 성장 과정"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N2",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케미의 죽음 이후 정치적·사회적 안정을 위한 연합 필요성 대두"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N4",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "개인적 차원에서의 한계 극복 전략 수립"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 카마도 네즈코를 보호하기로 결심한 결정으로 시작됨"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko Kamado가 Tanjiro를 보호하기로 결심하고 그의 훈련을 지원하며, 동시에 자신들의 공동 목표인 Demons' World를 위한 동맹을 강화합니다."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Susamaru에 의한 부상과 갈등 심화"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N15",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Yahaba가 Tanji로 하여금 자신의 경로를 방해하는 화살표를 사용하도록 조종함에 대한 경고와 조언을 제공합니다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro의 목표와 Yahaba의 권력 유지 전략 충돌"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N8",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "공동 위협에 대한 대응"
+      }
+    },
+    {
+      "start_id": "N8",
+      "end_id": "N15",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "츠유리 카나오의 부상으로 인해 탄지로가 직접 개입하여 Yahaba를 위협하는 상황에서도 Nezuko와 함께 보호 활동을 지속합니다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "BATTLES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Demons 세계 내 권력 투쟁의 정점"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N0",
+      "type": "DEFEATS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Yahaba가 Tanji로 하여금 화살표를 활용해 자신의 지배를 유지하도록 허용하는 결정으로 인해 Tanjiro가 패배합니다."
+      }
+    },
+    {
+      "start_id": "N15",
+      "end_id": "N7",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "후속 전투에서의 협력적 관계"
+      }
+    },
+    {
+      "start_id": "N8",
+      "end_id": "N7",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko가 탄지로 하여금 Yahaba의 공격 경로를 교란시키는 데 필요한 기술적 조언을 제공합니다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro와사비토가 Yahaba의 전술적 방해 수단인 화살표 사용에 대한 대응 훈련을 진행합니다."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N8",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "공동 생존을 위한 즉각적 협력"
+      }
+    },
+    {
+      "start_id": "N15",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Demons 세계 내부의 권력 재편"
+      }
+    },
+    {
+      "start_id": "N8",
+      "end_id": "N0",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko와 탄지로서 Tanji로부터 부상을 입은 후에도 자신들의 상처를 치유하며 Tanji로 하여금 Yahaba에 대한 저항 의지를 고취시킵니다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 도깨비로 변하면서 발생한 갈등의 시작"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N6",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "사비토가 아가츠마 젠이츠의 기술을 가르치는 과정."
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 동료 간의 유대감 강화"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N7",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 간접적 관찰을 통한 정보 공유"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N15",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 명시된 직접적 언급 없음 → 제외"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N17",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에서 암시적 언급만 있음 → 제외"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N18",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠가 엔무를 치유하는 과정."
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N18",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tamayo가 엔무 치유 후 Nezuko의 힘 강화."
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N15",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko가 Susamaru에게 이름 언급 유도."
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N14",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "eyeball 분석을 통한 정체성 확인 후 발생"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N15",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 직접적 언급 없음 → 제외"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N13",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "복수심과 인간성 사이의 갈등 반영"
+      }
+    },
+    {
+      "start_id": "N11",
+      "end_id": "N9",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Sakonji가 탄지로 하여금 인간화를 유도하도록 조종."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N4",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 명시된 결혼 장면 포함"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N7",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "eyeball 분석 결과를 바탕으로 한 추론 과정 포함"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 직접적 언급 없음 → 제외"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N7",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tamayo가 Susamaru에 대한 복수심을 해소하는 데 기여."
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N4",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 간접적 언급 있음"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N5",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 암시적 포함 가능성 있음 → 제외"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N2",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 직접적 언급 없음 → 제외"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N3",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 암시적 언급 있음 → 제외"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro와 Nezuko를 보호하기 위해 카마도 탄지로 직접 개입"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠의 기술 전수와 함께 탄지로의 훈련 시작"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "목도 마을의 숲속 저택에서 탄지로와 루오코다키가 처음 만나는 장면"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N8",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루오코다키가 탄지로에게 접근하려는 시도"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N7",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루오코다키가 탄지로와 함께 아이들을 초대하는 장면"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N4",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "목도 마을의 저택에서 탄지로와 Sabito가 처음 접촉"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N2",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루오코다키가 탄지로의 직접적인 도전 시도"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 루오코다키의 아이들을 보호하기 위해 그를 설득하는 과정"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N6",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루오코다키가 탄지로에게 아이들의 존재를 알려주는 장면"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루오코다키가 탄지로의 아이들을 보호하는 데 동의"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N4",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로와 Sabito가 루오코다키의 아이들을 초대받은 후 첫 만남"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N1",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 루오코다키의 네즈코에게 아이들의 존재를 알리는 마지막 개입"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 루오코다키의 네즈코에게 아이들 보호를 위한 설득을 통해 결정을 유도"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비로 변하기 전까지의 인간 신분 유지 시도"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Thunder Breathing 훈련을 통해 공격에 대비."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "전투 실패 시 구조 요청"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N16",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비 Kyogai에게 직접적인 물리적 공격 시도."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "DEFEATS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kyogai의 압도적인 힘에 패배하여 의식 상실."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N9",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Muzan의 명령에 따라 탄지로로 복귀 유도."
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N15",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "야하바와 같은 다른 도깨비들과의 동맹 형성."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "전투 구도 설정"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N17",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이에게 드럼 기술 전수."
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N13",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "복수 계획 실행"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N9",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시나즈가와 사네미와 탄지로의 만남."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "TRANSFORMS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kyogai의 드럼으로 인한 신체적 변화."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N9",
+      "type": "SAVES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "복수 실행 과정에서의 협력"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "복수 계획의 일환으로 탄지로 하여금 안전한 장소로 이동시킴"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko가 카마도 탄지로부터 보호받음을 결심함."
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 도깨비의 기술인 Hinokami Kagura를 가르침."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N18",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "케임의 과거 비밀과 엔무와의 유대 관계"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "후대 교육 및 문화 전파"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N17",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 가문의 훈련생들 중 하나"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N14",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로는 고통 속에서도 Kyogai와 엔무를 공격."
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N0",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "그들의 희생으로 인한 정신적 치유"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "적들과의 연합을 통한 전략적 협력"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로는 엔무를 보호하며 Kyogai에 대항해 defends."
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N0",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "희생 후 구원자 역할"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "TRANSFORMS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로는 Kyogai의 공격으로 인해 도깨비 세계로 완전히 변환."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로는 엔무와 함께 도깨비 세계의 핵심 기술 전수."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "경험을 통한 지도"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련생들과의 접촉 및 협력 시도"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "가족 간 유대 강화를 위한 네트워크 확장"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 네즈코를 보호하기로 결심하고 훈련을 시작함."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N3",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "우로코다키 사콘지가 최종 선택의 주요 동기였음을 암시"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N2",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 Tomioka 기유와 함께 훈련을 진행."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N3",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에서 명시된 바와 같이 Tanjiro가 사콘지를 공격한 사건과 연결됨"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 아가츠마 젠이츠의 가르침을 받음."
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N6",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "후일 Nezuko가 이 정보를 사용할 가능성 있음"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N7",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "이노스케의 과거 비밀과 연결된 교육 과정 포함"
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N8",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "하시비라 이노스케가츠유리 카나오와의 관계를 설명함."
+      }
+    },
+    {
+      "start_id": "N8",
+      "end_id": "N14",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 언급되지 않았으나 시놉시스 내 정보만으로는 부족하므로 제외"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N3",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 네즈코가 우로코다키 사콘지에게 직접적인 적대감을 보임."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N14",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "마스크가 떨어진 후 발생한 사건으로 명시적 구출 행위"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N17",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠가 루이를 교육시킴."
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N17",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "후일 두 형제 모두 도깨비가 됨을 예고하는 복선"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "최종 선택 과정에서의 전략적 협력 암시"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N3",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에서 직접적인 대립으로 기술됨"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N3",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 대한 간접적 암시"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N17",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시놉시스에 언급되지 않았으나 시놉시스 내 정보만으로는 불가능하므로 제외"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko가 카마도 탄지로부터 정신적 보호를 받기로 결심함."
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N7",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠가 하시비라 이노스케를 훈련시킴."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들의 비밀 조직인 사네미사게에 대한 교육"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N17",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들 간의 협력 체계 구축"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N9",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들 간의 적대 관계 설정"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N18",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "엔무의 존재로 인한 위기 극복 방안 모색"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N16",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들의 전략 수립 지원"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N9",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "엔무의 위협적 성격 노출"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N15",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로서 엔무에게 직접적인 저항 시도."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야는 엔무와의 전투에서 적극 개입."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들의 최종 대결 구도 확립"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N18",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "위기 관리를 위한 정보 제공"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N9",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "도깨비들 간의 첫 대규모 충돌"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro는 네즈코를 보호하기 위해 어머니 도깨비 mother로부터 위협을 받고 있음에 대비해 그의 가족 구성원들을 훈련시켰다."
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N8",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카노 카나오 도깨비가 마을을 위협하는 상황"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "큰 머리 없는 악마의 등장으로 마을 전체 위협 증가"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro는 루이 카가야의 직접적인 위협으로부터 자신과 동료들을 보호하기 위해 루이를 상대로 저항했다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N17",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro가 루이 카가야를 상대로 승리한 후, 루이의 학대와 학대에 대한 저항으로 루이를 해방시켰다."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "큰 악마의 헤드없는 형태로 마을을 위협하는 상황"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N0",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이 카가야는 루이 자신의 가족 구성원인 탄지로와 동맹을 맺었다."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N8",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이 카가야는 코쵸우 시노부와 함께 카노 카나오 도깨비를 공격하는 동맹을 결성했다."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N16",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "세 명의 주요 동맹자들 간의 연합 작전"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N6",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠는 루이 카가야의 편에 서서 모티브를 보호하기 위해 활동했다."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N5",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "마코모의 잠재적 존재로 인한 불안 증가"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N4",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이 카가야는 탄지로와 함께 모티프 보호를 위한 임시 동맹을 수립했다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 카마도 네즈코를 보호하기로 결심함."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N7",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 아버지에 대한 책임감과 의무"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들의 세계로의 전환과 가족 보호 의무"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N3",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "토미오카 기유가 우로코다키 사콘지의 기술을 가르치고 훈련시킴"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지에 대한 공동 책임"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 사네미가 아버지의 편에 서 있음을 암시함"
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N14",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 간의 경쟁 구도 속에서의 적응 필요성"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N14",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Rui의 학대 행위에 대한 저항"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 우부야시키 카가야와 함께 아버지를 구하려 함"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로가 우부야시키 카가야와 싸우다 패배함"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지를 구하기 위한 최후의 방어"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "DEFEATS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 사네미에게 패배하여 단검 파괴됨"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "BATTLES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지 구출을 위한 마지막 전투"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Rui의 분노에 대한 직접적 대응"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N14",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "인노스케의 학대에 대한 저항"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "코쵸우 시노부가 탄지로를 구하기 위해 노력함"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N0",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "코쵸우 시노부가 탄지로의 가족 보호 의무를 상기시킴"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N9",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지와 신들 사이에서 생존 전략 필요"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N10",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Rui의 딸에게 상처를 치유하는 과정"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 사네미에게 아버지 구출을 위한 희생적 행동"
+      }
+    },
+    {
+      "start_id": "N3",
+      "end_id": "N10",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지를 구하기 위한 불가피한 선택"
+      }
+    },
+    {
+      "start_id": "N3",
+      "end_id": "N10",
+      "type": "DEFEATS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 사네미에게 패배하고 단검 파괴됨"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N9",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "인노스케의 학대에 대한 즉각적 구제 요청"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N0",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로의 정신적 지원 필요성"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N9",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 코쵸우 시노부와 싸우다 패배함"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N12",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아버지 구출을 위한 희생적 투쟁"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N9",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "인노스케의 학대 상황에서의 긴급 개입"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N0",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 코쵸우 시노부의 딸을 구하기 위해 가족 의무를 상기시킴"
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N0",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 코쵸우 시노부의 딸에 대한 가족 보호 의무를 상기시킴"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N12",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "가족 보호를 위한 불가피한 선택"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N3",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야 사네미에게 아버지 구출을 위한 희생적 행동을 보이지만 결국 패배함"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로는 네즈코의 도깨비화 과정에서 그녀를 보호하려는 의지를 가짐"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N6",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 기본 능력 향상을 위한 교육"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N0",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 성장 과정에서 외부 지원 필요성 대두"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 아버지 영향으로 인한 위기 상황 대응"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N8",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "아가츠마 젠이츠가 츠유리 카나오를 훈련시킴."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N0",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 동료들과의 유대감 증진을 위한 관계 심화"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로와 네즈코 카만이 도깨비로 변하는 과정을 함께 수행."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N2",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "후에 카만이 도깨비로 변하는 데 필요한 기초 skill 습득"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N13",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "무잔 도깨비의 저주 극복을 위한 전략 수립"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카만의 도깨비 변환 기술과 토미오카의 실전 경험을 결합한 체계적인 교육"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N10",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "대규모 훈련 캠프 조직 및 지도"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N7",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Daughter의 기억 상실과 트라우마 극복을 위한 심리적·물리적 개입"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N8",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "렌고쿠의 고립된 상태와 잠재적 위협 요소"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N15",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "야하바의 공격적 성향과 무차별 파괴 경향"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N17",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이가 과거 사건으로 인해 정신적·육체적 고통을 겪고 있음"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N8",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "렌고쿠의 신체적 손상과 저주에 의한 정신적 고통 해소 시도"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N18",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "엔무의 저주와 관련된 영적 균형 회복을 위한 노력"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N18",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신의 은총에 의존하는 도깨비들과의 공동 작업"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N14",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "스사마루의 공격성과 예측 불가능한 위협에 대비한 방어 체계 구축"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N14",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "스사마루의 독극과 정신적 불안정화 효과로 인한 신체·정신적 손상 복구"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N7",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "딸이 숲에서 탈출한 후 기억 상실 상태로 고통받고 있음"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N8",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "렌고쿠의 고립된 환경에서의 생존 위기 극복"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N15",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "야하바의 공격성으로 인한 생명 위협 가능성"
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N17",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이가 과거 사건으로 인해 지속적인 정신적 고통을 겪고 있음"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N7",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "이노스케의 기억 상실과 트라우마로 인한 신체·정신적 회복 필요성"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Rui가 카마도 탄지로부터 부모를 공격하려 한 후 그들을 살해하고 자신의 죄의식을 깨닫습니다."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N2",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 탄지로의 가족을 지키기 위해 네즈코를 보호합니다."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N10",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 transformation event 후 부모 발견 및 용서받음."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N2",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야와 탄지로의 동맹 강화."
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N16",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "토미오카 기유가 카가야의 기술 전수 및 훈련 받음."
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N15",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "사비토가 야하바의 힘을 배우고 사용함."
+      }
+    },
+    {
+      "start_id": "N2",
+      "end_id": "N14",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 탄지로의 형제들을 막으려 시도했으나 실패."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N8",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야가 탄지로의 형제들을 위한 계획 수립 지원."
+      }
+    },
+    {
+      "start_id": "N14",
+      "end_id": "N15",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "스사마루가 야하바의 힘을 통해Siblings training에 참여."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N8",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "혈연 및 신념 차이"
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N12",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "인os케와 젠실루가 코시부의 훈련 장소에서 발견됨."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N2",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "탄지로가 카가야와 동맹을 강화하는 과정에서 토미오카 기유도 동참."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N8",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야가 탄지로의 형제들에 대한 knowledge를 공유."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N7",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카가야가 탄지로의 정보망 구축 지원."
+      }
+    },
+    {
+      "start_id": "N15",
+      "end_id": "N7",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "야하바의 힘을 통해 탄지로의 훈련 체계 강화."
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N9",
+      "type": "TRAINS_WITH",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이가 탄지로의 부모를 용서하고 함께 Hell로 탈출."
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N18",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이가 엔무를 포함한 새로운 동료들과 연합."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro decides to protect Nezuko from Muzan's influence."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N2",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko's spirit is safeguarded by Tanjiro as a countermeasure against Muzan."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N10",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "during trial preparation"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N7",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "post-trial aftermath"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N13",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro considers Kagaya Ubuyashiki an enemy due to his actions."
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N13",
+      "type": "ENEMY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kagaya's revelation about Sakonji's letter"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "BATTLES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "after Kagaya's warning about Muzan's influence"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N13",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro attacks Kagaya Ubuyashiki during the trial."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N7",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Nezuko's box stabbing incident"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N2",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro trains both Nezuko and Giyu in Hinokami Kagura before their execution."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N7",
+      "type": "SAVES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kagaya saves Nezuko and Giyu from Muzan's execution by orchestrating a plan."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N2",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "following Tanjiro's direct confrontation with Muzan"
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "preparation for the trial"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N13",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "to test Muzan's power and siblings' spirits"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N7",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kagaya exposes Sakonji's letter detailing Nezuko's resistance capabilities."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N0",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "after Tanjiro discredits him as biased"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N9",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "during a tense confrontation"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N2",
+      "type": "HEALS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "immediate crisis during trial"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N2",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Kagaya trains Nezuko in advanced Hinokami Kagura techniques."
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "following Muzan's arrival and Tanjiro's desperate measures"
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N9",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "preparation against Muzan's final assault"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N0",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Muzan's arrival forces immediate action"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Evidence of her bravery against enemy attacks."
+      }
+    },
+    {
+      "start_id": "N1",
+      "end_id": "N7",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Inspiration by Kagora's sacrifice."
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Support for fellow Demon Slayers."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N17",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Challenge to maintain spirit strength."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N7",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Post-Rui incident guidance."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N7",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Shared experience as Demon Slayers."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N9",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Group discussion after meeting."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N9",
+      "type": "DEFENDS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Clarification of demon hierarchy."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N9",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Unwavering faith despite setbacks."
+      }
+    },
+    {
+      "start_id": "N16",
+      "end_id": "N17",
+      "type": "TRANSFORMS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Symbolic transformation."
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N18",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Final determination post-recovery."
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "구원 훈련 과정에서 발생하는 특수한 어려움"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N7",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "학습 진행 속도 저하로 인한 이탈"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N7",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "정신적 성장을 위한 훈련 과정"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 후 공유된 지식과 멘토링"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N7",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 참여 후 관계 강화"
+      }
+    },
+    {
+      "start_id": "N9",
+      "end_id": "N10",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 장소에서의 직접적 접촉"
+      }
+    },
+    {
+      "start_id": "N7",
+      "end_id": "N8",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 후 분위기 변화로 인한 자연스러운 교류"
+      }
+    },
+    {
+      "start_id": "N4",
+      "end_id": "N12",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련 장소 주변에서의 우연한 접촉"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N7",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "가족의 죽음과 고통을 상기시키는 행동"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N6",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Zenitsu와 인노스케 모두 어려움을 겪는 상황"
+      }
+    },
+    {
+      "start_id": "N6",
+      "end_id": "N10",
+      "type": "TRAINS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "Tanjiro의 성장 단계에서 중요한 전환점으로 인식됨"
+      }
+    },
+    {
+      "start_id": "N11",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "세 명의 훈련생이 협력하여 더 큰 도전에 대비하기 위해"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N4",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "엔무는 사비토를 보호하며 그의 심리적 고통을 완화"
+      }
+    },
+    {
+      "start_id": "N13",
+      "end_id": "N8",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "카마도 탄지로의 인간성 회복을 위한 필수 단계"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "시나즈가와 사네미는 렌고쿠 쿄쥬로와 탄지로 동맹 결성"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N9",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "왕국의 공식적인 훈련 체계 강화를 위한 동맹"
+      }
+    },
+    {
+      "start_id": "N17",
+      "end_id": "N5",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "루이는 마코모를 보호하며 그의 정신적 고통 해소"
+      }
+    },
+    {
+      "start_id": "N12",
+      "end_id": "N4",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "훈련생들의 유대감 강화 및 미래 계획 수립 지원"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N1",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들의 세계로의 진입을 위한 필수 조건 충족"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N18",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "엔무와 함께 신들 세계에 도달하기 위한 준비"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "PROTECTS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들의 힘에 대한 의존적 구조 강화"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N18",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계에서의 전략적 협력 강화"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N18",
+      "type": "ALLY_OF",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들에게서 보호받기 위한 연합"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N15",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계의 권력 유지를 위한 폭력적 행동"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N15",
+      "type": "ATTACKS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신의 분노를 직접적으로 표출하는 계기"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N15",
+      "type": "TEACHES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계로의 교육적 접근"
+      }
+    },
+    {
+      "start_id": "N0",
+      "end_id": "N18",
+      "type": "GUIDES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계로의 길 안내 및 협력 강화"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "MEETS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계에서의 첫 접촉과 유대감 발전"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "ENCOUNTERS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계와 인간 세계의 경계 모호화"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N15",
+      "type": "TRANSFORMS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계 진입을 위한 필수 과정"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "RESCUES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "보호 체계 내에서의 역할 수행"
+      }
+    },
+    {
+      "start_id": "N15",
+      "end_id": "N0",
+      "type": "DEFEATS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계의 즉각적 위협 대응"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "SAVES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들의 지배에 대한 인간 사회의 첫 도전"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N18",
+      "type": "SAVES",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계 내 권력 구조 재편에 기여"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N15",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계의 전체적 정복 계획 실행"
+      }
+    },
+    {
+      "start_id": "N18",
+      "end_id": "N0",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들의 명령에 따른 구조 임무 종료"
+      }
+    },
+    {
+      "start_id": "N10",
+      "end_id": "N18",
+      "type": "KNOWS",
+      "properties": {
+        "episode_number": 1,
+        "season": 1,
+        "context": "신들 세계로의 이동을 위한 마지막 단계"
+      }
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-10-17 11:51:37",
+    "backend": "PostgreSQL 16+ & Apache AGE 1.5+",
+    "graph_name": "demon_slayer",
+    "node_count": 19,
+    "relationship_count": 310,
+    "schema_labels": [
+      "인간",
+      "도깨비"
+    ],
+    "relationship_types_count": 24
+  }
+}
