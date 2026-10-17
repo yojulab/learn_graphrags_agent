@@ -1,302 +1,179 @@
 # GraphRAG Agent 🕸️
+> **귀멸의 칼날 시즌 1 지식그래프 기반 Dual-Backend 하이브리드 검색 에이전트**
 
-애니메이션 줄거리를 AI로 분석하여 지식 그래프를 만들고, 하이브리드 검색(벡터 + 그래프)으로 질문에 답하는 GraphRAG 에이전트입니다.
-
----
-
-## 🎯 프로젝트 개요
-
-**하이브리드 검색 파이프라인**: 벡터 검색 → 그래프 확장 → Cypher 쿼리 → 결과 병합
-
-1. **데이터 준비** - 위키피디아 스크래핑 → AI 개체/관계 추출 → JSON 저장
-2. **그래프 생성** - JSON → Neo4j 지식그래프 + 벡터 임베딩 저장
-3. **하이브리드 검색** - 자연어 질문 → 벡터 유사도 검색 → 그래프 순회 → Cypher 쿼리 생성 → 답변
-
-📄 **상세 사양서**: 자세한 프로젝트 분석 및 아키텍처는 [PRD.md](file:///apps/learn_graphrags_agent/PRD.md)를 참조하세요.
+본 프로젝트는 위키피디아 시즌 1 줄거리를 기반으로 지식그래프를 구축하고, **벡터 검색(Vector Search)**과 **그래프 순회(Graph Traversal)**를 결합한 하이브리드 검색을 통해 정밀한 자연어 질의응답을 제공하는 GraphRAG 에이전트 시스템입니다.
 
 ---
 
-## 📋 사전 요구사항
+## 📌 주요 사항 요약
 
+- **듀얼 그래프 DB 백엔드 지원**:
+  - **Neo4j 5+**: Bolt 프로토콜, HNSW 코사인 유사도 벡터 인덱스 (`bge-m3:567m`), 1~2 Hop 동적 그래프 확장
+  - **PostgreSQL 16+ & Apache AGE 1.5+**: `ag_catalog` 기반 openCypher in SQL, In-Database 관계형 벡터 테이블, SQL JOIN 멀티모델 융합
+- **10대 골든 룰 및 가드레일**: 읽기 전용 쿼리 안전성(`MATCH` 전용), 19개 정규화 인물/도깨비 노드, 24개 표준 관계, `<think>` 태그 정제, 데이터 적재 멱등성 보장
+- **표준 MCP 서버 탑재**: `graphrag-db-inspector` MCP 도구를 통해 Neo4j, Apache AGE, MongoDB 상태 실시간 점검 및 안전 쿼리 지원
+- **인터랙티브 웹 대시보드**: FastAPI + Tailwind-free 모던 웹 UI를 통한 실시간 버전 전환(v1~v4) 및 원클릭 데이터 수집
+
+---
+
+## 🗺️ 버전별 상세 가이드 및 아키텍처 링크
+
+각 버전의 **상세 실행 다이어그램**, **실행 파일 순서(설명/참조/입출력 표)**, **적재 데이터 확인 예제**는 각 폴더의 상세 `README.md`에 분산 정리되어 있습니다:
+
+| 버전 | 폴더 링크 | 백엔드 DB | 검색 아키텍처 | 상세 가이드 링크 |
+| :---: | :--- | :--- | :--- | :---: |
+| **v1** | [`src/baseline_v1/`](file:///apps/learn_graphrags_agent/src/baseline_v1/) | Neo4j 5 | 기본 Text2Cypher 베이스라인 (0~1 hop 단일 매칭) | 📖 [v1 README.md](file:///apps/learn_graphrags_agent/src/baseline_v1/README.md) |
+| **v2** | [`src/metadata_filter_v2/`](file:///apps/learn_graphrags_agent/src/metadata_filter_v2/) | Neo4j 5 | 메타데이터(호흡/에피소드) 필터링 + 벡터 RAG + LLM Reranking | 📖 [v2 README.md](file:///apps/learn_graphrags_agent/src/metadata_filter_v2/README.md) |
+| **v3** | [`src/neo4j_hybrid_v3/`](file:///apps/learn_graphrags_agent/src/neo4j_hybrid_v3/) | Neo4j 5 | 1024차원 HNSW 벡터 인덱스 + 1~2 Hop 동적 그래프 확장 | 📖 [v3 README.md](file:///apps/learn_graphrags_agent/src/neo4j_hybrid_v3/README.md) |
+| **v4** | [`src/apache_age_v4/`](file:///apps/learn_graphrags_agent/src/apache_age_v4/) | PostgreSQL 16 & Apache AGE | In-DB SQL 벡터 검색 + openCypher in SQL 멀티모델 | 📖 [v4 README.md](file:///apps/learn_graphrags_agent/src/apache_age_v4/README.md) |
+
+---
+
+## 🛠️ 버전별 핵심 기능 비교
+
+| 항목 | baseline (v1) | metadata_filter (v2) | neo4j_hybrid (v3) | apache_age (v4) |
+| :--- | :---: | :---: | :---: | :---: |
+| **백엔드 DB** | Neo4j 5 | Neo4j 5 | Neo4j 5 | PostgreSQL 16+ & Apache AGE |
+| **그래프 모델** | Native Property Graph | Native Property Graph | Native Property Graph | Relational Property Graph (`ag_catalog`) |
+| **쿼리 언어** | Neo4j Cypher | Neo4j Cypher | Neo4j Cypher | openCypher in SQL (`cypher(...)`) |
+| **벡터 인덱스** | 미지원 (순수 Cypher) | 벡터 + 메타데이터 필터링 | 26개 HNSW 코사인 인덱스 | In-Database 관계형 벡터 테이블 |
+| **그래프 순회** | 0-hop (단일 매칭) | 1-hop 정적 필터링 | 1~2 hop 동적 하이브리드 확장 | 1~2 hop AGE 하이브리드 순회 |
+| **RDBMS 결합** | 불가 (그래프 단독) | 불가 (그래프 단독) | 불가 (그래프 단독) | **완전 지원** (SQL JOIN + Cypher 동시 질의) |
+
+---
+
+## ⚙️ 사전 요구사항 및 인프라 실행
+
+### 1. 사전 요구사항
 - **Python 3.12+**
-- **Neo4j Database** (Docker Compose 권장)
+- **Docker & Docker Compose**
 - **Ollama 또는 OpenAI API**
 
----
-
-## 🚀 실행 가이드 (Execution Guide)
-
-본 프로젝트는 **데이터 수집(Playwright Headless) → Neo4j 그래프 적재 및 벡터 인덱싱 → GraphRAG 하이브리드 검색 CLI → FastAPI 웹 대시보드 → E2E 파이프라인 검증**의 전 과정을 모듈화하여 지원합니다.
-
----
-
-### 1. 환경 설정 및 의존성 설치
-
-#### 1.1 Python 패키지 설치
-`uv` 또는 `pip`를 사용하여 필수 의존성을 설치합니다:
-
 ```bash
-# uv 사용 시 (권장)
-uv sync
+# 의존성 설치
+uv sync  # 또는 pip install -r requirements.txt
 
-# 또는 pip 사용 시
-pip install -r requirements.txt
-```
-
-#### 1.2 Playwright Headless 브라우저 설치
-웹 스크래핑 및 E2E UI 검증을 위해 Chromium 브라우저 바이너리를 설치합니다:
-
-```bash
-# Playwright Chromium 브라우저 설치
+# Playwright 브라우저 설치 (데이터 수집 및 UI 테스트용)
 playwright install chromium
-
-# (Linux/Docker 환경) 필수 시스템 라이브러리 설치
-playwright install-deps chromium
 ```
 
----
-
-### 2. 환경 변수 설정 (`.env`)
-
-프로젝트 루트의 `.env` 파일에서 Neo4j 데이터베이스 및 AI 모델 연결 정보를 설정합니다:
-
+### 2. 환경 변수 (`.env`)
+프로젝트 루트의 `.env`에 DB 및 LLM 접속 정보를 설정합니다:
 ```env
-# Neo4j 데이터베이스 연결
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=admin123
 NEO4J_DATABASE=db-graphrag-agent
 
-# LLM 및 임베딩 모델 (Ollama 또는 OpenAI)
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=admin123
+POSTGRES_DB=db-graphrag-agent
+
 LLM_MODEL=sam860/exaone-4.0:1.2b-thinking-Q8_0
 EMBEDDING_MODEL=bge-m3:567m
 MODEL_API_URL=http://localhost:11434/v1
-OPENAI_API_KEY=ollama
-
-# 하이브리드 검색 설정
-USE_HYBRID_RETRIEVAL=true
-VECTOR_TOP_K=5
-GRAPH_EXPANSION_DEPTH=2
 ```
 
----
-
-### 3. 인프라 실행 (Docker Compose)
-
-`dockers` 폴더에서 Docker Compose로 Neo4j 및 Ollama 인프라를 실행합니다:
-
+### 3. Docker 인프라 기동
 ```bash
 cd dockers
-
-# 전체 서비스 실행 (Neo4j, Postgres AGE, Mongo, Ollama, App)
 docker-compose up -d
-
-# 또는 특정 서비스만 선별 실행 (예: Neo4j 전용)
-docker-compose --profile neo4j up -d
-
 cd ..
 ```
-
-> **서비스 접속 정보**:
-> - **Neo4j Browser**: `http://localhost:7474` (Bolt: `localhost:7687`)
-> - **Ollama API**: `http://localhost:11434`
+- **Neo4j Browser**: [http://localhost:7474](http://localhost:7474) (Bolt: `localhost:7687`)
+- **PostgreSQL / Apache AGE**: `localhost:5432`
+- **Ollama API**: [http://localhost:11434](http://localhost:11434)
 
 ---
 
-### 4. 파이프라인 단계별 실행 (Step-by-Step)
+## ⚡ 빠른 시작 (Quick Start)
 
-#### Step 1: 데이터 수집 및 개체 추출 (`1_prepare_data`)
-위키피디아 시즌 1 줄거리 데이터를 수집하고 LLM/정규화기를 통해 지식그래프 노드/관계를 정형화합니다:
-
+### Step 1: 데이터 수집 & 정규화
 ```bash
-# [방법 A] Playwright Headless 기반 정밀 수집기 단독 실행
+# Playwright 기반 정밀 데이터 수집
 python3 src/utils/playwright_scraper.py
-
-# [방법 B] Neo4j 하이브리드 파이프라인 데이터 준비
-python3 src/neo4j_hybrid/1_prepare_data_v3.py
-
-# [방법 C] Apache AGE 멀티모델 파이프라인 데이터 준비
-python3 src/apache_age/1_prepare_data_v4.py
 ```
-- **출력 아티팩트**: `output/raw_data.json`, `output/knowledge_graph_v3.json`, `output/knowledge_graph_v4.json`
 
-#### Step 2: 지식그래프 적재 및 벡터 인덱싱 (`2_ingest_data`)
-추출된 JSON 데이터를 그래프 데이터베이스에 적재하고 벡터 인덱스를 구축합니다:
-
+### Step 2: 지식그래프 적재 (원하는 백엔드 선택)
 ```bash
-# [백엔드 A] Neo4j 5+ 그래프 적재 및 HNSW 벡터 인덱스 생성
-python3 src/neo4j_hybrid/2_ingest_data_v3.py
+# [Neo4j] v3 하이브리드 그래프 & HNSW 인덱스 적재
+python3 src/neo4j_hybrid_v3/2_ingest_data_v3.py
 
-# [백엔드 B] PostgreSQL 16+ & Apache AGE Multi-Model 적재 및 벡터 테이블 생성
-python3 src/apache_age/2_ingest_data_v4.py
+# [Apache AGE] v4 멀티모델 그래프 & 벡터 테이블 적재
+python3 src/apache_age_v4/2_ingest_data_v4.py
 ```
-- **주요 동작**: 이전 데이터 멱등 초기화 → 노드 및 관계 생성 → 1024차원 `bge-m3` 임베딩 저장 → 벡터 인덱스/테이블 구축
 
-#### Step 3: GraphRAG 에이전트 CLI 질의응답 (`3_graphrag_agent`)
-터미널에서 자연어 질문을 입력하여 하이브리드 검색 답변을 생성합니다:
-
+### Step 3: GraphRAG 에이전트 CLI 질의
 ```bash
-# Apache AGE Multi-Model (openCypher in SQL + In-Database 벡터 검색)
-python3 src/apache_age/3_graphrag_agent_v4.py
+# Neo4j Production Hybrid 실행
+python3 src/neo4j_hybrid_v3/3_graphrag_agent_v3.py
 
-# Neo4j 최신 하이브리드 검색 (벡터 검색 + 그래프 1~2hop + Cypher)
-python3 src/neo4j_hybrid/3_graphrag_agent_v3.py
-
-# 메타데이터 필터링 + LLM Reranking 버전
-python3 src/metadata_filter/3_graphrag_agent_v2.py
-
-# 기본 Text2Cypher 베이스라인 버전
-python3 src/baseline/3_graphrag_agent_v1.py
+# Apache AGE Multi-Model 실행
+python3 src/apache_age_v4/3_graphrag_agent_v4.py
 ```
 
 ---
 
-### 5. 웹 서비스 & 대시보드 실행
+## 🖥️ 웹 서비스 & 대시보드 (`src/web_app/`)
 
-FastAPI 기반의 인터랙티브 웹 대시보드를 구동하여 브라우저에서 편리하게 질문하고 결과를 시각적으로 확인합니다:
+실시간 버전 전환(v1~v4), 추천 질문 칩, 그래프 통계 대시보드를 제공하는 FastAPI 웹 애플리케이션입니다:
 
 ```bash
-# FastAPI 개발 서버 실행 (포트 8000)
 uvicorn src.web_app.main:app --host 0.0.0.0 --port 8000 --reload
-
-# 또는 main.py 직접 실행
-python3 src/web_app/main.py
 ```
-
-- **웹 대시보드 URL**: `http://localhost:8000`
-- **주요 기능**:
-  - 💬 **대화형 질의응답 창**: 추천 질문 칩 클릭 또는 자연어 질문 입력
-  - 🎛️ **버전 전환 셀렉터**: v4(Apache AGE 멀티모델), v3(Neo4j 하이브리드), v2(메타데이터), v1(Text2Cypher) 실시간 전환
-  - 📊 **실시간 통계 카드**: 총 노드/관계 수, 에피소드 수 등 지식그래프 상태 동적 표시
-  - 🕸️ **원클릭 데이터 수집**: 대시보드 내에서 Playwright Headless 수집 트리거 지원
+- **대시보드 URL**: [http://localhost:8000](http://localhost:8000)
+- **API 엔드포인트**:
+  - `GET /api/stats`: 지식그래프 총 노드/관계 통계
+  - `POST /api/query`: 버전별(v1/v2/v3/v4) 하이브리드 검색 질의
+  - `POST /api/scrape`: 웹 대시보드 내 원클릭 데이터 수집
 
 ---
 
-### 6. 전체 파이프라인 E2E 검증 (Playwright Headless)
+## 🔧 유틸리티 및 MCP DB Inspector (`src/utils/`)
 
-데이터 수집기, 듀얼 DB 정합성, Dual GraphRAG 에이전트, Web UI 대시보드 인터랙션을 일괄 검증합니다:
-
-```bash
-# 전체 파이프라인 흐름(Flow 1~4) 일괄 검증
-python3 src/utils/verify_full_pipeline.py
-
-# Playwright 단위/통합 테스트
-python3 src/utils/test_pipeline_playwright.py
-```
-
----
-
-### 7. 유틸리티 및 인덱스 점검
-
-Neo4j에 정상 구축된 HNSW 벡터 인덱스 목록을 확인합니다:
-
-```bash
-python3 src/utils/check_indexes.py
-```
+- [`src/utils/mcp_db_server.py`](file:///apps/learn_graphrags_agent/src/utils/mcp_db_server.py): Neo4j, Apache AGE, MongoDB 3대 DB 상태를 실시간 진단하고 읽기 전용 쿼리를 수행하는 Model Context Protocol 서버
+  ```bash
+  python3 src/utils/mcp_db_server.py --test
+  ```
+- [`src/utils/check_indexes.py`](file:///apps/learn_graphrags_agent/src/utils/check_indexes.py): Neo4j HNSW 벡터 인덱스 구축 상태 점검
+- [`src/utils/verify_full_pipeline.py`](file:///apps/learn_graphrags_agent/src/utils/verify_full_pipeline.py): Flow 1~4 전체 파이프라인 일괄 E2E 자동 검증기
+  ```bash
+  python3 src/utils/verify_full_pipeline.py
+  ```
 
 ---
 
-### 8. Multi-Model DB Inspector MCP 서버 (대화형 DB 상태 확인)
-
-에이전트가 Neo4j, Apache AGE on PostgreSQL, MongoDB의 적재 상태를 실시간으로 직접 확인하고 쿼리할 수 있도록 표준 **Model Context Protocol (MCP)** 서버를 제공합니다:
-
-```bash
-# MCP 도구 로컬 자체 검증 (3대 DB 상태 일괄 출력)
-python3 src/utils/mcp_db_server.py --test
-
-# Stdio 모드로 MCP 서버 구동 (mcp_config.json 등록 시 자동 호출)
-python3 src/utils/mcp_db_server.py
-```
-
-- **제공되는 6대 핵심 MCP 도구**:
-  1. `check_all_dbs_status()`: Neo4j(19개 노드/310개 관계), PostgreSQL AGE(19개 버텍스/310개 엣지), MongoDB 상태 일괄 요약
-  2. `inspect_neo4j_graph()`: 인간(13)/도깨비(6) 라벨별 통계 및 26개 HNSW 벡터 인덱스 목록 확인
-  3. `query_neo4j_cypher(cypher_query)`: 읽기 전용 Cypher 안전 실행 (가드레일 적용)
-  4. `inspect_apache_age_graph()`: demon_slayer 그래프 버텍스 및 PostgreSQL 관계형 벡터 테이블(`node_embeddings`, `relationship_embeddings`) 행 수 조회
-  5. `query_apache_age_cypher(cypher_body)`: openCypher in SQL 안전 실행 및 agtype 디코딩 결과 반환
-  6. `inspect_mongodb_status()`: MongoDB 컬렉션 및 문서 현황 확인
-
-- **설정 파일**: `mcp_config.json` 및 `.agents/plugins/harness/mcp_config.json`
-
----
-
-## 📁 디렉토리 구조 (업무별 폴더 구성)
+## 📁 프로젝트 폴더 구조
 
 ```text
 /apps/learn_graphrags_agent
-├── .env                              # 전체 중앙 환경변수 관리
-├── mcp_config.json                   # Multi-Model DB Inspector MCP 설정
-├── config.py                         # .env 기반 설정을 로딩하는 모듈
-├── PRD.md                            # 요구사항 및 상세 분석 문서 (docs/PRD.md)
-├── README.md                         # 실행 및 프로젝트 설명서
-├── dockers/                          # Docker 및 컨테이너 관련 파일
-│   ├── .env
-│   ├── docker-compose.yml
-│   ├── Dockerfile.ollama
-│   ├── Dockerfile.fullstack
-│   └── postgres/init/01_init_age.sql
-├── output/                           # 파이프라인 추출 JSON 데이터 저장소
-├── docs/
+├── .env                              # 전체 중앙 환경변수 (SSOT)
+├── config.py                         # 중앙 설정 로더
+├── mcp_config.json                   # Multi-Model DB Inspector MCP 서버 설정
+├── docs/                             # 사양서 및 아키텍처 문서
 │   ├── PRD.md                        # 제품 요구사항 정의서
 │   └── agent/
-│       ├── harness_prompt.md         # 에이전트 하네스 프롬프트 규격서
+│       ├── harness_prompt.md         # 하네스 프롬프트 규격서
 │       └── system_prompt.md          # 시스템 프롬프트 규격서
-└── src/                              # 업무별 실행 코드 폴더
-    ├── baseline/                     # [구 v1] Text2Cypher 베이스라인 파이프라인
-    │   ├── 1_prepare_data_v1.py
-    │   ├── 2_ingest_data_v1.py
-    │   └── 3_graphrag_agent_v1.py
-    ├── metadata_filter/              # [구 v2] 메타데이터 필터링 및 리랭킹 파이프라인
-    │   ├── 1_prepare_data_v2.py
-    │   ├── 2_ingest_data_v2.py
-    │   └── 3_graphrag_agent_v2.py
-    ├── neo4j_hybrid/                 # [구 v3] Neo4j 벡터+그래프 1~2hop 하이브리드 RAG
-    │   ├── 1_prepare_data_v3.py
-    │   ├── 2_ingest_data_v3.py
-    │   └── 3_graphrag_agent_v3.py
-    ├── apache_age/                   # [신규 v4] PostgreSQL 16+ & Apache AGE Multi-Model RAG
-    │   ├── 1_prepare_data_v4.py
-    │   ├── 2_ingest_data_v4.py
-    │   └── 3_graphrag_agent_v4.py
-    ├── web_app/                      # FastAPI 웹 대시보드 및 REST API
-    │   ├── __init__.py
-    │   └── main.py
-    └── utils/                        # 공통 유틸리티 및 검증 도구
-        ├── check_indexes.py          # Neo4j 벡터 인덱스 점검
-        ├── mcp_db_server.py          # Multi-Model DB Inspector MCP 서버
-        ├── playwright_scraper.py     # Playwright Headless 데이터 수집기
-        ├── test_pipeline_playwright.py # Playwright 단위/통합 테스트
-        └── verify_full_pipeline.py   # 전체 흐름(Flow 1~4) E2E 검증기
+├── output/                           # 정제된 JSON 지식그래프 저장소
+├── dockers/                          # Docker Compose 인프라 환경
+└── src/                              # 업무/버전별 소스 코드
+    ├── baseline_v1/                  # [v1] Text2Cypher 베이스라인 (README.md 포함)
+    ├── metadata_filter_v2/           # [v2] 메타데이터 필터링 & Reranking (README.md 포함)
+    ├── neo4j_hybrid_v3/              # [v3] Neo4j HNSW 벡터+그래프 하이브리드 (README.md 포함)
+    ├── apache_age_v4/                # [v4] PostgreSQL 16+ & Apache AGE 멀티모델 (README.md 포함)
+    ├── web_app/                      # FastAPI 웹 대시보드
+    └── utils/                        # 공통 수집기, 검증기, MCP 서버
 ```
 
 ---
 
-## 🛠️ 버전별 주요 차이점
+## 📚 관련 핵심 문서 링크
 
-| 항목 | baseline (v1) | metadata_filter (v2) | neo4j_hybrid (v3) | apache_age (v4) |
-|---|---|---|---|---|
-| **백엔드 DB** | Neo4j 5 | Neo4j 5 | Neo4j 5 | PostgreSQL 16+ & Apache AGE |
-| **그래프 모델** | Native Property Graph | Native Property Graph | Native Property Graph | Relational Property Graph (`ag_catalog`) |
-| **쿼리 언어** | Neo4j Cypher | Neo4j Cypher | Neo4j Cypher | openCypher in SQL (`cypher(...)`) |
-| **벡터 검색** | 미지원 (순수 Cypher) | 벡터 + 메타데이터 필터링 | HNSW 노드/관계 벡터 인덱스 | In-Database Cosine 테이블 검색 |
-| **그래프 순회** | 0-hop (단일 매칭) | 1-hop 정적 순회 | 1~2 hop 동적 하이브리드 확장 | 1~2 hop AGE 하이브리드 순회 |
-| **RDBMS 결합** | 불가 (그래프 전용) | 불가 (그래프 전용) | 불가 (그래프 전용) | **가능** (SQL JOIN + Cypher 동시 질의) |
-
----
-
-## 🎮 예시 질문
-
-```text
-"카마도 탄지로는 시즌 1에서 에피소드별로 어떤 활약을 했어?"
-"토미오카 기유와 관계있는 모든 캐릭터를 알려줘."
-"루이와 싸운 캐릭터는 누구야?"
-"3번 이상 등장한 관계 타입은?"
-```
-
----
-
-## 📚 관련 문서 및 사양서
-
-- [PRD.md](file:///apps/learn_graphrags_agent/PRD.md): 상세 제품 사양 및 아키텍처 분석
-- [docs/agent/harness_prompt.md](file:///apps/learn_graphrags_agent/docs/agent/harness_prompt.md): 에이전트 하네스 프롬프트 표준 규격서
-- [.agent/rules/rule-lock-fullstack.md](file:///apps/learn_graphrags_agent/.agent/rules/rule-lock-fullstack.md): 프로젝트 규칙 및 아키텍처 락
+- [PRD.md](file:///apps/learn_graphrags_agent/docs/PRD.md): 상세 제품 사양서 및 아키텍처 분석
+- [harness_prompt.md](file:///apps/learn_graphrags_agent/docs/agent/harness_prompt.md): 4단계 에이전트 하네스 프롬프트 표준 규격
+- [system_prompt.md](file:///apps/learn_graphrags_agent/docs/agent/system_prompt.md): 런타임 시스템 프롬프트 및 가드레일 지침
+- [AGENTS.md](file:///apps/learn_graphrags_agent/AGENTS.md): 에이전트 행동 강령 및 표준 지침
+- [GEMINI.md](file:///apps/learn_graphrags_agent/GEMINI.md): 하네스 헌장 및 10대 골든 룰

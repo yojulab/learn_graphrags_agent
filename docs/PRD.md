@@ -61,20 +61,20 @@ graph TD
 
 ### 3.1 Neo4j Pipeline Execution Analysis (v1 ~ v3)
 
-1. **Step 1: Data Preparation (`src/v3/1_prepare_data_v3.py`)**
+1. **Step 1: Data Preparation (`src/neo4j_hybrid_v3/1_prepare_data_v3.py`)**
    - Scrapes Wikipedia Demon Slayer Season 1 episode summaries (episodes 1~26).
    - Calls LLM with structured Pydantic schemas (`Node`, `Relationship`, `GraphResponse`).
    - Normalizes canonical Korean names (e.g. `카마도 탄지로`, `토미오카 기유`, `키부츠지 무잔`).
    - Validates node labels (`인간`, `도깨비`) and 24 relationship types (`FIGHTS`, `PROTECTS`, `TRAINS`, etc.).
    - Outputs `output/raw_data_v3.json`, `output/knowledge_graph_v3.json`, and `output/statistics_v3.json`.
 
-2. **Step 2: Data Ingestion (`src/v3/2_ingest_data_v3.py`)**
+2. **Step 2: Data Ingestion (`src/neo4j_hybrid_v3/2_ingest_data_v3.py`)**
    - Clears existing Neo4j database to guarantee idempotency.
    - Generates 1024-dimensional embeddings for all nodes and relationships using `bge-m3:567m`.
    - Creates nodes with property `embedding` and relationships with property `embedding`.
    - Automatically builds HNSW vector indexes: `entity_embeddings_*` and `rel_embeddings_*`.
 
-3. **Step 3: GraphRAG Agent (`src/v3/3_graphrag_agent_v3.py`)**
+3. **Step 3: GraphRAG Agent (`src/neo4j_hybrid_v3/3_graphrag_agent_v3.py`)**
    - **Query Classifier**: Categorizes queries into `SINGLE_ENTITY`, `RELATIONSHIP`, `EPISODE_SPECIFIC`, or `GENERAL`.
    - **Vector Retriever**: Computes cosine similarity to pull seed nodes and relevant relationships.
    - **Graph Expander**: Performs 1~2 hop graph traversals from seed nodes.
@@ -87,13 +87,13 @@ graph TD
 
 Apache AGE (A Graph Extension)는 PostgreSQL 상에서 구동되는 오픈소스 관계형-그래프 하이브리드 확장 프로그램입니다. v4는 기존의 RDBMS 데이터 인프라와 그래프 탐색 및 벡터 검색을 단일 엔진(PostgreSQL)에서 통합 처리하는 엔터프라이즈 멀티모델 아키텍처를 제공합니다.
 
-1. **Step 1: Data Preparation (`src/v4/1_prepare_data_v4.py`)**
+1. **Step 1: Data Preparation (`src/apache_age_v4/1_prepare_data_v4.py`)**
    - Pydantic v2 기반의 표준 데이터 파이프라인 재사용 (동일한 데이터 품질 및 정규화 보장).
    - Apache AGE 정점(Vertex) 라벨(`인간`, `도깨비`) 및 간선(Edge) 라벨(`FIGHTS`, `PROTECTS`, `TRAINS`, ...)과의 호환성 검증.
    - PostgreSQL 특화 이스케이프 및 JSON/agtype 직렬화 규격 준수.
    - 아티팩트 저장: `output/knowledge_graph_v4.json`, `output/raw_data_v4.json`.
 
-2. **Step 2: Data Ingestion (`src/v4/2_ingest_data_v4.py`)**
+2. **Step 2: Data Ingestion (`src/apache_age_v4/2_ingest_data_v4.py`)**
    - **연결 및 확장 로드**: `psycopg2` 또는 `asyncpg`를 통해 `POSTGRES_HOST:POSTGRES_PORT`에 접속, `LOAD 'age';` 및 `SET search_path = ag_catalog, "$user", public;` 실행.
    - **그래프 생성 및 초기화**:
      ```sql
@@ -118,7 +118,7 @@ Apache AGE (A Graph Extension)는 PostgreSQL 상에서 구동되는 오픈소스
      ```
    - **임베딩 테이블 적재**: PostgreSQL 내 `demon_slayer_node_embeddings` 및 `demon_slayer_edge_embeddings` 테이블을 생성하여 `bge-m3:567m` (1024차원) 벡터 데이터 적재 및 코사인 유사도 검색 인덱스 구성.
 
-3. **Step 3: GraphRAG Agent (`src/v4/3_graphrag_agent_v4.py`)**
+3. **Step 3: GraphRAG Agent (`src/apache_age_v4/3_graphrag_agent_v4.py`)**
    - **Query Classifier**: 자연어 질문의 유형(단일 엔티티, 관계, 에피소드, 일반) 자동 판별.
    - **Vector Seed Retrieval**: PostgreSQL 임베딩 테이블에서 코사인 유사도 쿼리로 상위 Top-K 시드 정점 및 간선 추출.
    - **AGE Graph Expansion**: 시드 정점 기반으로 1~2 hop 서브그래프를 순회하는 AGE Cypher 쿼리 동적 실행:
@@ -215,19 +215,19 @@ RELATIONSHIP_TYPES=FIGHTS,PROTECTS,TRAINS,TRAINS_WITH,KNOWS,FAMILY_OF,SIBLING_OF
 │       ├── harness_prompt.md         # Agent Harness Prompt Specification
 │       └── system_prompt.md          # Agent System Prompt Specification
 └── src/                              # Source Code by Domain & Task
-    ├── baseline/                     # Baseline Version (Basic Text2Cypher - Neo4j)
+    ├── baseline_v1/                  # Baseline Version (Basic Text2Cypher - Neo4j)
     │   ├── 1_prepare_data_v1.py
     │   ├── 2_ingest_data_v1.py
     │   └── 3_graphrag_agent_v1.py
-    ├── metadata_filter/              # Intermediate Version (Metadata Filtered Vector RAG - Neo4j)
+    ├── metadata_filter_v2/           # Intermediate Version (Metadata Filtered Vector RAG - Neo4j)
     │   ├── 1_prepare_data_v2.py
     │   ├── 2_ingest_data_v2.py
     │   └── 3_graphrag_agent_v2.py
-    ├── neo4j_hybrid/                 # Production Hybrid Version (Vector + Graph Expansion - Neo4j)
+    ├── neo4j_hybrid_v3/              # Production Hybrid Version (Vector + Graph Expansion - Neo4j)
     │   ├── 1_prepare_data_v3.py
     │   ├── 2_ingest_data_v3.py
     │   └── 3_graphrag_agent_v3.py
-    ├── apache_age/                   # Multi-Model Hybrid Version (PostgreSQL + Apache AGE)
+    ├── apache_age_v4/                # Multi-Model Hybrid Version (PostgreSQL + Apache AGE)
     │   ├── 1_prepare_data_v4.py
     │   ├── 2_ingest_data_v4.py
     │   └── 3_graphrag_agent_v4.py
@@ -279,13 +279,13 @@ cd ..
 
 ```bash
 # Step 1: 데이터 수집 및 정규화
-python3 src/neo4j_hybrid/1_prepare_data_v3.py
+python3 src/neo4j_hybrid_v3/1_prepare_data_v3.py
 
 # Step 2: Neo4j 그래프 적재 및 HNSW 벡터 인덱스 생성
-python3 src/neo4j_hybrid/2_ingest_data_v3.py
+python3 src/neo4j_hybrid_v3/2_ingest_data_v3.py
 
 # Step 3: GraphRAG 에이전트 CLI 실행
-python3 src/neo4j_hybrid/3_graphrag_agent_v3.py
+python3 src/neo4j_hybrid_v3/3_graphrag_agent_v3.py
 
 # 유틸리티: Neo4j 벡터 인덱스 상태 점검
 python3 src/utils/check_indexes.py
@@ -295,13 +295,13 @@ python3 src/utils/check_indexes.py
 
 ```bash
 # Step 1: 데이터 수집 및 AGE 호환 포맷 정규화
-python3 src/apache_age/1_prepare_data_v4.py
+python3 src/apache_age_v4/1_prepare_data_v4.py
 
 # Step 2: PostgreSQL AGE 그래프 생성, 노드/간선 적재 및 임베딩 인덱싱
-python3 src/apache_age/2_ingest_data_v4.py
+python3 src/apache_age_v4/2_ingest_data_v4.py
 
 # Step 3: Apache AGE 기반 GraphRAG 에이전트 CLI 실행
-python3 src/apache_age/3_graphrag_agent_v4.py
+python3 src/apache_age_v4/3_graphrag_agent_v4.py
 ```
 
 ### 4. Apache AGE Direct SQL Verification (psql 검증)

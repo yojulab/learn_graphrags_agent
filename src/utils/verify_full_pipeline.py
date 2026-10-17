@@ -163,8 +163,8 @@ def stage_3_graphrag_agent_execution() -> bool:
 
     try:
         import importlib
-        agent_v3 = importlib.import_module("src.neo4j_hybrid.3_graphrag_agent_v3")
-        agent_v4_mod = importlib.import_module("src.apache_age.3_graphrag_agent_v4")
+        agent_v3 = importlib.import_module("src.neo4j_hybrid_v3.3_graphrag_agent_v3")
+        agent_v4_mod = importlib.import_module("src.apache_age_v4.3_graphrag_agent_v4")
 
         # 1. 쿼리 의도 분류기 검증
         test_question = "카마도 탄지로와 카마도 네즈코는 어떤 관계야?"

@@ -121,11 +121,11 @@ async def execute_query(req: QueryRequest):
         # 오프라인/테스트 환경에서는 로컬 그래프 검색 또는 LLM 호출
         if req.version == "v1":
             import importlib
-            agent_v1 = importlib.import_module("src.v1.3_graphrag_agent_v1")
+            agent_v1 = importlib.import_module("src.baseline_v1.3_graphrag_agent_v1")
             answer = agent_v1.graphrag_pipeline(question)
         elif req.version == "v2":
             import importlib
-            agent_v2 = importlib.import_module("src.v2.3_graphrag_agent_v2")
+            agent_v2 = importlib.import_module("src.metadata_filter_v2.3_graphrag_agent_v2")
             # v2 파이프라인 실행
             rewritten = agent_v2.rewrite_query(question)
             results = agent_v2.vector_search(rewritten, top_k_per_query=10)
@@ -142,7 +142,7 @@ async def execute_query(req: QueryRequest):
             # v4 파이프라인 (PostgreSQL 16+ & Apache AGE Multi-Model)
             try:
                 import importlib
-                agent_v4_mod = importlib.import_module("src.apache_age.3_graphrag_agent_v4")
+                agent_v4_mod = importlib.import_module("src.apache_age_v4.3_graphrag_agent_v4")
                 agent_v4 = agent_v4_mod.GraphRAGAgentV4()
                 result = agent_v4.query(question)
                 answer = result.get("answer", "")
@@ -151,27 +151,31 @@ async def execute_query(req: QueryRequest):
                 answer = f"**[Apache AGE GraphRAG v4 답변]**\n\n질문: '{question}'\n(에이전트 검색 처리 중: {e})"
         else:
             # v3 파이프라인 (Neo4j 하이브리드)
-            # 지식 그래프 JSON 파일 기반 신속 조회 폴백 포함
-            kg_file = BASE_DIR / "output/knowledge_graph_v3.json"
-            if kg_file.exists():
-                with open(kg_file, "r", encoding="utf-8") as f:
-                    kg_data = json.load(f)
-                nodes = kg_data.get("nodes", [])
-                relationships = kg_data.get("relationships", [])
-                matched_rels = []
-                for rel in relationships:
-                    props = rel.get("properties", {}) or {}
-                    context = props.get("context", "") or props.get("description", "")
-                    if any(char in question for char in ["탄지로", "네즈코", "기유", "루이", "무잔", "이노스케", "젠이츠"]):
-                        matched_rels.append(f"[{rel.get('type')}] S1E{props.get('episode', '01')}: {context}")
+            try:
+                import importlib
+                agent_v3 = importlib.import_module("src.neo4j_hybrid_v3.3_graphrag_agent_v3")
+                answer = agent_v3.graphrag_pipeline(question)
+            except Exception as e:
+                # 지식 그래프 JSON 파일 기반 신속 조회 폴백
+                kg_file = BASE_DIR / "output/knowledge_graph_v3.json"
+                if kg_file.exists():
+                    with open(kg_file, "r", encoding="utf-8") as f:
+                        kg_data = json.load(f)
+                    relationships = kg_data.get("relationships", [])
+                    matched_rels = []
+                    for rel in relationships:
+                        props = rel.get("properties", {}) or {}
+                        context = props.get("context", "") or props.get("description", "")
+                        if any(char in question for char in ["탄지로", "네즈코", "기유", "루이", "무잔", "이노스케", "젠이츠"]):
+                            matched_rels.append(f"[{rel.get('type')}] S1E{props.get('episode', '01')}: {context}")
 
-                answer = f"**[GraphRAG v3 답변]**\n\n질문: '{question}'\n\n"
-                if matched_rels:
-                    answer += "### 지식그래프 검색 결과:\n" + "\n".join(f"- {r}" for r in matched_rels[:5])
+                    answer = f"**[GraphRAG v3 답변]**\n\n질문: '{question}'\n\n"
+                    if matched_rels:
+                        answer += "### 지식그래프 검색 결과:\n" + "\n".join(f"- {r}" for r in matched_rels[:5])
+                    else:
+                        answer += "해당 조건에 부합하는 관련 에피소드 및 엔티티가 지식그래프에 색인되어 있습니다."
                 else:
-                    answer += "해당 조건에 부합하는 관련 에피소드 및 엔티티가 지식그래프에 색인되어 있습니다."
-            else:
-                answer = f"지식그래프 데이터가 로드되지 않았습니다."
+                    answer = f"지식그래프 데이터가 로드되지 않았습니다 ({e})."
 
         return {
             "success": True,
