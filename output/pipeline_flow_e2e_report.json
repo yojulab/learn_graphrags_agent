@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-17 12:10:31",
-  "overall_status": "PASS",
+  "timestamp": "2026-11-07 13:29:44",
+  "overall_status": "PASSED",
   "stages": [
     {
       "stage": "1_prepare_data_playwright",
@@ -9,7 +9,7 @@
         "episodes_count": 26,
         "kg_nodes": 19,
         "kg_relationships": 310,
-        "duration": "0.05s"
+        "duration": "0.11s"
       }
     },
     {
@@ -19,8 +19,8 @@
         "neo4j_nodes": 19,
         "neo4j_relationships": 310,
         "neo4j_vector_indexes": 26,
-        "postgres_age_extension": "LOADED",
-        "duration": "0.43s"
+        "age_nodes": 19,
+        "duration": "0.70s"
       }
     },
     {
@@ -28,38 +28,29 @@
       "passed": true,
       "details": {
         "test_question": "카마도 탄지로와 카마도 네즈코는 어떤 관계야?",
-        "query_type": "relationship",
-        "entities": {
-          "entity_a": "카마도 탄지로",
-          "entity_b": "카마도 네즈코"
-        },
         "neo4j_seed_nodes": [
           "카마도 탄지로",
           "카마도 네즈코",
-          "츠유리 카나오",
-          "마코모",
-          "우부야시키 카가야"
+          "츠유리 카나오"
         ],
-        "neo4j_subgraph_records": 50,
+        "neo4j_subgraph_count": 40,
         "age_seed_nodes": [
           "카마도 탄지로",
           "카마도 네즈코",
           "츠유리 카나오"
         ],
-        "age_cypher_records": 24,
-        "duration": "15.51s"
+        "age_subgraph_count": 60,
+        "duration": "2.11s"
       }
     },
     {
-      "stage": "4_web_ui_playwright_e2e",
+      "stage": "4_playwright_e2e_web_ui",
       "passed": true,
       "details": {
-        "ui_nodes": 19,
-        "ui_relationships": 310,
-        "api_health": "healthy",
-        "query_result_sample": "**[Apache AGE GraphRAG v4 답변]**\n\nHmm, 사용자가 탄지로와 네즈코에 대한 정보를 요청했네. 제공된 지식그래프 검색 결과를 보면 이 두 인물 사이의 관계와",
-        "screenshot_path": "/apps/learn_graphrags_agent/output/playwright_e2e_screenshot.png",
-        "duration": "494.38s"
+        "web_title": "Demon Slayer Season 1 GraphRAG Teaching Lab",
+        "result_preview": "⏳ 지식그래프 탐색 및 추론 중... (수 초 소요)",
+        "screenshot": "/apps/learn_graphrags_agent/output/playwright_e2e_screenshot.png",
+        "duration": "10.12s"
       }
     }
   ]
