@@ -205,7 +205,8 @@ def execute_age_hybrid(question: str) -> str:
     raw_answer = resp.choices[0].message.content or ""
     # think 태그 정제
     clean_answer = re.sub(r'<think>.*?</think>', '', raw_answer, flags=re.DOTALL)
-    clean_answer = re.sub(r'<think>.*', '', clean_answer, flags=re.DOTALL).strip()
+    clean_answer = re.sub(r'<think>.*', '', clean_answer, flags=re.DOTALL)
+    clean_answer = clean_answer.replace('</think>', '').strip()
     return clean_answer
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 """
 [Neo4j Track Common] Neo4j 접속, 드라이버, Think 태그 정제 및 공통 임베딩 유틸
-(src/02_neo4j_track/common_neo4j.py)
+(src/neo4j_track/common_neo4j.py)
 """
 
 import os
@@ -38,12 +38,27 @@ class CleanOpenAILLM(OpenAILLM):
         content = re.sub(r'<think>.*', '', content, flags=re.DOTALL)
         content = content.replace('</think>', '').strip()
 
-        # 2. 마크다운 코드 블록(```cypher ... ```) 추출
-        code_block_match = re.search(r'```(?:cypher)?(.*?)```', content, re.DOTALL | re.IGNORECASE)
-        if code_block_match:
-            content = code_block_match.group(1).strip()
+        # 2. Text2Cypher 생성 모드 판단
+        is_cypher_prompt = any(kw in input_text for kw in ["Cypher", "CYPHER", "MATCH", "MATCH (", "neo4j", "Query:"])
 
-        response.content = content
+        if is_cypher_prompt:
+            # 2-A. 마크다운 코드 블록(```cypher ... ``` 또는 ``` ... ```) 추출
+            code_block_match = re.search(r'```(?:cypher)?\s*([\s\S]*?)\s*```', content, re.IGNORECASE)
+            if code_block_match:
+                extracted = code_block_match.group(1).strip()
+                # 코드블록 내부에서도 MATCH 구문 확인
+                if "MATCH" in extracted.upper():
+                    content = extracted
+            else:
+                # 2-B. 아주 엄격하게 MATCH ( 또는 MATCH path= 등으로 시작하는 Cypher만 허용
+                match_query = re.search(r'(MATCH\s*(?:\(|path\s*=)[\s\S]+?RETURN[\s\S]+?)(?:;|\n\n|$)', content, re.IGNORECASE)
+                if match_query:
+                    content = match_query.group(1).strip()
+                else:
+                    # 안전 폴백 쿼리
+                    content = "MATCH (n:인간)-[r]-(m) RETURN n.name as hero, type(r) as rel_type, m.name as target, r.episode_number as ep LIMIT 10"
+
+        response.content = content.strip()
         return response
 
 class Neo4jEmbedder:

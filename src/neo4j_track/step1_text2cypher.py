@@ -1,6 +1,6 @@
 """
 [Neo4j Track Step 1] 기초 순수 Text2Cypher GraphRAG 에이전트 실습
-(src/02_neo4j_track/2_step1_text2cypher.py)
+(src/neo4j_track/step1_text2cypher.py)
 
 - 실습 내용:
   1. LPG 스키마 프롬프트 제공
@@ -11,6 +11,7 @@
 
 import sys
 import re
+import traceback
 from pathlib import Path
 from typing import Dict, Any, List
 from neo4j_graphrag.retrievers import Text2CypherRetriever
@@ -35,15 +36,40 @@ EXAMPLES = [
     },
     {
         "user_input": "카마도 탄지로와 루이가 싸운 에피소드는?",
-        "cypher": "MATCH (a:인간 {name: '카마도 탄지로'})-[r:FIGHTS|BATTLES]-(b:도깨비 {name: '루이'}) RETURN a.name, type(r), b.name, r.episode_number, r.context, r.outcome"
+        "cypher": "MATCH (a:인간 {name: '카마도 탄지로'})-[r:FIGHTS|BATTLES]-(b:도깨비 {name: '루이'}) RETURN a.name, type(r) as rel_type, b.name, r.episode_number as ep, r.context as context, r.outcome as outcome"
     }
 ]
+
+# 포맷팅 중괄호 충돌 방지를 위해 스키마 내 중괄호 이스케이프
+safe_schema_nodes = SCHEMA_NODES.replace("{", "{{").replace("}", "}}")
+safe_schema_rels = SCHEMA_RELATIONSHIPS.replace("{", "{{").replace("}", "}}")
+
+CUSTOM_PROMPT = f"""You are a Neo4j Cypher query generator for a Demon Slayer knowledge graph.
+Convert the user question into a valid Cypher query using the schema below.
+
+## Schema
+{safe_schema_nodes}
+{safe_schema_rels}
+
+## Instructions
+1. Write ONLY the Cypher query inside a markdown code block: ```cypher ... ```
+2. Use ONLY MATCH queries (no CREATE, DELETE, SET).
+3. Do not include embedding properties in RETURN.
+
+## Examples
+{{examples}}
+
+## User Question:
+{{query_text}}
+
+Cypher Query:"""
 
 retriever = Text2CypherRetriever(
     driver=driver,
     llm=llm,
     neo4j_schema=f"{SCHEMA_NODES}\n{SCHEMA_RELATIONSHIPS}",
-    examples=[f"User: {e['user_input']}\nCypher: {e['cypher']}" for e in EXAMPLES]
+    examples=[f"User: {e['user_input']}\nCypher: ```cypher\n{e['cypher']}\n```" for e in EXAMPLES],
+    custom_prompt=CUSTOM_PROMPT
 )
 
 def run_text2cypher(question: str) -> str:
@@ -72,6 +98,7 @@ def run_text2cypher(question: str) -> str:
         ans = llm.invoke(prompt)
         return ans.content
     except Exception as e:
+        traceback.print_exc()
         return f"쿼리 실행 중 오류가 발생했습니다: {e}"
 
 if __name__ == "__main__":

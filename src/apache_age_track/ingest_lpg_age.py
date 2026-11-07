@@ -114,7 +114,9 @@ def ingest_lpg_to_age(data_path: str = "output/lpg_knowledge_graph.json"):
 
             # 2. Apache AGE 그래프 초기화 (멱등성 보장)
             graph_name = config.AGE_GRAPH_NAME
-            cur.execute(f"SELECT drop_graph('{graph_name}', true);")
+            cur.execute("SELECT count(*) FROM ag_catalog.ag_graph WHERE name = %s;", (graph_name,))
+            if cur.fetchone()[0] > 0:
+                cur.execute(f"SELECT drop_graph('{graph_name}', true);")
             cur.execute(f"SELECT create_graph('{graph_name}');")
             print(f"  ✅ Apache AGE '{graph_name}' 그래프 생성 완료")
 

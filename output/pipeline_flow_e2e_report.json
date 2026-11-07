@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-07 13:29:44",
+  "timestamp": "2026-11-07 14:20:26",
   "overall_status": "PASSED",
   "stages": [
     {
@@ -9,7 +9,7 @@
         "episodes_count": 26,
         "kg_nodes": 19,
         "kg_relationships": 310,
-        "duration": "0.11s"
+        "duration": "0.10s"
       }
     },
     {
@@ -20,7 +20,7 @@
         "neo4j_relationships": 310,
         "neo4j_vector_indexes": 26,
         "age_nodes": 19,
-        "duration": "0.70s"
+        "duration": "0.50s"
       }
     },
     {
@@ -40,7 +40,7 @@
           "츠유리 카나오"
         ],
         "age_subgraph_count": 60,
-        "duration": "2.11s"
+        "duration": "4.28s"
       }
     },
     {
@@ -50,7 +50,7 @@
         "web_title": "Demon Slayer Season 1 GraphRAG Teaching Lab",
         "result_preview": "⏳ 지식그래프 탐색 및 추론 중... (수 초 소요)",
         "screenshot": "/apps/learn_graphrags_agent/output/playwright_e2e_screenshot.png",
-        "duration": "10.12s"
+        "duration": "6.39s"
       }
     }
   ]
