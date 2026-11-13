@@ -8,17 +8,17 @@ ROOT_ENV = BASE_DIR / ".env"
 DOCKER_ENV = BASE_DIR / "dockers" / ".env"
 
 if ROOT_ENV.exists():
-    load_dotenv(dotenv_path=ROOT_ENV)
+    load_dotenv(dotenv_path=ROOT_ENV, override=True)
 elif DOCKER_ENV.exists():
-    load_dotenv(dotenv_path=DOCKER_ENV)
+    load_dotenv(dotenv_path=DOCKER_ENV, override=True)
 else:
-    load_dotenv()
+    load_dotenv(override=True)
 
 # ============================================================
 # Project & Infrastructure Settings
 # ============================================================
 PROJECT_NAME = os.getenv("PROJECT_NAME", "graphrag_agent")
-COMPOSE_PROFILES = os.getenv("COMPOSE_PROFILES", "neo4j,postgres,mongo,ollama,app")
+COMPOSE_PROFILES = os.getenv("COMPOSE_PROFILES", "neo4j,postgres,mongo,ollama,app,langfuse")
 
 # Database (Neo4j)
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -73,3 +73,13 @@ RELATIONSHIP_TYPES = [r.strip() for r in raw_rel_types.split(",") if r.strip()]
 # Valid Node Labels
 raw_node_labels = os.getenv("NODE_LABELS", "인간,도깨비")
 NODE_LABELS = [lbl.strip() for lbl in raw_node_labels.split(",") if lbl.strip()]
+
+# ============================================================
+# Langfuse LLM Observability & Tracing Settings
+# ============================================================
+LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "http://localhost:3000")
+LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY", "pk-lf-graphrag-agent-public")
+LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY", "sk-lf-graphrag-agent-secret")
+LANGFUSE_DB_NAME = os.getenv("LANGFUSE_DB_NAME", "db_langfuse")
+LANGFUSE_PORT = int(os.getenv("LANGFUSE_PORT", "3000"))
+

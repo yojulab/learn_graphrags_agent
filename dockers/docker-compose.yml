@@ -29,6 +29,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+      - LANGFUSE_DB_NAME=${LANGFUSE_DB_NAME:-db_langfuse}
       - TZ=Asia/Seoul
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
@@ -68,6 +69,36 @@ services:
       - OLLAMA_NUM_PARALLEL=${AI_OLAMA_CPU}
       - OLLAMA_MAX_LOADED_MODELS=1
 
+  # Langfuse LLM Observability & Tracing Platform
+  langfuse:
+    image: ghcr.io/langfuse/langfuse:${LANGFUSE_IMAGE_TAG:-2}
+    container_name: ${PROJECT_NAME}_langfuse
+    profiles:
+      - langfuse
+      - all
+    ports:
+      - "${LANGFUSE_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${LANGFUSE_DB_NAME:-db_langfuse}
+      - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-default_langfuse_nextauth_secret_32bytes}
+      - SALT=${LANGFUSE_SALT:-default_langfuse_salt_32bytes}
+      - NEXTAUTH_URL=${LANGFUSE_NEXTAUTH_URL:-http://localhost:3000}
+      - TELEMETRY_ENABLED=${LANGFUSE_TELEMETRY_ENABLED:-false}
+      # Headless Bootstrap Initialization (Automatic Setup)
+      - LANGFUSE_INIT_ORG_ID=${LANGFUSE_INIT_ORG_ID:-graphrag-org}
+      - LANGFUSE_INIT_ORG_NAME=${LANGFUSE_INIT_ORG_NAME:-GraphRAG Organization}
+      - LANGFUSE_INIT_PROJECT_ID=${LANGFUSE_INIT_PROJECT_ID:-graphrag-project}
+      - LANGFUSE_INIT_PROJECT_NAME=${LANGFUSE_INIT_PROJECT_NAME:-Demon Slayer GraphRAG}
+      - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=${LANGFUSE_INIT_PROJECT_PUBLIC_KEY:-pk-lf-graphrag-agent-public}
+      - LANGFUSE_INIT_PROJECT_SECRET_KEY=${LANGFUSE_INIT_PROJECT_SECRET_KEY:-sk-lf-graphrag-agent-secret}
+      - LANGFUSE_INIT_USER_EMAIL=${LANGFUSE_INIT_USER_EMAIL:-admin@example.com}
+      - LANGFUSE_INIT_USER_NAME=${LANGFUSE_INIT_USER_NAME:-Admin}
+      - LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD:-admin123456}
+    depends_on:
+      db_postgres:
+        condition: service_started
+        required: false
+
   # FastAPI application (no published ports; access via docker network / exec)
   app_fullstack:
     build:
@@ -91,6 +122,9 @@ services:
         condition: service_started
         required: false
       ollama:
+        condition: service_started
+        required: false
+      langfuse:
         condition: service_started
         required: false
     stdin_open: true

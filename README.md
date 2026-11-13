@@ -85,6 +85,7 @@ cd ..
 - **Neo4j Browser**: [http://localhost:7474](http://localhost:7474) (Bolt: `localhost:7687`)
 - **PostgreSQL / Apache AGE**: `localhost:5432`
 - **Ollama API**: [http://localhost:11434](http://localhost:11434)
+- **Langfuse Web UI**: [http://localhost:3000](http://localhost:3000) (기본 계정: `admin@example.com` / `admin123456`)
 
 ---
 
