@@ -34,3 +34,4 @@ fi
 
 echo ">>> [Docker] Executing: ${COMPOSE_CMD} $@"
 exec ${COMPOSE_CMD} "$@"
+
