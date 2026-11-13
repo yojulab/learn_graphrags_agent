@@ -21,6 +21,7 @@ services:
     container_name: ${PROJECT_NAME}_db_postgres
     profiles:
       - postgres
+      - langfuse
       - all
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -95,9 +96,7 @@ services:
       - LANGFUSE_INIT_USER_NAME=${LANGFUSE_INIT_USER_NAME:-Admin}
       - LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD:-admin123456}
     depends_on:
-      db_postgres:
-        condition: service_started
-        required: false
+      - db_postgres
 
   # FastAPI application (no published ports; access via docker network / exec)
   app_fullstack:
@@ -111,21 +110,5 @@ services:
     # restart: unless-stopped
     env_file:
       - .env
-    depends_on:
-      db_neo4j:
-        condition: service_started
-        required: false
-      db_postgres:
-        condition: service_started
-        required: false
-      db_mongo:
-        condition: service_started
-        required: false
-      ollama:
-        condition: service_started
-        required: false
-      langfuse:
-        condition: service_started
-        required: false
     stdin_open: true
     tty: true

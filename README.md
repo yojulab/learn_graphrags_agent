@@ -79,7 +79,7 @@ MODEL_API_URL=http://localhost:11434/v1
 ### 3. Docker 인프라 기동
 ```bash
 cd dockers
-docker-compose up -d
+./run.sh up -d    # 또는 docker-compose up -d
 cd ..
 ```
 - **Neo4j Browser**: [http://localhost:7474](http://localhost:7474) (Bolt: `localhost:7687`)

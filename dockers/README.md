@@ -37,20 +37,31 @@
 
 ## 🚀 실행 방법
 
-### 1. 전체 인프라 기동 (Langfuse 포함)
+### 1. 스크립트를 통한 간편 실행 (권장)
+`run.sh` 스크립트는 `.env` 파일의 `COMPOSE_PROFILES` 설정을 자동으로 읽어 쉘 환경변수로 전달하므로, 도커 버전에 구애받지 않고 설정에 따라 100% 신뢰성 있게 선택적 구동을 수행합니다:
 ```bash
 cd dockers
-docker-compose up -d
+./run.sh up -d       # .env의 COMPOSE_PROFILES 설정에 따라 선택적 기동
+./run.sh ps          # 현재 실행 중인 컨테이너 상태 확인
+./run.sh down        # 컨테이너 종료
 ```
-기본적으로 `COMPOSE_PROFILES=neo4j,postgres,mongo,ollama,app,langfuse`로 설정되어 있어 모든 서비스가 한 번에 실행됩니다.
 
-### 2. 특정 프로필만 선택 기동
+### 2. docker compose 직접 실행
 ```bash
-# Langfuse와 PostgreSQL만 실행할 경우
-docker-compose --profile postgres --profile langfuse up -d
+cd dockers
+docker compose up -d    # 또는 docker-compose up -d
+```
 
-# 또는 .env 파일에서 COMPOSE_PROFILES 변경:
-# COMPOSE_PROFILES=postgres,langfuse
+### 3. 특정 프로필만 선택 기동
+`.env` 파일의 `COMPOSE_PROFILES` 값을 원하는 프로필로 수정하거나, CLI 플래그를 사용할 수 있습니다:
+```bash
+# Langfuse만 실행 (필수 DB인 db_postgres 자동 포함 기동)
+COMPOSE_PROFILES=langfuse ./run.sh up -d
+# 또는 CLI 플래그:
+docker compose --profile langfuse up -d
+
+# Neo4j와 Ollama만 실행
+COMPOSE_PROFILES=neo4j,ollama ./run.sh up -d
 ```
 
 ### 3. 접속 주소 및 대시보드
