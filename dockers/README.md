@@ -129,3 +129,4 @@ generation = trace.generation(
 # 작업 완료 후 업데이트
 generation.end(output="MATCH (a:인간 {name: '카마도 탄지로'})-[r:SIBLING_OF]->(b:도깨비 {name: '카마도 네즈코'}) RETURN r")
 ```
+
